@@ -1,6 +1,6 @@
 // Configure the Google Cloud resources
 resource "google_container_cluster" "primary" {
-  name                     = "gitops-demo-gke"
+  name                     = "iac-demo-gke"
   location                 = "us-west1-a"
   remove_default_node_pool = true
   initial_node_count       = 1
