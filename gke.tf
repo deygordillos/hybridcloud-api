@@ -1,7 +1,12 @@
 // Configure the Google Cloud resources
+provider "google" {
+  project     = "gcp-project" // Override to use your GCP project
+  region      = "us-central1" // Override to use your preferred regtion
+  zone        = "us-central1-c" // Override to use your preferred zone
+}
+
 resource "google_container_cluster" "primary" {
-  name                     = "iac-demo-gke"
-  location                 = "us-west1-a"
+  name                     = "iac-demo-gke" // Override to your preferred cluster name
   remove_default_node_pool = true
   initial_node_count       = 1
   min_master_version       = "1.19"
@@ -9,7 +14,6 @@ resource "google_container_cluster" "primary" {
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
   name       = "my-node-pool"
-  location   = "us-west1-a"
   cluster    = google_container_cluster.primary.name
   node_count = 3
 
