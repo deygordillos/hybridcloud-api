@@ -1,3 +1,7 @@
+provider "gitlab" {
+    token = var.gitlab_token
+}
+
 data "gitlab_group" "iac-group" {
   full_path = var.gitlab_group
 }

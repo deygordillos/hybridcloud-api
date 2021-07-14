@@ -3,6 +3,11 @@ variable "gcp_project" {
     description = "The name of the Google Cloud Project where the cluster is to be provisioned"
 }
 
+variable "gitlab_token" {
+    type = string
+    description = "Provide a GitLab access token with admin rights to the GitLab group set as the `gitlab_group` variable"
+}
+
 variable "gitlab_group" {
     type = string
     description = "Override the full_path to point to your GitLab desired group name"
