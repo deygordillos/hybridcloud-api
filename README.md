@@ -20,31 +20,32 @@ These are the Terraform files we have pre-configured for the project.
 └── group_cluster.tf   # Registering kubernetes cluster to GitLab `apps` Group
 ```
 
-## Secrets
+## Configure your deployment
+
+Some variables need to be configured to match your desired infrastructure. These values can be set as Terraform variables. Optional variables have a default set already. See [`variables.tf`](./variables.tf) for these defaults.
+
+### Secrets
 
 The following [CI environment variables](https://docs.gitlab.com/ee/ci/variables/) need to be set so that your CI 
 job is able to provision the cluster on GCP and so that the CI job can associate the cluster to 
 your group. It is advised that you create them through the UI and not inside the `.gitlab-ci.yml` to not expose
 them in your code.
 
-- `GITLAB_TOKEN`: [GitLab personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) to add K8s clusters to your GitLab your group
+- `TF_VAR_gitlab_token`: [GitLab personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) to add the provisioned cluster to your GitLab group
 - `BASE64_GOOGLE_CREDENTIALS`: 
   - You must create [GCP service account](https://cloud.google.com/docs/authentication/getting-started) with the following roles: `Compute Network Viewer`, `Kubernetes Engine Admin`, `Service Account User`. 
   - As described in the above link, also create a json service account key. 
   - After downloading the json file for the key, encode it with: `base64 /path/to/sa-key.json | tr -d \\n`. Copy this value and use it to create your CI environment variable.
 
-## Configure your deployment
-
-Some variables need to be configured to match your desired infrastructure. These values can be set as Terraform variables. Optional variables have a default set already. See [`variables.tf`](./variables.tf) for these defaults.
-
-### Required
+### Required variable
 
 Set the following environment variables or edit the default values in [`variables.tf`](./variables.tf)
 
-- `TF_VAR_gcp_project`: Override the GCP `project` name. 
+- `TF_VAR_gcp_project`: Override the GCP `project` name
+- `TF_VAR_gitlab_token`: Provide a GitLab [Personal Access Token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#personal-access-tokens) with admin rights to the `gitlab_group`
 - `TF_VAR_gitlab_group`: Set the GitLab group to attach the cluster to GitLab.
 
-### Optional
+### Optional variables
 
 - `TF_VAR_gcp_region`: Set the region for your cluster. 
 - `TF_VAR_cluster_name`: Set the name of the cluster. 
