@@ -29,7 +29,7 @@ variable "machine_type" {
 variable "cluster_description" {
     type = string
     default = "This cluster is defined in GitLab"
-    description = "A description for the cluster. We recommend adding the \$CI_PROJECT_URL variable to describe where the cluster is configured."
+    description = "A description for the cluster. We recommend adding the $CI_PROJECT_URL variable to describe where the cluster is configured."
 }
 
 variable "base_domain" {
