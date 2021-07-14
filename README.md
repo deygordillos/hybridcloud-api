@@ -35,12 +35,24 @@ them in your code.
 
 ## Configure your deployment
 
-Some defaults in this sample need to be configured to match your desired infrastructure.
+Some variables need to be configured to match your desired infrastructure. These values can be set as Terraform variables. Optional variables have a default set already. See [`variables.tf`](./variables.tf) for these defaults.
 
-- In the [`gke.tf`](gke.tf) file.
-  - **(required)** Override the GCP `project` name under the [`gke.tf`](gke.rf) file.
-  - **(optional)** Choose also the `region` and `zone` that you would like to deploy your cluster to.
-- In the [`group_cluster.tf`](group_cluster.tf) file.
-  - **(required)** Override the full_path to point to your GitLab desired group name.
+### Required
+
+Set the following environment variables or edit the default values in [`variables.tf`](./variables.tf)
+
+- `TF_VAR_gcp_project`: Override the GCP `project` name. 
+- `TF_VAR_gitlab_group`: Set the GitLab group to attach the cluster to GitLab.
+
+### Optional
+
+- `TF_VAR_gcp_region`: Set the region for your cluster. 
+- `TF_VAR_cluster_name`: Set the name of the cluster. 
+- `TF_VAR_machine_type`: Set the machine type for the Kubernetes nodes. 
+- `TF_VAR_cluster_description`: Set a description for the cluster. We recommend setting this to `$CI_PROJECT_URL`.
+- `TF_VAR_base_domain`: Set to the base domain to provision resources under.
+- `TF_VAR_environment_scope`: Set to the GitLab environment name to associate the cluster with.
+
+## More info
 
 You can refer to the [GitLab Terraform provider](https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs) and the [Google Terraform provider](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference) for further resource options.
