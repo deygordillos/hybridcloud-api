@@ -31,7 +31,7 @@ job is able to provision the cluster on GCP and so that the CI job can associate
 your group. It is advised that you create them through the UI and not inside the `.gitlab-ci.yml` to not expose
 them in your code.
 
-- `TF_VAR_gitlab_token`: [GitLab personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) to add the provisioned cluster to your GitLab group
+- `TF_VAR_gitlab_token`: [GitLab personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) with `api` scope to add the provisioned cluster to your GitLab group.
 - `BASE64_GOOGLE_CREDENTIALS`: 
   - You must create [GCP service account](https://cloud.google.com/docs/authentication/getting-started) with the following roles: `Compute Network Viewer`, `Kubernetes Engine Admin`, `Service Account User`. 
   - As described in the above link, also create a json service account key. 
