@@ -24,7 +24,7 @@ These are the Terraform files we have pre-configured for the project.
 
 Some variables need to be configured to match your desired infrastructure. These values can be set as Terraform variables. Optional variables have a default set already. See [`variables.tf`](./variables.tf) for these defaults.
 
-### Secrets
+### Required variables/secrets
 
 The following [CI environment variables](https://docs.gitlab.com/ee/ci/variables/) need to be set so that your CI 
 job is able to provision the cluster on GCP and so that the CI job can associate the cluster to 
@@ -36,10 +36,6 @@ them in your code.
   - You must create [GCP service account](https://cloud.google.com/docs/authentication/getting-started) with the following roles: `Compute Network Viewer`, `Kubernetes Engine Admin`, `Service Account User`. 
   - As described in the above link, also create a json service account key. 
   - After downloading the json file for the key, encode it with: `base64 /path/to/sa-key.json | tr -d \\n`. Copy this value and use it to create your CI environment variable.
-
-### Required variable
-
-Set the following environment variables or edit the default values in [`variables.tf`](./variables.tf)
 
 - `TF_VAR_gcp_project`: Override the GCP `project` name
 - `TF_VAR_gitlab_token`: Provide a GitLab [Personal Access Token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#personal-access-tokens) with admin rights to the `gitlab_group`
