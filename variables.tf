@@ -21,7 +21,7 @@ variable "gcp_region" {
 
 variable "cluster_name" {
     type = string
-    default = "GitLab group level cluster"
+    default = "gitlab-group-level-cluster"
     description = "The name of the cluster to appear on the Google Cloud Console"
 }
 
