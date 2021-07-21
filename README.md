@@ -38,7 +38,6 @@ them in your code.
   - After downloading the json file for the key, encode it with: `base64 /path/to/sa-key.json | tr -d \\n`. Copy this value and use it to create your CI environment variable.
 
 - `TF_VAR_gcp_project`: Override the GCP `project` name
-- `TF_VAR_gitlab_token`: Provide a GitLab [Personal Access Token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#personal-access-tokens) with admin rights to the `gitlab_group`
 - `TF_VAR_gitlab_group`: Set the GitLab group to attach the cluster to GitLab.
 
 ### Optional variables
