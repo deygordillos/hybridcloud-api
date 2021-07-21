@@ -1,25 +1,25 @@
-// Configure the Google Cloud resources
 provider "google" {
-  project     = "gcp-project" // Override to use your GCP project
-  region      = "us-central1" // Override to use your preferred regtion
-  zone        = "us-central1-c" // Override to use your preferred zone
+  project     = var.gcp_project
 }
 
 resource "google_container_cluster" "primary" {
-  name                     = "iac-demo-gke" // Override to your preferred cluster name
+  name                     = var.cluster_name
+  location                 = var.gcp_region
   remove_default_node_pool = true
   initial_node_count       = 1
   min_master_version       = "1.19"
+  description              = var.cluster_description
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
-  name       = "my-node-pool"
+  name       = "${var.cluster_name} - node-pool"
   cluster    = google_container_cluster.primary.name
+  location   = var.gcp_region
   node_count = 3
 
   node_config {
     preemptible  = true
-    machine_type = "n1-standard-4"
+    machine_type = var.machine_type
 
     metadata = {
       disable-legacy-endpoints = "true"
@@ -30,8 +30,4 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
       "https://www.googleapis.com/auth/monitoring",
     ]
   }
-}
-
-output "env-dynamic-url" {
-  value = "https://${google_container_cluster.primary.endpoint}"
 }
