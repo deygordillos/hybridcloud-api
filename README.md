@@ -33,7 +33,7 @@ them in your code.
 
 - `TF_VAR_gitlab_token`: [GitLab personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) with `api` scope to add the provisioned cluster to your GitLab group.
 - `BASE64_GOOGLE_CREDENTIALS`: 
-  - You must create [GCP service account](https://cloud.google.com/docs/authentication/getting-started) with the following roles: `Compute Network Viewer`, `Kubernetes Engine Admin`, `Service Account User`. 
+  - You must create [GCP service account](https://cloud.google.com/docs/authentication/getting-started) with the following roles: `Compute Network Viewer`, `Kubernetes Engine Admin`, `Service Account User`, `Service Account Admin`. Yes, both User and Admin are needed. User will be used to impersonate the [default service account](https://cloud.google.com/compute/docs/access/service-accounts#default_service_account) when [creating the node pool](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/using_gke_with_terraform#node-pool-management). Admin will be used to create a service account in the kube-system namespace.
   - As described in the above link, also create a json service account key. 
   - After downloading the json file for the key, encode it with: `base64 /path/to/sa-key.json | tr -d \\n`. Copy this value and use it to create your CI environment variable.
 
