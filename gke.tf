@@ -7,7 +7,7 @@ resource "google_container_cluster" "primary" {
   location                 = var.gcp_region
   remove_default_node_pool = true
   initial_node_count       = 1
-  min_master_version       = "1.19"
+  min_master_version       = "1.20"
   description              = var.cluster_description
 }
 
