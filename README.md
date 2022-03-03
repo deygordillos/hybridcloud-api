@@ -1,7 +1,5 @@
 # Infrastructure as Code with GitLab and Terraform (GKE)
 
-**DISCLAIMER: This example uses the certificate based GitLab Group Clusters feature which is now DEPRECATED**
-
-This repository contains sample code for creating Google Kubernetes Engine (GKE) [Group level clusters](https://docs.gitlab.com/ee/user/group/clusters/) with the [GitLab Infrastructure as Code](https://docs.gitlab.com/ee/user/infrastructure/).
+This repository contains sample code for creating a Google Kubernetes Engine (GKE) cluster using [GitLab Infrastructure as Code](https://docs.gitlab.com/ee/user/infrastructure/), and connecting it to GitLab with the [GitLab agent for Kubernetes](https://docs.gitlab.com/ee/user/clusters/agent/).
 
 For more information on how to use it, please refer to the [official docs](https://docs.gitlab.com/ee/user/infrastructure/clusters/connect/new_gke_cluster.html).
