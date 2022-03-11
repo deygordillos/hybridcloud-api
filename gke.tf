@@ -1,7 +1,3 @@
-provider "google" {
-  project     = var.gcp_project
-}
-
 resource "google_container_cluster" "primary" {
   name                     = var.cluster_name
   location                 = var.gcp_region
@@ -11,14 +7,14 @@ resource "google_container_cluster" "primary" {
   description              = var.cluster_description
 }
 
-resource "google_container_node_pool" "primary_preemptible_nodes" {
+resource "google_container_node_pool" "primary_nodes" {
   name       = "${var.cluster_name}-node-pool"
   cluster    = google_container_cluster.primary.name
   location   = var.gcp_region
-  node_count = 3
+  node_count = var.node_count
 
   node_config {
-    preemptible  = true
+    preemptible  = false
     machine_type = var.machine_type
 
     metadata = {

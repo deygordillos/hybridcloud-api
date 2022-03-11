@@ -1,50 +1,52 @@
 variable "gcp_project" {
-    type = string
-    description = "The name of the Google Cloud Project where the cluster is to be provisioned"
-}
-
-variable "gitlab_token" {
-    type = string
-    description = "Provide a GitLab access token with admin rights to the GitLab group set as the `gitlab_group` variable"
-}
-
-variable "gitlab_group" {
-    type = string
-    description = "Override the full_path to point to your GitLab desired group name"
+  type        = string
+  description = "The name of the Google Cloud Project where the cluster is to be provisioned"
 }
 
 variable "gcp_region" {
-    type = string
-    default = "us-central1"
-    description = "The name of the Google region where the cluster nodes are to be provisioned"
+  type        = string
+  default     = "us-central1"
+  description = "The name of the Google region where the cluster nodes are to be provisioned"
 }
 
 variable "cluster_name" {
-    type = string
-    default = "gitlab-group-level-cluster"
-    description = "The name of the cluster to appear on the Google Cloud Console"
-}
-
-variable "machine_type" {
-    type = string
-    default = "n1-standard-4"
-    description = "The name of the machine type to use for the cluster nodes"
+  type        = string
+  default     = "gitlab-terraform-gke"
+  description = "The name of the cluster to appear on the Google Cloud Console"
 }
 
 variable "cluster_description" {
-    type = string
-    default = "This cluster is defined in GitLab"
-    description = "A description for the cluster. We recommend adding the $CI_PROJECT_URL variable to describe where the cluster is configured."
+  type        = string
+  default     = "This cluster is managed by GitLab"
+  description = "A description for the cluster. We recommend adding the $CI_PROJECT_URL variable to describe where the cluster is configured."
 }
 
-variable "base_domain" {
-    type = string
-    default = "example.com"
-    description = "The base domain to configure with this cluster in GitLab"
+variable "machine_type" {
+  type        = string
+  default     = "n1-standard-4"
+  description = "The name of the machine type to use for the cluster nodes"
 }
 
-variable "environment_scope" {
-    type = string
-    default = "*"
-    description = "The GitLab environment name to associate this cluster with"
+variable "node_count" {
+  default     = 3
+  description = "The number of cluster nodes"
+}
+
+variable "agent_version" {
+  default     = "v14.8.1"
+  description = "Agent version"
+}
+
+variable "agent_namespace" {
+  default     = "gitlab-agent"
+  description = "Kubernetes namespace to install the Agent"
+}
+
+variable "agent_token" {
+  description = "Agent token (provided when registering an Agent in GitLab)"
+  sensitive   = true
+}
+
+variable "kas_address" {
+  description = "Agent Server address (provided when registering an Agent in GitLab)"
 }
