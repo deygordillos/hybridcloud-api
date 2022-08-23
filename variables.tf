@@ -32,11 +32,6 @@ variable "node_count" {
   description = "The number of cluster nodes"
 }
 
-variable "agent_version" {
-  default     = "v14.8.1"
-  description = "Agent version"
-}
-
 variable "agent_namespace" {
   default     = "gitlab-agent"
   description = "Kubernetes namespace to install the Agent"
