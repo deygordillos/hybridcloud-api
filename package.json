@@ -1,0 +1,38 @@
+{
+  "name": "hybrid-api-ts",
+  "version": "1.0.0",
+  "description": "API for Hybrid Systems - Insite Venezuela",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/index.js",
+    "dev": "tsc-watch --onSuccess \"node dist/index.js\" ",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/hybrid-insite/express-api-hybrid.git"
+  },
+  "keywords": [
+    "hybrid",
+    "api",
+    "insiteve"
+  ],
+  "author": "Insite Venezuela",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/hybrid-insite/express-api-hybrid/issues"
+  },
+  "homepage": "https://gitlab.com/hybrid-insite/express-api-hybrid#readme",
+  "devDependencies": {
+    "tsc-watch": "^6.0.4",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "@types/express": "^4.17.17",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.17"
+  }
+}
