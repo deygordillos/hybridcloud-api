@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { appDataSource } from "../app-data-source"
 import { Equal } from "typeorm";
-import { bcrypt } from 'bcrypt'
-import { jwt } from "jsonwebtoken";
+import bcrypt from 'bcrypt'
+import jwt from "jsonwebtoken";
 import { User } from "../entity/user.entity";
 import messages from "../config/messages";
 import config from "../config/config";
@@ -24,12 +24,7 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
         // If not founded username
         if (!userData) return res.status(404).send({ message: messages.Auth.user_not_found });
 
-        // Compare the password
-        const result = await bcrypt.compare(password, userData.clave, (err, result) => {
-            if (err || !result) {
-                return res.status(401).json({ error: messages.Auth.user_auth_incorrect });
-            }
-
+        if (password === userData.clave) {
             // Generar el token JWT
             const token = jwt.sign({
                 username: username,
@@ -38,10 +33,19 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
                 expireIn: config.JWT_EXPIRES_IN
             }, config.JWT_SECRET, { expiresIn: config.JWT_EXPIRES_IN });
 
-            res.json({ message: 'Usuario logueado exitosamente', jwt: token });
-        });
+            return res.json({
+                message: 'Usuario logueado exitosamente', 
+                data: {
+                    nombre: userData.nombre,
+                    perfil: userData.perfil
+                },
+                jwt: token
+            });
+        } else {
+            return res.status(401).json({ error: messages.Auth.user_auth_incorrect });
+        }
     } catch (e) {
         console.log('AuthController.login catch error: ', e);
-        return res.status(500).json({ message: 'error', data: e });
+        return res.status(500).json({ message: 'error', data: e.name });
     }
 }
