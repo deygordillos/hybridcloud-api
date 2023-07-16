@@ -1,6 +1,7 @@
 import express from "express"
 import cors from 'cors';
 import morgan from 'morgan';
+import bodyParser from "body-parser";
 import { appDataSource } from "./app-data-source"
 import indexRoutes from './routes/index.route';
 import 'dotenv/config';
@@ -19,6 +20,7 @@ appDataSource
         app.use(express.urlencoded({
             extended: true,
         }));
+        app.use(bodyParser.json());
 
         app.use(indexRoutes);
 
