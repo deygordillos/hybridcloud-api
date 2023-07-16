@@ -8,9 +8,6 @@
         "experimentalDecorators": true,
         "outDir": "./dist",
         "rootDir": "./src",
-        "sourceMap": true,
-        "resolveJsonModule": true,
-        "strictPropertyInitialization": false,
-        "skipLibCheck": true
+        "esModuleInterop": true
     }
 }

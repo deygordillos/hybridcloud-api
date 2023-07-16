@@ -1,54 +1,35 @@
-import * as express from "express"
-import { Request, Response } from "express"
-import { User } from "./entity/user.entity"
+import express from "express"
+import cors from 'cors';
+import morgan from 'morgan';
+import bodyParser from "body-parser";
 import { appDataSource } from "./app-data-source"
+import indexRoutes from './routes/index.route';
+import 'dotenv/config';
 
 // establish database connection
 appDataSource
     .initialize()
     .then(() => {
         console.log("Data Source has been initialized!")
+
+        // create and setup express app
+        const app = express()
+        app.use(cors());
+        app.use(morgan(process.env.LOGGER || 'dev'));
+        app.use(express.json())
+        app.use(express.urlencoded({
+            extended: true,
+        }));
+        app.use(bodyParser.json());
+
+        app.use(indexRoutes);
+
+        // start express server
+        const port = process.env.PORT || 3000;
+        app.listen(port, () => {
+            console.log('Server started on port:', port);
+        });
     })
     .catch((err) => {
         console.error("Error during Data Source initialization:", err)
     })
-
-// create and setup express app
-const app = express()
-app.use(express.json())
-
-// register routes
-app.get("/users", async function (req: Request, res: Response) {
-    const users = await appDataSource.getRepository(User).find()
-    res.json(users)
-})
-
-app.get("/users/:id", async function (req: Request, res: Response) {
-    const results = await appDataSource.getRepository(User).findOneBy({
-        id: parseInt(req.params.id),
-    })
-    return res.send(results)
-})
-
-app.post("/users", async function (req: Request, res: Response) {
-    const user = await appDataSource.getRepository(User).create(req.body)
-    const results = await appDataSource.getRepository(User).save(user)
-    return res.send(results)
-})
-
-app.put("/users/:id", async function (req: Request, res: Response) {
-    const user = await appDataSource.getRepository(User).findOneBy({
-        id: parseInt(req.params.id),
-    })
-    appDataSource.getRepository(User).merge(user, req.body)
-    const results = await appDataSource.getRepository(User).save(user)
-    return res.send(results)
-})
-
-app.delete("/users/:id", async function (req: Request, res: Response) {
-    const results = await appDataSource.getRepository(User).delete(req.params.id)
-    return res.send(results)
-})
-
-// start express server
-app.listen(3000)
