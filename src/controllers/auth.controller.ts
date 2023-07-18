@@ -25,27 +25,44 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
         if (!userData) return res.status(404).send({ message: messages.Auth.user_not_found });
 
         if (password === userData.clave) {
-            // Generar el token JWT
-            const token = jwt.sign({
+            const user = {
+                id: userData.id,
                 username: username,
                 sucursal: userData.sucursal,
                 empresa: userData.empresa,
                 expireIn: config.JWT_EXPIRES_IN
-            }, config.JWT_SECRET, { expiresIn: config.JWT_EXPIRES_IN });
+            };
+            // Generar el token JWT
+            const accessToken = jwt.sign({ user }, config.JWT_SECRET, { expiresIn: config.JWT_EXPIRES_IN });
+            const refreshToken = jwt.sign({ user }, config.JWT_SECRET, { expiresIn: config.JWT_EXPIRES_IN_REFRESH });
 
-            return res.json({
-                message: 'Usuario logueado exitosamente', 
-                data: {
-                    nombre: userData.nombre,
-                    perfil: userData.perfil
-                },
-                jwt: token
-            });
+            res
+                .cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'strict' })
+                .header('Authorization', accessToken)
+                .send(user);
         } else {
             return res.status(401).json({ error: messages.Auth.user_auth_incorrect });
         }
     } catch (e) {
         console.log('AuthController.login catch error: ', e);
         return res.status(500).json({ message: 'error', data: e.name });
+    }
+}
+
+export const refreshLogin = async (req: Request, res: Response): Promise<Response> => {
+    console.log('cookies:', req.cookies )
+    const refreshToken = req.cookies['refreshToken'];
+    if (!refreshToken) {
+        return res.status(401).send('Access Denied. No refresh token provided.');
+    }
+    try {
+        const decoded = jwt.verify(refreshToken, config.JWT_SECRET);
+        const accessToken = jwt.sign({ user: decoded.user }, config.JWT_SECRET, { expiresIn: config.JWT_EXPIRES_IN });
+
+        res
+            .header('Authorization', accessToken)
+            .send(decoded.user);
+    } catch (error) {
+        return res.status(400).send('Invalid refresh token.');
     }
 }
