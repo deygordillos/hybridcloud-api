@@ -10,3 +10,15 @@ variables:
   
 before_script:
   - export GOOGLE_CREDENTIALS=$(echo $BASE64_GOOGLE_CREDENTIALS | base64 -d)
+
+stages:
+  - init
+  - validate
+  - build
+  - test
+  - deploy
+  - cleanup
+
+destroy:
+  extends: .terraform:destroy
+  needs: []
