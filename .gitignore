@@ -113,3 +113,5 @@ dist
 *.svg
 ormconfig.json
 ormconfig.js
+
+package-lock.json
