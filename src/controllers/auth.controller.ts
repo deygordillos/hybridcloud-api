@@ -50,7 +50,6 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
 }
 
 export const refreshLogin = async (req: Request, res: Response): Promise<Response> => {
-    console.log('cookies:', req.cookies )
     const refreshToken = req.cookies['refreshToken'];
     if (!refreshToken) {
         return res.status(401).send('Access Denied. No refresh token provided.');
@@ -60,6 +59,7 @@ export const refreshLogin = async (req: Request, res: Response): Promise<Respons
         const accessToken = jwt.sign({ user: decoded.user }, config.JWT_SECRET, { expiresIn: config.JWT_EXPIRES_IN });
 
         res
+            .cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'strict' })
             .header('Authorization', accessToken)
             .send(decoded.user);
     } catch (error) {
