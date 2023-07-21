@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 import { appDataSource } from "../app-data-source"
 import { Equal } from "typeorm";
-import bcrypt from 'bcrypt'
 import jwt from "jsonwebtoken";
+import 'dotenv/config';
 import { User } from "../entity/user.entity";
 import messages from "../config/messages";
-import config from "../config/config";
+
 
 export const authLogin = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const authHeader = req.headers['authorization']
+        const authHeader  = req.headers['authorization'] // basic randomhashbase64
         const tokenBase64 = authHeader && authHeader.split(' ')[1]
         if (!tokenBase64) return res.status(400).send({ message: 'Please, you have to complete username and password' });
 
@@ -22,24 +22,23 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
             usuario: Equal(username)
         });
         // If not founded username
-        if (!userData) return res.status(404).send({ message: messages.Auth.user_not_found });
+        if (!userData) return res.status(404).json({ message: messages.Auth.user_not_found });
 
         if (password === userData.clave) {
             const user = {
                 id: userData.id,
                 username: username,
                 sucursal: userData.sucursal,
-                empresa: userData.empresa,
-                expireIn: config.JWT_EXPIRES_IN
+                empresa: userData.empresa
             };
             // Generar el token JWT
-            const accessToken = jwt.sign({ user }, config.JWT_SECRET, { expiresIn: config.JWT_EXPIRES_IN });
-            const refreshToken = jwt.sign({ user }, config.JWT_SECRET, { expiresIn: config.JWT_EXPIRES_IN_REFRESH });
+            const accessToken  = jwt.sign(user,  process.env.JWT_ACCESS_TOKEN,  { expiresIn: process.env.JWT_EXPIRES_IN_ACCESS });
+            const refreshToken = jwt.sign(user,  process.env.JWT_REFRESH_TOKEN, { expiresIn: process.env.JWT_EXPIRES_IN_REFRESH });
 
             res
-                .cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'strict' })
+                .header('refreshToken', refreshToken)
                 .header('Authorization', accessToken)
-                .send(user);
+                .json({data: user});
         } else {
             return res.status(401).json({ error: messages.Auth.user_auth_incorrect });
         }
@@ -50,19 +49,19 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
 }
 
 export const refreshLogin = async (req: Request, res: Response): Promise<Response> => {
-    const refreshToken = req.cookies['refreshToken'];
-    if (!refreshToken) {
-        return res.status(401).send('Access Denied. No refresh token provided.');
-    }
     try {
-        const decoded = jwt.verify(refreshToken, config.JWT_SECRET);
-        const accessToken = jwt.sign({ user: decoded.user }, config.JWT_SECRET, { expiresIn: config.JWT_EXPIRES_IN });
+        const currentRefreshToken = req.header['refreshToken'];
+        if (!currentRefreshToken)  return res.status(401).json({message: 'Access Denied. No refresh token provided.'});
 
+        const decoded      = jwt.verify(currentRefreshToken,  process.env.JWT_REFRESH_TOKEN);
+        const accessToken  = jwt.sign(decoded.user,  process.env.JWT_ACCESS_TOKEN, { expiresIn:  process.env.JWT_EXPIRES_IN_ACCESS });
+        const refreshToken = jwt.sign(decoded.user,  process.env.JWT_REFRESH_TOKEN, { expiresIn: process.env.JWT_EXPIRES_IN_REFRESH });
+        
         res
-            .cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'strict' })
+            .header('refreshToken', refreshToken)
             .header('Authorization', accessToken)
-            .send(decoded.user);
+            .json({data: decoded.user});
     } catch (error) {
-        return res.status(400).send('Invalid refresh token.');
+        return res.status(400).json({message: 'Invalid refresh token.'});
     }
 }
