@@ -5,7 +5,7 @@ variable "gcp_project" {
 
 variable "gcp_region" {
   type        = string
-  default     = "us-central1-a"
+  default     = "us-central1"
   description = "The name of the Google region where the cluster nodes are to be provisioned"
 }
 
@@ -23,7 +23,7 @@ variable "cluster_description" {
 
 variable "machine_type" {
   type        = string
-  default     = "n1-standard-2"
+  default     = "n1-standard-4"
   description = "The name of the machine type to use for the cluster nodes"
 }
 
