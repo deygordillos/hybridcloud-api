@@ -5,7 +5,7 @@ variable "gcp_project" {
 
 variable "gcp_region" {
   type        = string
-  default     = "us-central1"
+  default     = "us-central1-a"
   description = "The name of the Google region where the cluster nodes are to be provisioned"
 }
 
