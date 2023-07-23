@@ -52,12 +52,13 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
 export const refreshLogin = async (req: Request, res: Response): Promise<Response> => {
     try {
         const { refreshToken } = req.body;
-        if (!refreshToken)  return res.status(401).json({message: 'Access Denied. No refresh token provided.'});
+        if (!refreshToken)  return res.status(400).json({message: 'Access Denied. No refresh token provided.'});
         console.log('refreshToken: ', refreshToken);
         console.log('JWT_REFRESH_TOKEN: ', process.env.JWT_REFRESH_TOKEN);
         const decoded         = jwt.verify(refreshToken,  process.env.JWT_REFRESH_TOKEN);
-        const accessToken     = jwt.sign(decoded.user,  process.env.JWT_ACCESS_TOKEN, { expiresIn:  process.env.JWT_EXPIRES_IN_ACCESS });
-        const newRefreshToken = jwt.sign(decoded.user,  process.env.JWT_REFRESH_TOKEN, { expiresIn: process.env.JWT_EXPIRES_IN_REFRESH });
+        const user  = decoded.user;
+        const accessToken     = jwt.sign({user},  process.env.JWT_ACCESS_TOKEN, { expiresIn:  process.env.JWT_EXPIRES_IN_ACCESS });
+        const newRefreshToken = jwt.sign({user},  process.env.JWT_REFRESH_TOKEN, { expiresIn: process.env.JWT_EXPIRES_IN_REFRESH });
 
         console.log('accessToken: ', accessToken);
         console.log('newRefreshToken: ', newRefreshToken);
@@ -68,7 +69,7 @@ export const refreshLogin = async (req: Request, res: Response): Promise<Respons
             data: decoded.user
         });
     } catch (error) {
-        return res.status(400).json({message: messages.Auth.invalid_refresh_token});
+        return res.status(401).json({message: messages.Auth.invalid_refresh_token});
     }
 }
 
