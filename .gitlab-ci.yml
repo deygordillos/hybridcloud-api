@@ -27,9 +27,9 @@ install-dependencies:
     expire_in: 1hr
     paths:
       - node_modules/
-    cache:
-      paths:
-        - node_modules/
+  cache:
+    paths:
+      - node_modules/
 
 test-apps:
   stage: test
