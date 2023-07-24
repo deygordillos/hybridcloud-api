@@ -19,14 +19,9 @@ stages:
   - deploy
   - cleanup
 
-install-node:
-  image: node:11.1.0
-  stage: build
-
 install-dependencies:
+  image: node:latest
   stage: build
-  dependencies:
-    - install-node
   script:
     - npm install
   artifacts:
