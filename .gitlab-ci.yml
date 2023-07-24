@@ -20,7 +20,7 @@ stages:
   - cleanup
 
 install-dependencies:
-  image: node:latest
+  image: node:alpine
   stage: build
   script:
     - npm install
@@ -38,7 +38,6 @@ build-app:
   dependencies:
     - install-dependencies
   script:
-    - npm install
     - npm run build
 
 destroy:
