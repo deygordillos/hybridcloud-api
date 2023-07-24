@@ -24,6 +24,7 @@ install-dependencies:
   stage: build
   script:
     - npm install
+    - npm run build
   artifacts:
     expire_in: 1hr
     paths:
@@ -31,14 +32,6 @@ install-dependencies:
   cache:
     paths:
       - node_modules/
-
-# Trabajo para construir la aplicación.
-build-app:
-  stage: build
-  needs:
-    - install-dependencies
-  script:
-    - npm run build
 
 destroy:
   extends: .terraform:destroy
