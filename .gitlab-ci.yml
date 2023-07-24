@@ -35,6 +35,8 @@ install-dependencies:
 # Trabajo para construir la aplicación.
 build-app:
   stage: build
+  dependencies:
+    - install-dependencies
   script:
     - npm install
     - npm run build
