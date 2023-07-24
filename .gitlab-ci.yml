@@ -19,6 +19,30 @@ stages:
   - deploy
   - cleanup
 
+install-dependencies:
+  stage: build
+  script:
+    - npm install
+  artifacts:
+    expire_in: 1hr
+    paths:
+      - node_modules/
+    cache:
+      paths:
+        - node_modules/
+
+test-apps:
+  stage: test
+  dependencies:
+    - install-dependencies
+  before_script:
+    - apt-get update && apt-get install -y apt-transport-https
+    - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+    - sh -c 'echo "deb https://dl.google.com/linux/chrome/deb/stable main" >> /etc/app/sources.list.d/google.list'
+    - apt get update && apt-get install -y google-chrome-stable
+  script:
+    - npm run test:ci
+    
 destroy:
   extends: .terraform:destroy
   needs: []
