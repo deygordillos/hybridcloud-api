@@ -32,6 +32,13 @@ install-dependencies:
     paths:
       - node_modules/
 
+# Trabajo para construir la aplicación.
+build-app:
+  stage: build
+  script:
+    - npm install
+    - npm run build
+
 destroy:
   extends: .terraform:destroy
   needs: []
