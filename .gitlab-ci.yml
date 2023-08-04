@@ -1,5 +1,3 @@
-image: node:14-alpine
-
 include:
   - template: Terraform.gitlab-ci.yml
 
@@ -22,6 +20,7 @@ stages:
   - cleanup
 
 install-dependencies:
+  image: node:14-alpine
   stage: build
   script:
     - npm install
