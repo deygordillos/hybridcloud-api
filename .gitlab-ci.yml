@@ -19,32 +19,12 @@ stages:
   - deploy
   - cleanup
 
-install-dependencies:
-  image: node:14-alpine
-  stage: build
-  script:
-    - npm install
-  artifacts:
-    expire_in: 1hr
-    paths:
-      - node_modules/
-  cache:
-    paths:
-      - node_modules/
-
 # Trabajo para construir la aplicación.
 build-app:
   stage: build
-  needs:
-    - install-dependencies
+  image: node:latest
   script:
     - npm run build
-
-run-app:
-  stage: test
-  needs:
-    - build-app
-  script:
     - npm run start
 
 destroy:
