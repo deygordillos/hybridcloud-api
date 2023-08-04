@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+
+  hybrid-api-ts:
+    container_name: hybrid-api-ts
+    build: ./build
+    ports:
+      - "4005:4005"
+    volumes:
+      - .:/usr/local/apache2/htdocs/hybrid-api-ts/v0.00
+    working_dir: /usr/local/apache2/htdocs/hybrid-api-ts/v0.00
+    expose:
+      - 4005
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    
