@@ -1,3 +1,5 @@
+image: node:14-alpine
+
 include:
   - template: Terraform.gitlab-ci.yml
 
@@ -20,7 +22,6 @@ stages:
   - cleanup
 
 install-dependencies:
-  image: node:alpine
   stage: build
   script:
     - npm install
@@ -39,6 +40,13 @@ build-app:
     - install-dependencies
   script:
     - npm run build
+
+run-app:
+  stage: test
+  needs:
+    - build-app
+  script:
+    - npm run start
 
 destroy:
   extends: .terraform:destroy
