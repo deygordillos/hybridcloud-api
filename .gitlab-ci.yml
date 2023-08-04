@@ -24,8 +24,16 @@ build-app:
   stage: build
   image: node:latest
   script:
+    - npm i
     - npm run build
     - npm run start
+  artifacts:
+    expire_in: 1hr
+    paths:
+      - node_modules/
+  cache:
+    paths:
+      - node_modules/
 
 destroy:
   extends: .terraform:destroy
