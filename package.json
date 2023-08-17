@@ -10,7 +10,7 @@
     "build": "tsc",
     "typeorm": "typeorm-ts-node-commonjs",
     "migration:create": "npm run typeorm migration:create -- --dataSource ./src/app-data-source.ts",
-    "migration:generate": "npm run typeorm migration:generate -- --dataSource ./src/app-data-source.ts",
+    "migration:generate": "npm run typeorm migration:generate -- --dataSource ./src/app-data-source.ts --outputJs ./src/migration/default",
     "migration:run": "typeorm-ts-node-commonjs -d ./src/app-data-source.ts migration:run",
     "migration:revert": "typeorm-ts-node-commonjs -d ./src/app-data-source.ts migration:revert"
   },
