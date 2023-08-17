@@ -81,6 +81,18 @@ module.exports = class InitialUsers1692245023178 {
                     default: "CURRENT_TIMESTAMP" 
                 },
                 {
+                    name: "access_token",
+                    type: "varchar",
+                    length: "150",
+                    comment: "access token login",
+                },
+                {
+                    name: "refresh_token",
+                    type: "varchar",
+                    length: "150",
+                    comment: "refresh token login",
+                },
+                {
                     name: "is_admin",
                     type: "tinyint",
                     default: 0,

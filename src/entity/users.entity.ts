@@ -38,6 +38,12 @@ export class Users {
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     last_login: Date;
 
+    @Column({ length: 150, comment: "access token login", nullable: true })
+    access_token: string
+
+    @Column({ length: 150, comment: "refresh token login", nullable: true })
+    refresh_token: string
+
     @Column({ width: 1, default: 0, comment: "1 es user admin, 0 no es user admin" })
     is_admin: number
 }
