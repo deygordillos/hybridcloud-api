@@ -1,0 +1,49 @@
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
+
+@Index('user_type_username', ['user_type', 'username'], {})
+@Index('first_name', ['first_name'], {})
+
+@Entity('Users')
+export class Users {
+    @PrimaryGeneratedColumn()
+    id: number
+
+    @Column({ width: 1, default: 2, comment: "1 user api, 2 user web, 3 user pos, 4 user app" })
+    user_type: string
+
+    @Column({ length: 50, unique: true, comment: "username to login" })
+    username: string
+
+    @Column({ length: 150, comment: "password to login" })
+    password: string
+
+    @Column({ length: 150, unique: true, comment: "email to contact or reset login" })
+    email: string
+
+    @Column({ length: 50, comment: "user first name" })
+    first_name: string
+
+    @Column({ length: 50, comment: "user lastname", nullable: true })
+    last_name: string
+
+    @Column({ length: 20, comment: "user phone number", nullable: true })
+    user_phone: string
+
+    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    created_at: Date;
+
+    @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    updated_at: Date;
+
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    last_login: Date;
+
+    @Column({ length: 150, comment: "access token login", nullable: true })
+    access_token: string
+
+    @Column({ length: 150, comment: "refresh token login", nullable: true })
+    refresh_token: string
+
+    @Column({ width: 1, default: 0, comment: "1 es user admin, 0 no es user admin" })
+    is_admin: number
+}

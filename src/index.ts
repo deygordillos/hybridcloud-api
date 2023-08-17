@@ -17,6 +17,10 @@ appDataSource
         app.use(cors());
         app.use(morgan(process.env.LOGGER || 'dev'));
         app.use(express.json())
+        app.use (function (error, req, res, next){
+            //Catch json error
+            res.status(500).json({ message: 'Formato de JSON Inválido' });
+        });
         app.use(express.urlencoded({
             extended: true,
         }));
