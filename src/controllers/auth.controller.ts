@@ -3,7 +3,7 @@ import { appDataSource } from "../app-data-source"
 import { Equal } from "typeorm";
 import jwt from "jsonwebtoken";
 import 'dotenv/config';
-import { User } from "../entity/user.entity";
+import { Users } from "../entity/users.entity";
 import messages from "../config/messages";
 
 
@@ -18,18 +18,16 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
         const password = plain && plain.split(':')[1]
 
         // Looking for user by username
-        const userData = await appDataSource.manager.findOneBy(User, {
-            usuario: Equal(username)
+        const userData = await appDataSource.manager.findOneBy(Users, {
+            username: Equal(username)
         });
         // If not founded username
         if (!userData) return res.status(404).json({ message: messages.Auth.user_not_found });
 
-        if (password === userData.clave) {
+        if (password === userData.password) {
             const user = {
                 id: userData.id,
                 username: username,
-                sucursal: userData.sucursal,
-                empresa: userData.empresa
             };
             // Generar el token JWT
             const accessToken  = jwt.sign({user},  process.env.JWT_ACCESS_TOKEN,  { expiresIn: process.env.JWT_EXPIRES_IN_ACCESS });
