@@ -7,8 +7,11 @@ import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, Update
 export class Users {
     @PrimaryGeneratedColumn()
     id: number
+    
+    @Column({ length: 20, comment: "ip login" })
+    ip_address: string
 
-    @Column({ width: 1, default: 2, comment: "1 user api, 2 user web, 3 user pos, 4 user app" })
+    @Column({ length: 1, default: 2, comment: "1 user api, 2 user web, 3 user pos, 4 user app" })
     user_type: string
 
     @Column({ length: 50, unique: true, comment: "username to login" })
