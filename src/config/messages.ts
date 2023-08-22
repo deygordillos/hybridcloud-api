@@ -7,7 +7,10 @@ export default {
     },
     User: {
         user_created: 'User created',
+        user_updated: 'User updated',
         user_exists: 'Sorry, user already exists',
+        user_not_exists: 'Sorry, user not exists',
         user_complete_required_fields: 'Please, you have to send username, password, email and user_type at least',
+        user_needed: 'You must have send an userid',
     }
 }

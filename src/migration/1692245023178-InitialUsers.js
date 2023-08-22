@@ -17,9 +17,16 @@ module.exports = class InitialUsers1692245023178 {
                     comment: "id incremental del usuario"
                 },
                 {
+                    name: "ip_address",
+                    type: "varchar",
+                    length: "20",
+                    comment: "ip login"
+                },
+                {
                     name: "user_type",
                     type: "tinyint",
                     default: 2,
+                    length: 1,
                     comment: "1 user api, 2 user web, 3 user pos, 4 user app"
                 },
                 {

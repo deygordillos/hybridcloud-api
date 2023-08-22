@@ -1,7 +1,8 @@
 import { Router } from 'express'
 import { body } from "express-validator";
 import { validatorRequestMiddleware } from '../middlewares/validator_request';
-import { createUser } from '../controllers/users.controller';
+import { checkJwtMiddleware } from '../middlewares/check-jwt';
+import { createUser, updateUser } from '../controllers/users.controller';
 
 const router = Router();
 router.post('/',
@@ -14,5 +15,7 @@ router.post('/',
     ],
     validatorRequestMiddleware,
     createUser);
+
+router.put('/:id', checkJwtMiddleware, updateUser);
 
 export default router
