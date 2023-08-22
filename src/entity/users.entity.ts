@@ -1,6 +1,7 @@
 import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
 
 @Index('user_type_username', ['user_type', 'username'], {})
+@Index('user_status_username', ['user_status', 'username'], {})
 @Index('first_name', ['first_name'], {})
 
 @Entity('Users')

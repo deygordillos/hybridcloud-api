@@ -121,6 +121,11 @@ module.exports = class InitialUsers1692245023178 {
         }))
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
+            name: 'user_status_username',
+            columnNames: ['user_status', 'username']
+        }))
+
+        await queryRunner.createIndex(this.table_name, new TableIndex({
             name: 'first_name',
             columnNames: ['first_name']
         }))
@@ -129,6 +134,7 @@ module.exports = class InitialUsers1692245023178 {
     async down(queryRunner) {
         await queryRunner.dropIndex(this.table_name, 'first_name');
         await queryRunner.dropIndex(this.table_name, 'user_type_username');
+        await queryRunner.dropIndex(this.table_name, 'user_status_username');
         await queryRunner.dropTable(this.table_name);
     }
 }
