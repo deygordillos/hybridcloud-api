@@ -11,14 +11,17 @@ export class Users {
     @Column({ length: 20, comment: "ip login" })
     ip_address: string
 
-    @Column({ length: 1, default: 2, comment: "1 user api, 2 user web, 3 user pos, 4 user app" })
-    user_type: string
+    @Column({ width: 1, default: 2, comment: "1 user api, 2 user web, 3 user pos, 4 user app" })
+    user_type: number
 
     @Column({ length: 50, unique: true, comment: "username to login" })
     username: string
 
     @Column({ length: 150, comment: "password to login" })
     password: string
+
+    @Column({ width: 1, default: 1, comment: "1 activo, 0 inactivo" })
+    user_status: number
 
     @Column({ length: 150, unique: true, comment: "email to contact or reset login" })
     email: string

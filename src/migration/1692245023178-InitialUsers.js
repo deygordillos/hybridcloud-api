@@ -45,6 +45,13 @@ module.exports = class InitialUsers1692245023178 {
                     comment: "password to login"
                 },
                 {
+                    name: "user_status",
+                    type: "tinyint",
+                    default: 1,
+                    length: 1,
+                    comment: "1 activo, 0 inactivo"
+                },
+                {
                     name: "email",
                     type: "varchar",
                     length: "150",
