@@ -1,5 +1,4 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToOne } from "typeorm"
-import { Groups } from "./groups.entity";
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn} from "typeorm"
 
 @Index('company_status_name', ['company_status', 'company_name'], {})
 @Index('group_id', ['group_id'], {})
@@ -72,10 +71,5 @@ export class Companies {
     country_id: number
 
     @Column({ type: 'int', comment: "id del grupo empresarial" })
-    @JoinColumn()
-    @ManyToOne(() => Groups, (groups) => groups.group_id, {
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-    })
     group_id: number
 }
