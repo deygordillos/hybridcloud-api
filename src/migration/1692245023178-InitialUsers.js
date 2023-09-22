@@ -20,7 +20,8 @@ module.exports = class InitialUsers1692245023178 {
                     name: "ip_address",
                     type: "varchar",
                     length: "20",
-                    comment: "ip login"
+                    comment: "ip login",
+                    isNullable: true
                 },
                 {
                     name: "user_type",
@@ -70,13 +71,15 @@ module.exports = class InitialUsers1692245023178 {
                     name: "last_name",
                     type: "varchar",
                     length: "50",
-                    comment: "user lastname"
+                    comment: "user lastname",
+                    isNullable: true
                 },
                 {
                     name: "user_phone",
                     type: "varchar",
                     length: "20",
                     comment: "user phone number",
+                    isNullable: true
                 },
                 {
                     name: "created_at",
@@ -99,12 +102,14 @@ module.exports = class InitialUsers1692245023178 {
                     type: "varchar",
                     length: "400",
                     comment: "access token login",
+                    isNullable: true
                 },
                 {
                     name: "refresh_token",
                     type: "varchar",
                     length: "400",
                     comment: "refresh token login",
+                    isNullable: true
                 },
                 {
                     name: "is_admin",

@@ -9,7 +9,7 @@ export class Users {
     @PrimaryGeneratedColumn()
     id: number
     
-    @Column({ length: 20, comment: "ip login" })
+    @Column({ length: 20, comment: "ip login", nullable: true })
     ip_address: string
 
     @Column({ width: 1, default: 2, comment: "1 user api, 2 user web, 3 user pos, 4 user app" })
