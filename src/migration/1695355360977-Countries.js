@@ -39,7 +39,7 @@ module.exports = class Countries1695355360977 {
                     name: "country_name",
                     type: "varchar",
                     length: "100",
-                    comment: "prefijo numerico celular"
+                    comment: "nombre del pais"
                 },
                 {
                     name: "country_status",
