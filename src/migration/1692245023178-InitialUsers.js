@@ -100,14 +100,14 @@ module.exports = class InitialUsers1692245023178 {
                 {
                     name: "access_token",
                     type: "varchar",
-                    length: "400",
+                    length: "700",
                     comment: "access token login",
                     isNullable: true
                 },
                 {
                     name: "refresh_token",
                     type: "varchar",
-                    length: "400",
+                    length: "700",
                     comment: "refresh token login",
                     isNullable: true
                 },

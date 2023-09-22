@@ -45,10 +45,10 @@ export class Users {
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     last_login: Date;
 
-    @Column({ length: 400, comment: "access token login", nullable: true })
+    @Column({ length: 700, comment: "access token login", nullable: true })
     access_token: string
 
-    @Column({ length: 400, comment: "refresh token login", nullable: true })
+    @Column({ length: 700, comment: "refresh token login", nullable: true })
     refresh_token: string
 
     @Column({ width: 1, default: 0, comment: "1 es user admin, 0 no es user admin" })

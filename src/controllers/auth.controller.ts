@@ -31,6 +31,8 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
         }
         
         delete userData.password;
+        delete userData.access_token;
+        delete userData.refresh_token;
         // Actualizo fecha del login
         userData.last_login = new Date();
         userData.ip_address = req.socket.remoteAddress ? req.socket.remoteAddress.toString().replace('::ffff:', '') : null;
