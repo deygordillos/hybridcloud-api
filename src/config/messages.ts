@@ -18,5 +18,14 @@ export default {
         group_updated: 'Group updated',
         group_not_exists: 'Sorry, group not exists',
         group_needed: 'You must have send an group id'
+    },
+    Companies: {
+        company_created: 'Company created',
+        company_updated: 'Company updated',
+        company_not_exists: 'Sorry, company not exists',
+        company_needed: 'You must have send an company id'
+    },
+    Country: {
+        country_not_exists: 'Sorry, country not exists'
     }
 }

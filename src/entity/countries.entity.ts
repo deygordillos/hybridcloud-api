@@ -7,7 +7,7 @@ import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, Update
 @Index('subcontinent_name', ['subcontinent_name'], {})
 
 @Entity('Countries')
-export class Groups {
+export class Countries {
     @PrimaryGeneratedColumn({ type: 'int', comment: "id incremental del pais" })
     country_id: number
 
