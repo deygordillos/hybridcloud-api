@@ -27,5 +27,11 @@ export default {
     },
     Country: {
         country_not_exists: 'Sorry, country not exists'
-    }
+    },
+    Sucursales: {
+        sucursal_created: 'Sucursal created',
+        sucursal_updated: 'Sucursal updated',
+        sucursal_not_exists: 'Sorry, sucursal not exists',
+        sucursal_needed: 'You must have send an sucursal id'
+    },
 }

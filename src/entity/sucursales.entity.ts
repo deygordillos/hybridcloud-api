@@ -66,9 +66,5 @@ export class Sucursales {
 
     @Column({ type: 'int', comment: "id de la empresa" })
     @JoinColumn()
-    @ManyToOne(() => Companies, (companies) => companies.company_id, {
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-    })
     company_id: number
 }
