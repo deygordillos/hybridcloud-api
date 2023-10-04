@@ -26,8 +26,8 @@ export const createSucursal = async (req: Request, res: Response): Promise<Respo
             sucursal_contact_name, sucursal_contact_phone, sucursal_contact_email, company_id } = req.body;
 
         // Obtengo el usuario en token para comprobar sea user admin
-        const decoded        = jwt.verify(accessToken,  process.env.JWT_ACCESS_TOKEN);
-        const user  = decoded.user;
+        const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN);
+        const user = decoded.user;
         if (user.is_admin === 0) return res.status(400).json({ message: 'No está autorizado para crear sucursales' });
         // Busco si existe la empresa
         const companyRepository = appDataSource.getRepository(Companies);
@@ -37,7 +37,7 @@ export const createSucursal = async (req: Request, res: Response): Promise<Respo
         // If company not exists
         if (!dataCompany) return res.status(404).json({ message: messages.Companies.company_not_exists });
 
-        
+
         // Creo la sucursal
         const sucursalRepository = appDataSource.getRepository(Sucursales);
         const sucursal = sucursalRepository.create({
@@ -70,38 +70,52 @@ export const createSucursal = async (req: Request, res: Response): Promise<Respo
 }
 
 /**
- * Update a group
+ * Update a sucursal
  * @param req Request object :id { group_name, group_status }
  * @param res Response object
  * @returns
  */
-// export const updateGroup = async (req: Request, res: Response): Promise<Response> => {
-//     try {
-//         const group_id = req.params.id; // get user id from URL param
-//         const { group_name, group_status } = req.body;
-//         console.log(typeof group_id)
-//         // If group not exists
-//         if (!group_id) return res.status(400).json({ message: messages.Groups.group_needed });
+export const updateSucursal = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const sucursal_id = req.params.id; // get user id from URL param
+        const { sucursal_name, sucursal_status, sucursal_color, sucursal_razon_social, sucursal_id_fiscal, sucursal_email,
+            sucursal_phone, sucursal_phone2, sucursal_website, sucursal_facebook, sucursal_instagram, sucursal_url_logo,
+            sucursal_contact_name, sucursal_contact_phone, sucursal_contact_email } = req.body;
+        // If sucursal not exists
+        if (!sucursal_id) return res.status(400).json({ message: messages.Sucursales.sucursal_not_exists });
 
-//         const groupRepository = appDataSource.getRepository(Groups);
+        const sucursalRepository = appDataSource.getRepository(Sucursales);
 
-//         const data = await groupRepository.findOneBy({
-//             group_id: parseInt(group_id)
-//         });
-//         // If group not exists
-//         if (!data) return res.status(404).json({ message: messages.Groups.group_not_exists });
+        const data = await sucursalRepository.findOneBy({
+            sucursal_id: parseInt(sucursal_id)
+        });
+        // If sucursal not exists
+        if (!data) return res.status(404).json({ message: messages.Sucursales.sucursal_not_exists });
 
-//         // Actualiza los campos del usuario
-//         data.group_name   = group_name || data.group_name;
-//         data.group_status = (group_status == 0 || group_status == 1 ? group_status : data.group_status);
-//         data.updated_at = new Date();
+        // Actualiza los campos del usuario
+        data.sucursal_name = sucursal_name || data.sucursal_name;
+        data.sucursal_status = (sucursal_status == 0 || sucursal_status == 1 ? sucursal_status : data.sucursal_status);
+        data.sucursal_color = sucursal_color || data.sucursal_color;
+        data.sucursal_razon_social = sucursal_razon_social || data.sucursal_razon_social;
+        data.sucursal_id_fiscal = sucursal_id_fiscal || data.sucursal_id_fiscal;
+        data.sucursal_email = sucursal_email || data.sucursal_email;
+        data.sucursal_phone = sucursal_phone || data.sucursal_phone;
+        data.sucursal_phone2 = sucursal_phone2 || data.sucursal_phone2;
+        data.sucursal_website = sucursal_website || data.sucursal_website;
+        data.sucursal_facebook = sucursal_facebook || data.sucursal_facebook;
+        data.sucursal_instagram = sucursal_instagram || data.sucursal_instagram;
+        data.sucursal_url_logo = sucursal_url_logo || data.sucursal_url_logo;
+        data.sucursal_contact_name = sucursal_contact_name || data.sucursal_contact_name;
+        data.sucursal_contact_phone = sucursal_contact_phone || data.sucursal_contact_phone;
+        data.sucursal_contact_email = sucursal_contact_email || data.sucursal_contact_email;
+        data.updated_at = new Date();
 
-//         // Guarda los cambios en la base de datos
-//         await groupRepository.save(data);
+        // Guarda los cambios en la base de datos
+        await sucursalRepository.save(data);
 
-//         res.status(200).json({ message: messages.Groups.group_updated, data: data });
-//     } catch (e) {
-//         console.log('GroupController.updateGroup catch error: ', e);
-//         return res.status(500).json({ message: 'error', data: e.name });
-//     }
-// }
+        res.status(200).json({ message: messages.Sucursales.sucursal_updated, data: data });
+    } catch (e) {
+        console.log('SucursalController.updateSucursal catch error: ', e);
+        return res.status(500).json({ message: 'error', data: e.name });
+    }
+}

@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { body, query } from "express-validator";
+import { body } from "express-validator";
 import { validatorRequestMiddleware } from '../middlewares/validator_request';
 import { checkJwtMiddleware } from '../middlewares/check-jwt';
-import { createSucursal } from '../controllers/sucursales.controller';
+import { createSucursal, updateSucursal } from '../controllers/sucursales.controller';
 
 const router = Router();
 router.post('/',
@@ -18,11 +18,11 @@ router.post('/',
     checkJwtMiddleware,
     createSucursal);
 
-// router.put('/:id', [
-//         body('company_name').notEmpty().trim().withMessage("You must send a company name"),
-//     ],
-//     validatorRequestMiddleware,
-//     checkJwtMiddleware, 
-//     updateGroup);
+router.put('/:id', [
+        body('sucursal_name').notEmpty().trim().withMessage("You must send a sucursal name"),
+    ],
+    validatorRequestMiddleware,
+    checkJwtMiddleware, 
+    updateSucursal);
 
 export default router
