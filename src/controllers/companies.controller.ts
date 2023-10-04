@@ -79,38 +79,52 @@ export const createCompany = async (req: Request, res: Response): Promise<Respon
 }
 
 /**
- * Update a group
- * @param req Request object :id { group_name, group_status }
+ * Update a company
+ * @param req Request object :id { company_name, company_color, company_razon_social, company_id_fiscal, company_email,
+            company_phone, company_phone2, company_website, company_facebook, company_instagram, company_url_logo,
+            company_contact_name, company_contact_phone, company_contact_email }
  * @param res Response object
  * @returns
  */
-// export const updateGroup = async (req: Request, res: Response): Promise<Response> => {
-//     try {
-//         const group_id = req.params.id; // get user id from URL param
-//         const { group_name, group_status } = req.body;
-//         console.log(typeof group_id)
-//         // If group not exists
-//         if (!group_id) return res.status(400).json({ message: messages.Groups.group_needed });
+export const updateCompany = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const company_id = req.params.id; // get user id from URL param
+        const { company_name, company_status, company_color, company_razon_social, company_id_fiscal, company_email,
+            company_phone, company_phone2, company_website, company_facebook, company_instagram, company_url_logo,
+            company_contact_name, company_contact_phone, company_contact_email, country_id, group_id } = req.body;
+        // If sucursal not exists
+        if (!company_id) return res.status(400).json({ message: messages.Companies.company_not_exists });
 
-//         const groupRepository = appDataSource.getRepository(Groups);
+        const companyRepository = appDataSource.getRepository(Companies);
+        const data = await companyRepository.findOneBy({
+            company_id: parseInt(company_id)
+        });
+        // If company not exists
+        if (!data) return res.status(404).json({ message: messages.Companies.company_not_exists });
 
-//         const data = await groupRepository.findOneBy({
-//             group_id: parseInt(group_id)
-//         });
-//         // If group not exists
-//         if (!data) return res.status(404).json({ message: messages.Groups.group_not_exists });
+        // Actualiza los campos del usuario
+        data.company_name = company_name || data.company_name;
+        data.company_status = (company_status == 0 || company_status == 1 ? company_status : data.company_status);
+        data.company_color = company_color || data.company_color;
+        data.company_razon_social = company_razon_social || data.company_razon_social;
+        data.company_id_fiscal = company_id_fiscal || data.company_id_fiscal;
+        data.company_email = company_email || data.company_email;
+        data.company_phone = company_phone || data.company_phone;
+        data.company_phone2 = company_phone2 || data.company_phone2;
+        data.company_website = company_website || data.company_website;
+        data.company_facebook = company_facebook || data.company_facebook;
+        data.company_instagram = company_instagram || data.company_instagram;
+        data.company_url_logo = company_url_logo || data.company_url_logo;
+        data.company_contact_name = company_contact_name || data.company_contact_name;
+        data.company_contact_phone = company_contact_phone || data.company_contact_phone;
+        data.company_contact_email = company_contact_email || data.company_contact_email;
+        data.updated_at = new Date();
 
-//         // Actualiza los campos del usuario
-//         data.group_name   = group_name || data.group_name;
-//         data.group_status = (group_status == 0 || group_status == 1 ? group_status : data.group_status);
-//         data.updated_at = new Date();
-
-//         // Guarda los cambios en la base de datos
-//         await groupRepository.save(data);
-
-//         res.status(200).json({ message: messages.Groups.group_updated, data: data });
-//     } catch (e) {
-//         console.log('GroupController.updateGroup catch error: ', e);
-//         return res.status(500).json({ message: 'error', data: e.name });
-//     }
-// }
+        // Guarda los cambios en la base de datos
+        await companyRepository.save(data);
+        res.status(200).json({ message: messages.Companies.company_updated, data: data });
+    } catch (e) {
+        console.log('CompanyController.updateCompany catch error: ', e);
+        return res.status(500).json({ message: 'error', data: e.name });
+    }
+}

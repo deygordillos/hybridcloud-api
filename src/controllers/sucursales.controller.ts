@@ -71,7 +71,9 @@ export const createSucursal = async (req: Request, res: Response): Promise<Respo
 
 /**
  * Update a sucursal
- * @param req Request object :id { group_name, group_status }
+ * @param req Request object :id { sucursal_name, sucursal_status, sucursal_color, sucursal_razon_social, sucursal_id_fiscal, sucursal_email,
+            sucursal_phone, sucursal_phone2, sucursal_website, sucursal_facebook, sucursal_instagram, sucursal_url_logo,
+            sucursal_contact_name, sucursal_contact_phone, sucursal_contact_email }
  * @param res Response object
  * @returns
  */
