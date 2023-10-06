@@ -7,6 +7,7 @@ import { Groups } from "../entity/groups.entity";
 import { Companies } from "../entity/companies.entity";
 import messages from "../config/messages";
 import slugify from "slugify";
+import { DataSource } from "typeorm";
 
 /**
  * Create a company
@@ -72,11 +73,39 @@ export const createCompany = async (req: Request, res: Response): Promise<Respon
                 group_id
             });
             await companyRepository.save(company);
-
+            
             company.company_database = 'hybrid_company_' + company.company_id;
-
+            
             // Guarda los cambios en la base de datos
             await companyRepository.save(company);
+            /////////////////////////////////////////////////////
+            // Crear la base de datos asociada
+            /////////////////////////////////////////////////////
+            // Realizo creación de la base de datos
+            const rawData = await appDataSource.query(`CREATE DATABASE \`${company.company_database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;`)
+
+            const appDataSourceCompany = new DataSource({
+                type: "mysql",
+                host: process.env.DB_HOST || 'localhost',
+                port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306,
+                username: process.env.DB_USERNAME || '',
+                password: process.env.DB_PASSWORD || '',
+                database: company.company_database,
+                logging: false,
+                synchronize: false,
+                entities: ['dist/entity/**/*.js'],
+                migrations: ['src/migration/companies/*.js'],
+                subscribers: ['src/subscriber/**/*.ts']
+            })
+            appDataSourceCompany.initialize()
+            .then(() => {
+                // Realizo creación de la base de datos
+                appDataSourceCompany.runMigrations();
+            })
+            .catch((err) => {
+                console.error("Error during Data Source initialization company: ", company.company_database, err)
+            })
+            /////////////////////////////////////////////////////
 
             appDataSource.destroy();
             res.status(201).json({ message: messages.Companies.company_created, data: company });
@@ -106,7 +135,7 @@ export const updateCompany = async (req: Request, res: Response): Promise<Respon
         const { company_name, company_status, company_color, company_razon_social, company_id_fiscal, company_email,
             company_phone, company_phone2, company_website, company_facebook, company_instagram, company_url_logo,
             company_contact_name, company_contact_phone, company_contact_email, country_id, group_id } = req.body;
-        // If sucursal not exists
+        // If company not exists
         if (!company_id) return res.status(400).json({ message: messages.Companies.company_not_exists });
         appDataSource
         .initialize()
@@ -149,5 +178,61 @@ export const updateCompany = async (req: Request, res: Response): Promise<Respon
     } catch (e) {
         console.log('CompanyController.updateCompany catch error: ', e);
         return res.status(500).json({ message: 'error', data: e.name });
+    }
+}
+
+
+
+export const migrateDatabase = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const company_id = req.params.id; // get user id from URL param
+        // If company not exists
+        if (!company_id) return res.status(400).json({ message: messages.Companies.company_not_exists });
+        appDataSource
+        .initialize()
+        .then(async () => {
+            const companyRepository = appDataSource.getRepository(Companies);
+            const data = await companyRepository.findOneBy({
+                company_id: parseInt(company_id)
+            });
+            // If company not exists
+            if (!data) return res.status(404).json({ message: messages.Companies.company_not_exists });
+            const db = data.company_database;
+
+            const appDataSourceCompany = new DataSource({
+                type: "mysql",
+                name: "company_conection",
+                host: process.env.DB_HOST || 'localhost',
+                port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306,
+                username: process.env.DB_USERNAME || '',
+                password: process.env.DB_PASSWORD || '',
+                database: db,
+                logging: false,
+                synchronize: false,
+                entities: ['dist/entity/**/*.js'],
+                migrations: ['src/migration/companies/*.js'],
+                subscribers: ['src/subscriber/**/*.ts']
+            })
+            appDataSourceCompany.initialize()
+            .then(() => {
+                appDataSourceCompany.runMigrations();
+                console.log('Migración ok')
+                res.status(200).json({ message: `Migración en la base de datos ejecutada con éxito` });
+            })
+            .catch((err) => {
+                console.error("Error during Data Source initialization:", err)
+                return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+            })
+            appDataSource.destroy();
+        })
+        .catch((err) => {
+            console.error("Error during Data Source initialization:", err)
+            appDataSource.destroy();
+            return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+        })
+        
+    } catch (error) {
+        console.error('Error al ejecutar la migración:', error);
+        return res.status(500).json({ message: 'Error al ejecutar la migración' });
     }
 }

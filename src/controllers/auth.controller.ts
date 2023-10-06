@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { appDataSource } from "../app-data-source"
-import { DataSource, Equal } from "typeorm";
+import { Equal } from "typeorm";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import 'dotenv/config';
