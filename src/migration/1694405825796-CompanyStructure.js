@@ -110,7 +110,9 @@ module.exports = class CompanyStructure1694405825796 {
                     name: "company_database",
                     type: "varchar",
                     length: "100",
-                    comment: "base de datos de la empresa"
+                    comment: "base de datos de la empresa",
+                    default: null,
+                    isNullable: true
                 },
                 {
                     name: "company_url_logo",

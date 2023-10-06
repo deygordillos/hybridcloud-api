@@ -52,7 +52,7 @@ export class Companies {
     @Column({ length: 200, comment: "url instagram de la empresa", nullable: true })
     company_instagram: string
 
-    @Column({ length: 100, comment: "base de datos de la empresa" })
+    @Column({ length: 100, comment: "base de datos de la empresa", nullable: true, default: null })
     company_database: string
 
     @Column({ length: 200, comment: "url logo de la empresa", nullable: true })
