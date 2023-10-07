@@ -20,7 +20,8 @@ module.exports = class InitialUsers1692245023178 {
                     name: "ip_address",
                     type: "varchar",
                     length: "20",
-                    comment: "ip login"
+                    comment: "ip login",
+                    isNullable: true
                 },
                 {
                     name: "user_type",
@@ -45,6 +46,13 @@ module.exports = class InitialUsers1692245023178 {
                     comment: "password to login"
                 },
                 {
+                    name: "user_status",
+                    type: "tinyint",
+                    default: 1,
+                    length: 1,
+                    comment: "1 activo, 0 inactivo"
+                },
+                {
                     name: "email",
                     type: "varchar",
                     length: "150",
@@ -63,13 +71,15 @@ module.exports = class InitialUsers1692245023178 {
                     name: "last_name",
                     type: "varchar",
                     length: "50",
-                    comment: "user lastname"
+                    comment: "user lastname",
+                    isNullable: true
                 },
                 {
                     name: "user_phone",
                     type: "varchar",
                     length: "20",
                     comment: "user phone number",
+                    isNullable: true
                 },
                 {
                     name: "created_at",
@@ -90,14 +100,16 @@ module.exports = class InitialUsers1692245023178 {
                 {
                     name: "access_token",
                     type: "varchar",
-                    length: "150",
+                    length: "700",
                     comment: "access token login",
+                    isNullable: true
                 },
                 {
                     name: "refresh_token",
                     type: "varchar",
-                    length: "150",
+                    length: "700",
                     comment: "refresh token login",
+                    isNullable: true
                 },
                 {
                     name: "is_admin",
@@ -114,6 +126,11 @@ module.exports = class InitialUsers1692245023178 {
         }))
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
+            name: 'user_status_username',
+            columnNames: ['user_status', 'username']
+        }))
+
+        await queryRunner.createIndex(this.table_name, new TableIndex({
             name: 'first_name',
             columnNames: ['first_name']
         }))
@@ -122,6 +139,7 @@ module.exports = class InitialUsers1692245023178 {
     async down(queryRunner) {
         await queryRunner.dropIndex(this.table_name, 'first_name');
         await queryRunner.dropIndex(this.table_name, 'user_type_username');
+        await queryRunner.dropIndex(this.table_name, 'user_status_username');
         await queryRunner.dropTable(this.table_name);
     }
 }

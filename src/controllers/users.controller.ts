@@ -15,20 +15,29 @@ import messages from "../config/messages";
 export const createUser = async (req: Request, res: Response): Promise<Response> => {
     try {
         const { username, password, user_type, email, first_name, last_name, user_phone } = req.body;
+        appDataSource
+        .initialize()
+        .then(async () => {
+            const userData = await appDataSource.manager.findOneBy(Users, {
+                username: username
+            });
+            // If username exists
+            if (userData) return res.status(400).json({ message: messages.User.user_exists });
 
-        const userData = await appDataSource.manager.findOneBy(Users, {
-            username: username
-        });
-        // If username exists
-        if (userData) return res.status(400).json({ message: messages.User.user_exists });
+            const hashedPassword = await bcrypt.hash(password, 10);
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+            const userRepository = appDataSource.getRepository(Users);
+            const user = userRepository.create({ username, password: hashedPassword, user_type, email, first_name, last_name, user_phone });
+            await userRepository.save(user);
+            appDataSource.destroy();
 
-        const userRepository = appDataSource.getRepository(Users);
-        const user = userRepository.create({ username, password: hashedPassword, user_type, email, first_name, last_name, user_phone });
-        await userRepository.save(user);
-
-        res.status(201).json({ message: messages.User.user_created, data: user });
+            res.status(201).json({ message: messages.User.user_created, data: user });
+        })
+        .catch((err) => {
+            console.error("Error during Data Source initialization:", err)
+            appDataSource.destroy();
+            return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+        })
     } catch (e) {
         console.log('UserController.createUser catch error: ', e);
         return res.status(500).json({ message: 'error', data: e.name });
@@ -48,27 +57,78 @@ export const updateUser = async (req: Request, res: Response): Promise<Response>
 
         if (!user_id) return res.status(400).json({ message: messages.User.user_needed });
 
-        const userRepository = appDataSource.getRepository(Users);
+        appDataSource
+        .initialize()
+        .then(async () => {
+            const userRepository = appDataSource.getRepository(Users);
 
-        const userData = await userRepository.findOneBy({
-            id: parseInt(user_id)
-        });
-        // If user not exists
-        if (!userData) return res.status(400).json({ message: messages.User.user_not_exists });
+            const userData = await userRepository.findOneBy({
+                id: parseInt(user_id)
+            });
+            // If user not exists
+            if (!userData) return res.status(400).json({ message: messages.User.user_not_exists });
 
-        // Actualiza los campos del usuario
-        userData.email      = email      || userData.email;
-        userData.first_name = first_name || userData.first_name;
-        userData.last_name  = last_name  || userData.last_name;
-        userData.user_phone = user_phone || userData.user_phone;
-        userData.updated_at = new Date();
-        
-        delete userData.password;
+            // Actualiza los campos del usuario
+            userData.email = email || userData.email;
+            userData.first_name = first_name || userData.first_name;
+            userData.last_name = last_name || userData.last_name;
+            userData.user_phone = user_phone || userData.user_phone;
+            userData.updated_at = new Date();
 
-        // Guarda los cambios en la base de datos
-        await userRepository.save(userData);
+            delete userData.password;
 
-        res.status(200).json({ message: messages.User.user_updated, data: userData });
+            // Guarda los cambios en la base de datos
+            await userRepository.save(userData);
+            appDataSource.destroy();
+            res.status(200).json({ message: messages.User.user_updated, data: userData });
+        })
+        .catch((err) => {
+            console.error("Error during Data Source initialization:", err)
+            appDataSource.destroy();
+            return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+        })
+    } catch (e) {
+        console.log('UserController.updateUser catch error: ', e);
+        return res.status(500).json({ message: 'error', data: e.name });
+    }
+}
+
+/**
+ * Cambiar el estatus de un usuario
+ * @param req Request object :id { user_status }
+ * @param res Response object
+ * @returns 
+ */
+export const changeStatusUser = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const user_id = req.params.id; // get user id from URL param
+        const { user_status } = req.body;
+        if (!user_id) return res.status(400).json({ message: messages.User.user_needed });
+        if (user_status != 0 && user_status != 1) return res.status(400).json({ message: 'Status not supported' });
+        appDataSource
+        .initialize()
+        .then(async () => {
+            const userRepository = appDataSource.getRepository(Users);
+            const userData = await userRepository.findOneBy({
+                id: parseInt(user_id)
+            });
+            // If user not exists
+            if (!userData) return res.status(400).json({ message: messages.User.user_not_exists });
+
+            // Actualiza los campos del usuario
+            userData.user_status = (user_status == 0 || user_status == 1 ? user_status : userData.user_status);
+            userData.updated_at = new Date();
+            // Guarda los cambios en la base de datos
+            await userRepository.save(userData);
+            appDataSource.destroy();
+
+            res.status(200).json({ message: messages.User.user_updated });
+        })
+        .catch((err) => {
+            console.error("Error during Data Source initialization:", err)
+            appDataSource.destroy();
+            return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+        })
     } catch (e) {
         console.log('UserController.updateUser catch error: ', e);
         return res.status(500).json({ message: 'error', data: e.name });
