@@ -30,7 +30,7 @@ export const createCompany = async (req: Request, res: Response): Promise<Respon
         // Obtengo el usuario en token para comprobar sea user admin
         const decoded        = jwt.verify(accessToken,  process.env.JWT_ACCESS_TOKEN);
         const user  = decoded.user;
-        if (user.is_admin === 0) return res.status(400).json({ message: 'No está autorizado para crear grupos' });
+        if (user.is_admin === 0) return res.status(400).json({ message: 'No está autorizado para crear empresas' });
         appDataSource
         .initialize()
         .then(async () => {
@@ -131,10 +131,18 @@ export const createCompany = async (req: Request, res: Response): Promise<Respon
  */
 export const updateCompany = async (req: Request, res: Response): Promise<Response> => {
     try {
+        const { authorization } = req.headers; // bearer randomhashjwt
+        const split = authorization.split(' ');
+        const accessToken = split[1] || '';
+
         const company_id = req.params.id; // get user id from URL param
         const { company_name, company_status, company_color, company_razon_social, company_id_fiscal, company_email,
             company_phone, company_phone2, company_website, company_facebook, company_instagram, company_url_logo,
-            company_contact_name, company_contact_phone, company_contact_email, country_id, group_id } = req.body;
+            company_contact_name, company_contact_phone, company_contact_email } = req.body;
+        // Obtengo el usuario en token para comprobar sea user admin
+        const decoded        = jwt.verify(accessToken,  process.env.JWT_ACCESS_TOKEN);
+        const user  = decoded.user;
+        if (user.is_admin === 0) return res.status(400).json({ message: 'No está autorizado para modificar empresas' });
         // If company not exists
         if (!company_id) return res.status(400).json({ message: messages.Companies.company_not_exists });
         appDataSource
