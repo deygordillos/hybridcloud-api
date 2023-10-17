@@ -11,16 +11,22 @@ import { Rel_Users_Sucursales } from "../entity/rel_users_sucursales.entity";
 
 /**
  * Create an user
- * @param req Request object { username, password, user_type, email, first_name, last_name, user_phone }
+ * @param req Request object { username, password, user_type, email, first_name, last_name, user_phone, sucursal_id }
  * @param res Response object
  * @returns 
  */
 export const createUser = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const { username, password, user_type, email, first_name, last_name, user_phone } = req.body;
+        const { username, password, user_type, email, first_name, last_name, user_phone, sucursal_id } = req.body;
         appDataSource
         .initialize()
         .then(async () => {
+            const sucursalData = await appDataSource.manager.findOneBy(Sucursales, {
+                sucursal_id: parseInt(sucursal_id)
+            });
+            // If sucursal not exists
+            if (!sucursalData) return res.status(400).json({ message: messages.Sucursales.sucursal_not_exists });
+
             const userData = await appDataSource.manager.findOneBy(Users, {
                 username: username
             });
@@ -29,17 +35,19 @@ export const createUser = async (req: Request, res: Response): Promise<Response>
 
             const hashedPassword = await bcrypt.hash(password, 10);
 
+            // Creo el user
             const userRepository = appDataSource.getRepository(Users);
-            const user = userRepository.create({ username, password: hashedPassword, user_type, email, first_name, last_name, user_phone });
+            const user = userRepository.create({ username, password: hashedPassword, user_type, email, first_name, last_name, user_phone, sucursal_id });
             await userRepository.save(user);
-            appDataSource.destroy();
 
             res.status(201).json({ message: messages.User.user_created, data: user });
         })
         .catch((err) => {
             console.error("Error during Data Source initialization:", err)
-            appDataSource.destroy();
             return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+        })
+        .finally(() => {
+            appDataSource.destroy();
         })
     } catch (e) {
         console.log('UserController.createUser catch error: ', e);
@@ -83,13 +91,14 @@ export const updateUser = async (req: Request, res: Response): Promise<Response>
 
             // Guarda los cambios en la base de datos
             await userRepository.save(userData);
-            appDataSource.destroy();
             res.status(200).json({ message: messages.User.user_updated, data: userData });
         })
         .catch((err) => {
             console.error("Error during Data Source initialization:", err)
-            appDataSource.destroy();
             return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+        })
+        .finally(() => {
+            appDataSource.destroy();
         })
     } catch (e) {
         console.log('UserController.updateUser catch error: ', e);
@@ -124,14 +133,14 @@ export const changeStatusUser = async (req: Request, res: Response): Promise<Res
             userData.updated_at = new Date();
             // Guarda los cambios en la base de datos
             await userRepository.save(userData);
-            appDataSource.destroy();
-
             res.status(200).json({ message: messages.User.user_updated });
         })
         .catch((err) => {
             console.error("Error during Data Source initialization:", err)
-            appDataSource.destroy();
             return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+        })
+        .finally(() => {
+            appDataSource.destroy();
         })
     } catch (e) {
         console.log('UserController.updateUser catch error: ', e);
@@ -175,19 +184,17 @@ export const assignSucursalesToUser = async (req: Request, res: Response): Promi
                 const relUserSucRepository = appDataSource.getRepository(Rel_Users_Sucursales);
             
                 try {
-                const promises = sucursalData.map((sucursal) => {
-                    const relUserSuc = new Rel_Users_Sucursales();
-                    relUserSuc.users = userData;
-                    relUserSuc.sucursales = sucursal;
-                    return relUserSucRepository.save(relUserSuc);
-                });
-            
-                await Promise.all(promises);
+                    const promises = sucursalData.map((sucursal) => {
+                        const relUserSuc = new Rel_Users_Sucursales();
+                        relUserSuc.users = userData;
+                        relUserSuc.sucursales = sucursal;
+                        return relUserSucRepository.save(relUserSuc);
+                    });
+                
+                    await Promise.all(promises);
                     console.log("Todas las inserciones exitosas");
                 } catch (error) {
                     console.error("Error al insertar: ", error.sqlMessage);
-                } finally {
-                    appDataSource.destroy();
                 }
             })();
 
@@ -195,8 +202,10 @@ export const assignSucursalesToUser = async (req: Request, res: Response): Promi
         })
         .catch((err) => {
             console.error("Error during Data Source initialization:", err)
-            appDataSource.destroy();
             return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+        })
+        .finally(() => {
+            appDataSource.destroy();
         })
     } catch (e) {
         console.log('UserController.assignSucursalesToUser catch error: ', e);

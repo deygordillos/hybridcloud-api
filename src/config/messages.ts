@@ -34,4 +34,11 @@ export default {
         sucursal_not_exists: 'Sorry, sucursal not exists',
         sucursal_needed: 'You must have send an sucursal id'
     },
+    Tax: {
+        tax_created: 'Tax created',
+        tax_updated: 'Tax updated',
+        tax_exists: 'Sorry, tax already exists',
+        tax_not_exists: 'Sorry, tax not exists',
+        tax_needed: 'You must have send an tax id'
+    },
 }

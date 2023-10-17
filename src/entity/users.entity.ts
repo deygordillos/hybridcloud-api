@@ -55,6 +55,9 @@ export class Users {
     @Column({ width: 1, default: 0, comment: "1 es user admin, 0 no es user admin" })
     is_admin: number
 
+    @Column({ type: 'int', comment: "id de la sucursal" })
+    sucursal_id: number
+
     /////////////////////////////////////////////////////////////
     // Relaciones
     /////////////////////////////////////////////////////////////
