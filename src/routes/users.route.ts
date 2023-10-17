@@ -9,9 +9,10 @@ router.post('/',
     [
         body('username').notEmpty().trim().withMessage("You must send a username"),
         body('password').notEmpty().trim().withMessage("You must send a password"),
-        body('user_type').notEmpty().trim().withMessage("You must send a user type (1 for user API, 2 for user web, 3 for user POS, 4 user app)"),
+        body('user_type').notEmpty().trim().isInt().isIn([1,2,3,4]).withMessage("You must send a user type (1 for user API, 2 for user web, 3 for user POS, 4 user app)"),
         body('email').notEmpty().trim().isEmail().withMessage("You must send a valid email"),
-        body('first_name').notEmpty().trim().withMessage("You must send your name"),
+        body('first_name').notEmpty().trim().withMessage("You must send your first name"),
+        body('sucursal_id').notEmpty().trim().withMessage("You must send a sucursal id"),
     ],
     validatorRequestMiddleware,
     createUser);
@@ -19,7 +20,7 @@ router.post('/',
 router.put('/:id', checkJwtMiddleware, updateUser);
 router.put('/change_status/:id', checkJwtMiddleware, 
     [
-        body('user_status').notEmpty().trim().withMessage("You must send a user_status (1 to activate user, 0 to inactive user)"),
+        body('user_status').notEmpty().trim().isInt().isIn([0,1]).withMessage("You must send a user_status (1 to activate user, 0 to inactive user)"),
     ],
     validatorRequestMiddleware,
     changeStatusUser);
