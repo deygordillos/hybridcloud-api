@@ -70,7 +70,6 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
             
             delete user.access_token;
             delete user.refresh_token;
-            appDataSource.destroy();
             res.json({
                 accessToken: accessToken,
                 refreshToken: refreshToken,
@@ -79,8 +78,10 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
         })
         .catch((err) => {
             console.error("Error during Data Source initialization:", err)
-            appDataSource.destroy();
             return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+        })
+        .finally(() => {
+            appDataSource.destroy();
         })
     } catch (e) {
         console.log('AuthController.login catch error: ', e);

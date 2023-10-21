@@ -107,49 +107,6 @@ export const updateUser = async (req: Request, res: Response): Promise<Response>
 }
 
 /**
- * Cambiar el estatus de un usuario
- * @param req Request object :id { user_status }
- * @param res Response object
- * @returns 
- */
-export const changeStatusUser = async (req: Request, res: Response): Promise<Response> => {
-    try {
-        const user_id = req.params.id; // get user id from URL param
-        const { user_status } = req.body;
-        if (!user_id) return res.status(400).json({ message: messages.User.user_needed });
-        if (user_status != 0 && user_status != 1) return res.status(400).json({ message: 'Status not supported' });
-        appDataSource
-        .initialize()
-        .then(async () => {
-            const userRepository = appDataSource.getRepository(Users);
-            const userData = await userRepository.findOneBy({
-                id: parseInt(user_id)
-            });
-            // If user not exists
-            if (!userData) return res.status(400).json({ message: messages.User.user_not_exists });
-
-            // Actualiza los campos del usuario
-            userData.user_status = (user_status == 0 || user_status == 1 ? user_status : userData.user_status);
-            userData.updated_at = new Date();
-            // Guarda los cambios en la base de datos
-            await userRepository.save(userData);
-            res.status(200).json({ message: messages.User.user_updated });
-        })
-        .catch((err) => {
-            console.error("Error during Data Source initialization:", err)
-            return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
-        })
-        .finally(() => {
-            appDataSource.destroy();
-        })
-    } catch (e) {
-        console.log('UserController.updateUser catch error: ', e);
-        return res.status(500).json({ message: 'error', data: e.name });
-    }
-}
-
-
-/**
  * Assign sucursal to an user
  * @param req Request object :id { sucursal_id: array | int }
  * @param res Response object
