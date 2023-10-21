@@ -2,9 +2,14 @@ import { Router } from 'express'
 import { body } from "express-validator";
 import { validatorRequestMiddleware } from '../middlewares/validator_request';
 import { checkJwtMiddleware } from '../middlewares/check-jwt';
-import { createTax, updateTax } from '../controllers/taxes.controller';
+import { findAllTaxes, createTax, updateTax } from '../controllers/taxes.controller';
 
 const router = Router();
+
+router.get('/',
+    checkJwtMiddleware,
+    findAllTaxes);
+
 router.post('/',
     [
         body('tax_code').notEmpty().trim().withMessage("You must send a tax_code name"),

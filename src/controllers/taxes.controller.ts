@@ -4,7 +4,57 @@ import 'dotenv/config';
 import jwt from "jsonwebtoken";
 import messages from "../config/messages";
 import { Taxes } from "../entity/taxes.entity";
-import { Companies } from "../entity/companies.entity";
+
+export const findAllTaxes = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        let tax_status = (req.query.hasOwnProperty("tax_status")) ? parseInt(req.query.tax_status.toString()) : 1;
+        let offset = (req.query.hasOwnProperty("offset")) ? parseInt(req.query.offset.toString()) : 0;
+        let limit = (req.query.hasOwnProperty("limit")) ? parseInt(req.query.limit.toString()) : 10;
+        if (limit > 1000) limit = 1000;
+
+        const { authorization } = req.headers; // bearer randomhashjwt
+        const split = authorization.split(' ');
+        const accessToken = split[1] || '';
+        if (!accessToken) return res.status(401).json({ message: 'Access Denied. No token provided.'});
+        const decoded  = jwt.verify(accessToken,  process.env.JWT_ACCESS_TOKEN);
+        const jwtdata  = decoded.user;
+
+        appDataSource
+        .initialize()
+        .then(async () => {
+            // Creo el impuesto
+            const taxesList = await appDataSource.createQueryBuilder(Taxes, "tax")
+            .select(["tax_id", "tax_code", "tax_description", "tax_siglas", "IF(tax_status = 1, 'Activo', 'Inactivo') as tax_status","IF(tax_type = 1, 'Execto', 'Afecto') as tax_type", "tax_percentage"])
+            .where({
+                company_id: jwtdata.company_id,
+                tax_status: tax_status
+            })
+            .offset(offset)
+            .limit(limit)
+            .getRawMany();
+
+            const total = await appDataSource.createQueryBuilder(Taxes, "tax")
+            .where({
+                company_id: jwtdata.company_id,
+                tax_status: tax_status
+            })
+            .getCount();
+
+            res.send({ code: 200, message: 'Taxes founded', recordsTotal: total, recordsFiltered: taxesList.length, data: taxesList });
+        })
+        .catch((err) => {
+            console.error("appDataSource. Error during Data Source initialization:", err.sqlMessage)
+            return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+        })
+        .finally(() => {
+            if (appDataSource.isInitialized) appDataSource.destroy();
+        });
+
+    } catch (e) {
+        console.log({ e });
+        return res.status(503).send({ message: 'error', data: e });
+    }
+}
 
 /**
  * Create a tax
