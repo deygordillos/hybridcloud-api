@@ -117,6 +117,11 @@ module.exports = class InitialUsers1692245023178 {
                     default: 0,
                     comment: "1 es user admin, 0 no es user admin"
                 },
+                {
+                    name: "sucursal_id",
+                    type: "int",
+                    comment: "id de la sucursal"
+                }
             ],
         }), true);
 

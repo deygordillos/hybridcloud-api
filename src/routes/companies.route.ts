@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { body } from "express-validator";
 import { validatorRequestMiddleware } from '../middlewares/validator_request';
 import { checkJwtMiddleware } from '../middlewares/check-jwt';
-import { createCompany, migrateDatabase, updateCompany } from '../controllers/companies.controller';
+import { createCompany, migrateDatabase, updateCompany, revertMigrateDatabase } from '../controllers/companies.controller';
 
 const router = Router();
 router.post('/',
@@ -29,5 +29,9 @@ router.put('/:id', [
 router.post('/migrate/:id',
     checkJwtMiddleware, 
     migrateDatabase);
+
+router.post('/migrate/:id/revert',
+    checkJwtMiddleware, 
+    revertMigrateDatabase);
 
 export default router

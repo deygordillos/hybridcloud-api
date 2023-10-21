@@ -1,5 +1,6 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToOne } from "typeorm"
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToOne, OneToMany } from "typeorm"
 import { Companies } from "./companies.entity";
+import { Rel_Users_Sucursales } from "./rel_users_sucursales.entity";
 
 @Index('sucursal_status_name', ['sucursal_status', 'sucursal_name'], {})
 @Index('company_id', ['company_id'], {})
@@ -67,4 +68,14 @@ export class Sucursales {
     @Column({ type: 'int', comment: "id de la empresa" })
     @JoinColumn()
     company_id: number
+
+    /////////////////////////////////////////////////////////////
+    // Relaciones
+    /////////////////////////////////////////////////////////////
+    @OneToMany(() => Rel_Users_Sucursales, (relusersuc) => relusersuc.sucursales, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    @JoinColumn({ referencedColumnName: 'sucursal_id' })
+    users_sucursales: Rel_Users_Sucursales[];
 }
