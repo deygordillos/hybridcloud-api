@@ -30,7 +30,7 @@ export const createCompany = async (req: Request, res: Response): Promise<Respon
         // Obtengo el usuario en token para comprobar sea user admin
         const decoded        = jwt.verify(accessToken,  process.env.JWT_ACCESS_TOKEN);
         const user  = decoded.user;
-        if (user.is_admin === 0) return res.status(400).json({ message: 'No está autorizado para crear grupos' });
+        if (user.is_admin === 0) return res.status(400).json({ message: 'No está autorizado para crear empresas' });
         appDataSource
         .initialize()
         .then(async () => {
@@ -131,10 +131,18 @@ export const createCompany = async (req: Request, res: Response): Promise<Respon
  */
 export const updateCompany = async (req: Request, res: Response): Promise<Response> => {
     try {
+        const { authorization } = req.headers; // bearer randomhashjwt
+        const split = authorization.split(' ');
+        const accessToken = split[1] || '';
+
         const company_id = req.params.id; // get user id from URL param
         const { company_name, company_status, company_color, company_razon_social, company_id_fiscal, company_email,
             company_phone, company_phone2, company_website, company_facebook, company_instagram, company_url_logo,
-            company_contact_name, company_contact_phone, company_contact_email, country_id, group_id } = req.body;
+            company_contact_name, company_contact_phone, company_contact_email } = req.body;
+        // Obtengo el usuario en token para comprobar sea user admin
+        const decoded        = jwt.verify(accessToken,  process.env.JWT_ACCESS_TOKEN);
+        const user  = decoded.user;
+        if (user.is_admin === 0) return res.status(400).json({ message: 'No está autorizado para modificar empresas' });
         // If company not exists
         if (!company_id) return res.status(400).json({ message: messages.Companies.company_not_exists });
         appDataSource
@@ -216,6 +224,60 @@ export const migrateDatabase = async (req: Request, res: Response): Promise<Resp
             appDataSourceCompany.initialize()
             .then(() => {
                 appDataSourceCompany.runMigrations();
+                console.log('Migración ok')
+                res.status(200).json({ message: `Migración en la base de datos ejecutada con éxito` });
+            })
+            .catch((err) => {
+                console.error("Error during Data Source initialization:", err)
+                return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+            })
+            appDataSource.destroy();
+        })
+        .catch((err) => {
+            console.error("Error during Data Source initialization:", err)
+            appDataSource.destroy();
+            return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+        })
+        
+    } catch (error) {
+        console.error('Error al ejecutar la migración:', error);
+        return res.status(500).json({ message: 'Error al ejecutar la migración' });
+    }
+}
+
+export const revertMigrateDatabase = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const company_id = req.params.id; // get user id from URL param
+        // If company not exists
+        if (!company_id) return res.status(400).json({ message: messages.Companies.company_not_exists });
+        appDataSource
+        .initialize()
+        .then(async () => {
+            const companyRepository = appDataSource.getRepository(Companies);
+            const data = await companyRepository.findOneBy({
+                company_id: parseInt(company_id)
+            });
+            // If company not exists
+            if (!data) return res.status(404).json({ message: messages.Companies.company_not_exists });
+            const db = data.company_database;
+
+            const appDataSourceCompany = new DataSource({
+                type: "mysql",
+                name: "company_conection",
+                host: process.env.DB_HOST || 'localhost',
+                port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306,
+                username: process.env.DB_USERNAME || '',
+                password: process.env.DB_PASSWORD || '',
+                database: db,
+                logging: false,
+                synchronize: false,
+                entities: ['dist/entity/**/*.js'],
+                migrations: ['src/migration/companies/*.js'],
+                subscribers: ['src/subscriber/**/*.ts']
+            })
+            appDataSourceCompany.initialize()
+            .then(() => {
+                appDataSourceCompany.undoLastMigration();
                 console.log('Migración ok')
                 res.status(200).json({ message: `Migración en la base de datos ejecutada con éxito` });
             })

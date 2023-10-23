@@ -1,4 +1,5 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, JoinColumn, OneToMany } from "typeorm"
+import { Rel_Users_Sucursales } from "./rel_users_sucursales.entity"
 
 @Index('user_type_username', ['user_type', 'username'], {})
 @Index('user_status_username', ['user_status', 'username'], {})
@@ -53,4 +54,17 @@ export class Users {
 
     @Column({ width: 1, default: 0, comment: "1 es user admin, 0 no es user admin" })
     is_admin: number
+
+    @Column({ type: 'int', comment: "id de la sucursal" })
+    sucursal_id: number
+
+    /////////////////////////////////////////////////////////////
+    // Relaciones
+    /////////////////////////////////////////////////////////////
+    @OneToMany(() => Rel_Users_Sucursales, (relusersuc) => relusersuc.users, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    @JoinColumn({ referencedColumnName: 'user_id' })
+    users_sucursales: Rel_Users_Sucursales[];
 }

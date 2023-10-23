@@ -6,6 +6,8 @@ import bcrypt from "bcrypt";
 import 'dotenv/config';
 import { Users } from "../entity/users.entity";
 import messages from "../config/messages";
+import { Sucursales } from "../entity/sucursales.entity";
+import { Companies } from "../entity/companies.entity";
 
 
 export const authLogin = async (req: Request, res: Response): Promise<Response> => {
@@ -29,6 +31,18 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
             // If not founded username
             if (!userData) return res.status(404).json({ message: messages.Auth.user_not_found });
             
+            if (userData.user_status !== 1) return res.status(404).json({ message: messages.Auth.user_not_found });
+
+            const sucursalRepository = appDataSource.getRepository(Sucursales);
+            const sucursalData = await sucursalRepository.findOneBy({
+                sucursal_id: userData.sucursal_id
+            });
+
+            const companyRepository = appDataSource.getRepository(Companies);
+            const companyData = await companyRepository.findOneBy({
+                company_id: sucursalData.company_id
+            });
+
             const passwordMatch = await bcrypt.compare(password, userData.password);
             if (!passwordMatch) {
                 return res.status(401).json({ error: messages.Auth.user_auth_incorrect });
@@ -41,8 +55,10 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
             userData.last_login = new Date();
             userData.ip_address = req.socket.remoteAddress ? req.socket.remoteAddress.toString().replace('::ffff:', '') : null;
             
-            const user = userData;
-            
+            let user : any = userData;
+            user.company_id = sucursalData.company_id;
+            user.database = companyData.company_database;
+
             // Generar el token JWT
             const accessToken  = jwt.sign({user},  process.env.JWT_ACCESS_TOKEN,  { expiresIn: process.env.JWT_EXPIRES_IN_ACCESS });
             const refreshToken = jwt.sign({user},  process.env.JWT_REFRESH_TOKEN, { expiresIn: process.env.JWT_EXPIRES_IN_REFRESH });
@@ -54,7 +70,6 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
             
             delete user.access_token;
             delete user.refresh_token;
-            appDataSource.destroy();
             res.json({
                 accessToken: accessToken,
                 refreshToken: refreshToken,
@@ -63,8 +78,10 @@ export const authLogin = async (req: Request, res: Response): Promise<Response> 
         })
         .catch((err) => {
             console.error("Error during Data Source initialization:", err)
-            appDataSource.destroy();
             return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+        })
+        .finally(() => {
+            appDataSource.destroy();
         })
     } catch (e) {
         console.log('AuthController.login catch error: ', e);
