@@ -1,4 +1,5 @@
 import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, JoinColumn, OneToMany } from "typeorm"
+import { Rel_Taxes_Sucursales } from "./rel_taxes_sucursales.entity"
 
 @Index('tax_company_status_code', ['company_id', 'tax_status', 'tax_code'], {})
 @Index('company_id_code', ['company_id', 'tax_code'], {})
@@ -39,4 +40,14 @@ export class Taxes {
 
     @Column({ type: 'int', comment: "id de la empresa" })
     company_id: number
+
+    /////////////////////////////////////////////////////////////
+    // Relaciones
+    /////////////////////////////////////////////////////////////
+    @OneToMany(() => Rel_Taxes_Sucursales, (rel_tax_suc) => rel_tax_suc.taxes, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    @JoinColumn({ referencedColumnName: 'tax_id' })
+    taxes_sucursales: Rel_Taxes_Sucursales[];
 }
