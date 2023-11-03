@@ -5,8 +5,8 @@ import jwt from "jsonwebtoken";
 import messages from "../config/messages";
 import { In } from "typeorm";
 import { Coins } from "../entity/coins.entity";
-import { Sucursales } from "../entity/sucursales.entity";
-import { Rel_Taxes_Sucursales } from "../entity/rel_taxes_sucursales.entity";
+import { Companies } from "../entity/companies.entity";
+import { Rel_Coins_Companies } from "../entity/rel_coins_companies.entity";
 
 export const findAllCoins = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -55,78 +55,77 @@ export const findAllCoins = async (req: Request, res: Response): Promise<Respons
 }
 
 /**
- * Assign tax to a sucursal
- * @param req Request object :id { sucursal_id: [] }
+ * Assign coin to company
+ * @param req Request object { coins: [{id: 1, factor: 100.0}] }
  * @param res Response object
  * @returns 
  */
-// export const assignTaxToSucursales = async (req: Request, res: Response): Promise<Response> => {
-//     try {
-//         const tax_id = req.params.id; // get user id from URL param
-//         const { sucursal_id } = req.body;
-//         if (!tax_id) return res.status(400).json({ message: messages.Tax.tax_needed });
+export const assignCoinsToCompanies = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const { coins } = req.body;
+        console.log({coins});
 
-//         const { authorization } = req.headers; // bearer randomhashjwt
-//         const split = authorization.split(' ');
-//         const accessToken = split[1] || '';
-//         if (!accessToken) return res.status(401).json({ message: 'Access Denied. No token provided.'});
+        const { authorization } = req.headers; // bearer randomhashjwt
+        const split = authorization.split(' ');
+        const accessToken = split[1] || '';
+        if (!accessToken) return res.status(401).json({ message: 'Access Denied. No token provided.'});
+        const decoded  = jwt.verify(accessToken,  process.env.JWT_ACCESS_TOKEN);
+        const jwtdata  = decoded.user;
 
-//         const decoded  = jwt.verify(accessToken,  process.env.JWT_ACCESS_TOKEN);
-//         const jwtdata  = decoded.user;
+        appDataSource
+        .initialize()
+        .then(async () => {
+            const idCoins = coins.map(coin => coin.id); // mapeo de id coins
+            // Obtengo la data de la empresa en sesión
+            const companyRepository = appDataSource.getRepository(Companies);
+            const companyData = await companyRepository.findOneBy({
+                company_id: parseInt(jwtdata.company_id)
+            });
+            // If company not exists
+            if (!companyData) return res.status(400).json({ message: messages.Companies.company_not_exists });
+            // Obtengo las monedas válidas en json body coins
+            const coinsRepository = appDataSource.getRepository(Coins);
+            const coinsData = await coinsRepository.find({
+                where: {
+                    coin_id: In(idCoins)
+                }
+            });
 
-//         appDataSource
-//         .initialize()
-//         .then(async () => {
-//             const taxesRepository = appDataSource.getRepository(Taxes);
-//             const taxData = await taxesRepository.findOneBy({
-//                 tax_id: parseInt(tax_id)
-//             });
-//             console.log(taxData)
-//             // If tax not exists
-//             if (!taxData) return res.status(404).json({ message: messages.User.user_not_exists });
-
-//             const sucursalRepository = appDataSource.getRepository(Sucursales);
-//             const sucursalData = await sucursalRepository.find({
-//                 where: {
-//                     sucursal_id: In(sucursal_id),
-//                     company_id: jwtdata.company_id
-//                 }
-//             });
-
-//             // If sucursales not exists
-//             if (!sucursalData || sucursalData.length == 0) return res.status(400).json({ message: messages.Sucursales.sucursal_not_exists });
-
-//             const relTaxesSucRepository = appDataSource.getRepository(Rel_Taxes_Sucursales);
-//             const queryRunner = appDataSource.createQueryRunner()
-//             try {
-//                 await queryRunner.startTransaction()
-//                 const promises = sucursalData.map(async (sucursal) => {
-//                     const relTaxSuc = new Rel_Taxes_Sucursales();
-//                     relTaxSuc.taxes = taxData;
-//                     relTaxSuc.sucursales = sucursal;
-//                     await relTaxesSucRepository.save(relTaxSuc);
-//                 });
-//                 await Promise.all(promises);
-//                 await queryRunner.commitTransaction(); // Confirmar la transacción
-//                 console.log("Todas las inserciones exitosas");
-//                 res.status(200).json({ message: messages.Tax.tax_updated });
-//             } catch (error) {
-//                 console.error("Error al insertar: ", error);
-//                 await queryRunner.rollbackTransaction(); // Revertir la transacción en caso de error
-//                 res.status(500).json({ message: 'Error al guardar los datos.' });
-//             } finally {
-//                 await queryRunner.release(); // Liberar la transacción y la conexión
-//             }
-//         })
-//         .catch((err) => {
-//             console.error("Error during Data Source initialization:", err)
-//             return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
-//         })
-//         .finally(() => {
-//             appDataSource.destroy();
-//         })
-//     } catch (e) {
-//         console.log('TaxController.assignTaxToSucursales catch error: ', e);
-//         return res.status(500).json({ message: 'error', data: e.name });
-//     }
-// }
+            const repositoryCoinsCompany = appDataSource.getRepository(Rel_Coins_Companies);
+            const queryRunner = appDataSource.createQueryRunner()
+            try {
+                await queryRunner.startTransaction()
+                const promises = coinsData.map(async (coinData) => {
+                    const { coin_id } = coinData; 
+                    const datafactor = coins.find(coin => coin.id == coin_id); // obtengo el factor ingresado por body
+                    
+                    const relCoinCompany = new Rel_Coins_Companies();
+                    relCoinCompany.coins = coinData;
+                    relCoinCompany.companies = companyData;
+                    relCoinCompany.coin_factor = parseFloat(datafactor.factor);
+                    await repositoryCoinsCompany.save(relCoinCompany);
+                });
+                await Promise.all(promises);
+                await queryRunner.commitTransaction(); // Confirmar la transacción
+                console.log("Todas las inserciones exitosas");
+                res.status(200).json({ message: messages.Coins.coins_assigned });
+            } catch (error) {
+                console.error("Error al insertar: ", error);
+                await queryRunner.rollbackTransaction(); // Revertir la transacción en caso de error
+                res.status(500).json({ message: 'Error al guardar los datos.' });
+            } finally {
+                await queryRunner.release(); // Liberar la transacción y la conexión
+            }
+        })
+        .catch((err) => {
+            console.error("Error during Data Source initialization:", err)
+            return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+        })
+        .finally(() => {
+            appDataSource.destroy();
+        })
+    } catch (e) {
+        console.log('TaxController.assignTaxToSucursales catch error: ', e);
+        return res.status(500).json({ message: 'error', data: e.name });
+    }
+}

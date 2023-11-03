@@ -45,7 +45,9 @@ module.exports = class Coins1698295352333 {
                     name: "coin_factor",
                     type: "decimal",
                     default: 1,
-                    comment: "factor de conversión"
+                    comment: "factor de conversión",
+                    precision: 10,
+                    scale: 6
                 },
                 {
                     name: "coin_iso3",

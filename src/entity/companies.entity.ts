@@ -1,4 +1,5 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn} from "typeorm"
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn} from "typeorm"
+import { Rel_Coins_Companies } from "./rel_coins_companies.entity";
 
 @Index('company_status_name', ['company_status', 'company_name'], {})
 @Index('group_id', ['group_id'], {})
@@ -72,4 +73,14 @@ export class Companies {
 
     @Column({ type: 'int', comment: "id del grupo empresarial" })
     group_id: number
+
+    /////////////////////////////////////////////////////////////
+    // Relaciones
+    /////////////////////////////////////////////////////////////
+    @OneToMany(() => Rel_Coins_Companies, (rel_coins_comp) => rel_coins_comp.companies, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    @JoinColumn({ referencedColumnName: 'company_id' })
+    coins_companies: Rel_Coins_Companies[];
 }
