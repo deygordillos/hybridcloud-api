@@ -27,7 +27,16 @@ export const findAllTaxes = async (req: Request, res: Response): Promise<Respons
         .then(async () => {
             // Creo el impuesto
             const taxesList = await appDataSource.createQueryBuilder(Taxes, "tax")
-            .select(["tax_id", "tax_code", "tax_description", "tax_siglas", "IF(tax_status = 1, 'Activo', 'Inactivo') as tax_status","IF(tax_type = 1, 'Execto', 'Afecto') as tax_type", "tax_percentage"])
+            .select([
+                "tax_id", 
+                "tax_code", 
+                "tax_description", 
+                "tax_siglas", 
+                "IF(tax_status = 1, 'Activo', 'Inactivo') as tax_status",
+                "IF(tax_type = 1, 'Execto', 'Afecto') as tax_type",
+                "IF(tax_affects_cost = 1, 'Afecta costo', 'No afecta costo') as tax_affects_cost", 
+                "tax_percentage"
+            ])
             .where({
                 company_id: jwtdata.company_id,
                 tax_status: tax_status
@@ -85,7 +94,7 @@ export const createTax = async (req: Request, res: Response): Promise<Response> 
                 tax_code
             });
             // If tax exists
-            if (taxDataExists) return res.status(400).json({ message: messages.Tax.tax_exists });
+            if (taxDataExists) return res.status(404).json({ message: messages.Tax.tax_exists });
 
             const taxRepository = appDataSource.getRepository(Taxes);
             const tax = taxRepository.create({ tax_code, tax_description, tax_siglas, tax_type, tax_percentage, tax_affects_cost, company_id: jwtdata.company_id, created_at: new Date() });
@@ -127,7 +136,7 @@ export const updateTax = async (req: Request, res: Response): Promise<Response> 
                 tax_id: parseInt(tax_id)
             });
             // If tax not exists
-            if (!data) return res.status(400).json({ message: messages.Tax.tax_not_exists });
+            if (!data) return res.status(404).json({ message: messages.Tax.tax_not_exists });
 
             // Actualiza los campos del usuario
             data.tax_description = tax_description || data.tax_description;
@@ -185,7 +194,7 @@ export const assignTaxToSucursales = async (req: Request, res: Response): Promis
             });
             console.log(taxData)
             // If tax not exists
-            if (!taxData) return res.status(400).json({ message: messages.User.user_not_exists });
+            if (!taxData) return res.status(404).json({ message: messages.User.user_not_exists });
 
             const sucursalRepository = appDataSource.getRepository(Sucursales);
             const sucursalData = await sucursalRepository.find({
