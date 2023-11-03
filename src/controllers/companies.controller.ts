@@ -144,7 +144,7 @@ export const updateCompany = async (req: Request, res: Response): Promise<Respon
         const user  = decoded.user;
         if (user.is_admin === 0) return res.status(400).json({ message: 'No está autorizado para modificar empresas' });
         // If company not exists
-        if (!company_id) return res.status(400).json({ message: messages.Companies.company_not_exists });
+        if (!company_id) return res.status(404).json({ message: messages.Companies.company_not_exists });
         appDataSource
         .initialize()
         .then(async () => {
