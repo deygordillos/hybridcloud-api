@@ -12,6 +12,6 @@ export const checkJwtMiddleware = (req: Request, res: Response, next: NextFuncti
         jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN);
         next();
     } catch (error) {
-        return res.status(400).json({ message: 'Invalid Token.'});
+        return res.status(401).json({ message: 'Invalid Token.'});
     }
 }
