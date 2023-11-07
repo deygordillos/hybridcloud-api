@@ -143,7 +143,7 @@ export const updateTax = async (req: Request, res: Response): Promise<Response> 
             data.tax_siglas = tax_siglas || data.tax_siglas;
             data.tax_type = tax_type || data.tax_type;
             data.tax_percentage = tax_percentage || data.tax_percentage;
-            data.tax_affects_cost = (tax_affects_cost == 1 || tax_affects_cost == 2 ? tax_affects_cost : data.tax_affects_cost);
+            data.tax_affects_cost = (tax_affects_cost == 1 || tax_affects_cost == 0 ? tax_affects_cost : data.tax_affects_cost);
             data.tax_status = (tax_status == 0 || tax_status == 1 ? tax_status : data.tax_status);
             data.updated_at = new Date();
             
