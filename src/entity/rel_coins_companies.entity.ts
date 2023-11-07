@@ -1,4 +1,4 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, JoinColumn, ManyToOne, ManyToMany } from "typeorm"
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, JoinColumn, ManyToOne, ManyToMany, OneToMany } from "typeorm"
 import { Coins } from "./coins.entity";
 import { Companies } from "./companies.entity";
 import { Rel_Coins_Companies_Sucursal } from "./rel_coins_companies_sucursal.entity";
@@ -41,7 +41,7 @@ export class Rel_Coins_Companies {
     @JoinColumn({ name: 'company_id' })
     companies: Companies
 
-    @ManyToOne(() => Rel_Coins_Companies_Sucursal, (rel_coins_comp) => rel_coins_comp.coins_companies, {
+    @OneToMany(() => Rel_Coins_Companies_Sucursal, (rel_coins_comp) => rel_coins_comp.coins_companies, {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     })

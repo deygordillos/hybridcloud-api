@@ -7,6 +7,8 @@ import { In } from "typeorm";
 import { Coins } from "../entity/coins.entity";
 import { Companies } from "../entity/companies.entity";
 import { Rel_Coins_Companies } from "../entity/rel_coins_companies.entity";
+import { Sucursales } from "../entity/sucursales.entity";
+import { Rel_Coins_Companies_Sucursal } from "../entity/rel_coins_companies_sucursal.entity";
 
 export const findAllCoins = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -126,6 +128,92 @@ export const assignCoinsToCompanies = async (req: Request, res: Response): Promi
         })
     } catch (e) {
         console.log('TaxController.assignTaxToSucursales catch error: ', e);
+        return res.status(500).json({ message: 'error', data: e.name });
+    }
+}
+
+/**
+ * Assign coin to sucursal
+ * @param req Request params { coin_id, company_id } --- body object { sucursal_id: [1,2,3] }
+ * @param res Response object
+ * @returns 
+ */
+export const assignCoinsToSucursales = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        const { coin_id, company_id } = req.params; // get coin & company_id by param
+        const { sucursal_id } = req.body;
+        console.log({sucursal_id});
+
+        appDataSource
+        .initialize()
+        .then(async () => {
+            // Obtengo la data de la empresa por parámetro
+            const companyRepository = appDataSource.getRepository(Companies);
+            const companyData = await companyRepository.findOneBy({
+                company_id: parseInt(company_id)
+            });
+            // If company not exists
+            if (!companyData) return res.status(400).json({ message: messages.Companies.company_not_exists });
+            // Obtengo las monedas válidas en json body coins
+            const coinsRepository = appDataSource.getRepository(Coins);
+            const coinsData = await coinsRepository.findOneBy({
+                coin_id: parseInt(coin_id)
+            });
+            if (!coinsData) return res.status(400).json({ message: messages.Coins.coin_not_exists });
+
+            const repositoryCoinsCompany = appDataSource.getRepository(Rel_Coins_Companies);
+            const coinCompanyData = await repositoryCoinsCompany.findOneBy({
+                coin_id: parseInt(coin_id),
+                company_id: parseInt(company_id)
+            });
+            if (!coinCompanyData) return res.status(404).json({ message: messages.Coins.coin_not_exists });
+
+            console.log("assignCoinsToSucursales.coinCompanyData:", coinCompanyData);
+
+            // Busco si las sucursales ingresadas son sucursales de la empresa
+            const sucursalRepository = appDataSource.getRepository(Sucursales);
+            const sucursalData = await sucursalRepository.find({
+                where: {
+                    company_id: parseInt(company_id),
+                    sucursal_id: In(sucursal_id)
+                }
+            });
+            // If sucursales not exists
+            if (!sucursalData || sucursalData.length == 0) return res.status(400).json({ message: messages.Sucursales.sucursal_not_exists });
+
+
+            const repositoryCoinsCompanySucursal = appDataSource.getRepository(Rel_Coins_Companies_Sucursal);
+            const queryRunner = appDataSource.createQueryRunner()
+            try {
+                await queryRunner.startTransaction()
+                const promises = sucursalData.map(async (sucData) => {
+                    const relCoinCompanySuc = new Rel_Coins_Companies_Sucursal();
+                    relCoinCompanySuc.sucursales = sucData;
+                    relCoinCompanySuc.coins_companies = coinCompanyData;
+                    relCoinCompanySuc.created_at = new Date();
+                    await repositoryCoinsCompanySucursal.save(relCoinCompanySuc);
+                });
+                await Promise.all(promises);
+                await queryRunner.commitTransaction(); // Confirmar la transacción
+                console.log("Todas las inserciones exitosas");
+                res.status(200).json({ message: messages.Coins.coins_assigned });
+            } catch (error) {
+                console.error("Error al insertar: ", error);
+                await queryRunner.rollbackTransaction(); // Revertir la transacción en caso de error
+                res.status(500).json({ message: 'Error al guardar los datos.' });
+            } finally {
+                await queryRunner.release(); // Liberar la transacción y la conexión
+            }
+        })
+        .catch((err) => {
+            console.error("Error during Data Source initialization:", err)
+            return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
+        })
+        .finally(() => {
+            appDataSource.destroy();
+        })
+    } catch (e) {
+        console.log('CoinsController.assignCoinsToSucursales catch error: ', e);
         return res.status(500).json({ message: 'error', data: e.name });
     }
 }

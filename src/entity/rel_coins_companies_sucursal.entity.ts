@@ -1,4 +1,4 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, JoinColumn, ManyToOne } from "typeorm"
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, JoinColumn, ManyToOne, JoinTable } from "typeorm"
 import { Rel_Coins_Companies } from "./rel_coins_companies.entity";
 import { Sucursales } from "./sucursales.entity";
 

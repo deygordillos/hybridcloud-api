@@ -42,6 +42,7 @@ export default {
         tax_needed: 'You must have send an tax id'
     },
     Coins: {
-        coins_assigned: 'Coins assigned!'
+        coins_assigned: 'Coins assigned!',
+        coin_not_exists: 'Sorry, coin not exists',
     },
 }
