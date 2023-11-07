@@ -1,6 +1,7 @@
 import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToOne, OneToMany } from "typeorm"
 import { Companies } from "./companies.entity";
 import { Rel_Users_Sucursales } from "./rel_users_sucursales.entity";
+import { Rel_Coins_Companies_Sucursal } from "./rel_coins_companies_sucursal.entity";
 
 @Index('sucursal_status_name', ['sucursal_status', 'sucursal_name'], {})
 @Index('company_id', ['company_id'], {})
@@ -78,4 +79,11 @@ export class Sucursales {
     })
     @JoinColumn({ referencedColumnName: 'sucursal_id' })
     users_sucursales: Rel_Users_Sucursales[];
+
+    @OneToMany(() => Rel_Coins_Companies_Sucursal, (relcoincomsuc) => relcoincomsuc.sucursales, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    @JoinColumn({ referencedColumnName: 'sucursal_id' })
+    coins_companies_sucursales: Rel_Coins_Companies_Sucursal[];
 }
