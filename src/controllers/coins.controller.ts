@@ -14,24 +14,26 @@ export const findAllCoins = async (req: Request, res: Response): Promise<Respons
     try {
         let offset = (req.query.hasOwnProperty("offset")) ? parseInt(req.query.offset.toString()) : 0;
         let limit = (req.query.hasOwnProperty("limit")) ? parseInt(req.query.limit.toString()) : 10;
+        let company_id = (req.query.hasOwnProperty("company_id")) ? parseInt(req.query.company_id.toString()) : 0;
         if (limit > 1000) limit = 1000;
 
         appDataSource
         .initialize()
         .then(async () => {
             const coinsList = await appDataSource.createQueryBuilder(Coins, "coin")
+            .leftJoinAndSelect(Rel_Coins_Companies, "rcc", "rcc.coin_id = coin.coin_id AND rcc.company_id = :company_id", {company_id})
             .select([
-                "coin_id", 
-                "coin_name", 
-                "coin_symbol", 
-                "coin_factor",
-                "coin_iso3"
+                "coin.coin_id", 
+                "coin.coin_name", 
+                "coin.coin_symbol", 
+                "coin.coin_factor",
+                "coin.coin_iso3",
+                "IF(rcc.id_coin_company IS NULL, 0, 1) AS coin_company_active"
             ])
-            .where({
-                coin_status: 1
-            })
+            .where("coin.coin_status = :coin_status", { coin_status: 1 })
             .offset(offset)
             .limit(limit)
+            .groupBy("coin.coin_id")
             .getRawMany();
 
             const total = await appDataSource.createQueryBuilder(Coins, "coin")
