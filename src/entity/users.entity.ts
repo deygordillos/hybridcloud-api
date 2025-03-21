@@ -1,14 +1,14 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, JoinColumn, OneToMany } from "typeorm"
-import { Rel_Users_Sucursales } from "./rel_users_sucursales.entity"
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
 
+@Index('username', ['username'], {})
 @Index('user_type_username', ['user_type', 'username'], {})
 @Index('user_status_username', ['user_status', 'username'], {})
-@Index('first_name', ['first_name'], {})
+@Index('name', ['first_name', 'last_name'], {})
 
 @Entity('Users')
 export class Users {
-    @PrimaryGeneratedColumn()
-    id: number
+    @PrimaryGeneratedColumn({ unsigned: true })
+    user_id: number
     
     @Column({ length: 20, comment: "ip login", nullable: true })
     ip_address: string
@@ -16,7 +16,7 @@ export class Users {
     @Column({ width: 1, default: 2, comment: "1 user api, 2 user web, 3 user pos, 4 user app" })
     user_type: number
 
-    @Column({ length: 50, unique: true, comment: "username to login" })
+    @Column({ length: 100, unique: true, comment: "username to login" })
     username: string
 
     @Column({ length: 150, comment: "password to login" })
@@ -40,10 +40,10 @@ export class Users {
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
-    @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn({ type: 'timestamp' })
     updated_at: Date;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @Column({ type: 'timestamp' })
     last_login: Date;
 
     @Column({ length: 700, comment: "access token login", nullable: true })
@@ -54,17 +54,4 @@ export class Users {
 
     @Column({ width: 1, default: 0, comment: "1 es user admin, 0 no es user admin" })
     is_admin: number
-
-    @Column({ type: 'int', comment: "id de la sucursal" })
-    sucursal_id: number
-
-    /////////////////////////////////////////////////////////////
-    // Relaciones
-    /////////////////////////////////////////////////////////////
-    @OneToMany(() => Rel_Users_Sucursales, (relusersuc) => relusersuc.users, {
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-    })
-    @JoinColumn({ referencedColumnName: 'user_id' })
-    users_sucursales: Rel_Users_Sucursales[];
 }
