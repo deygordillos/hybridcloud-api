@@ -23,12 +23,6 @@ export class Rel_Users_Sucursales {
     /////////////////////////////////////////////////////////////
     // Relaciones
     /////////////////////////////////////////////////////////////
-    @ManyToOne(() => Users, (users) => users.users_sucursales, {
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-    })
-    @JoinColumn({ name: 'user_id' })
-    users: Users
 
     @ManyToOne(() => Sucursales, (suc) => suc.users_sucursales, {
         onDelete: "CASCADE",

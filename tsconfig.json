@@ -1,13 +1,24 @@
 {
     "compilerOptions": {
-        "lib": ["es5", "es6", "dom"],
-        "target": "es5",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "outDir": "./dist",
-        "rootDir": "./src",
-        "esModuleInterop": true
-    }
-}
+       "lib": [
+          "ES5",
+          "ES6",
+          "ES7",
+          "DOM"
+       ],
+       "target": "es6",
+       "module": "commonjs",
+       "moduleResolution": "node",
+       "esModuleInterop": true,
+       "allowSyntheticDefaultImports": true,
+       "outDir": "./dist",
+       "rootDir": "./src",
+       "emitDecoratorMetadata": true,
+       "experimentalDecorators": true,
+       "sourceMap": true,
+       "resolveJsonModule": true,
+       "strictPropertyInitialization": false,
+       "skipLibCheck": true
+    },
+    "include": ["src/**/*"]
+  }
