@@ -10,7 +10,7 @@ router.get('/',
     checkJwtMiddleware,
     findAllCoins);
 
-router.put('/assign_to_company', checkJwtMiddleware,
+router.put('/assign_to_company/:company_id', checkJwtMiddleware,
     [
         check('coins').isArray().notEmpty().isLength({ min: 1 }).withMessage('El campo "coins" debe ser un array de números con al menos un elemento')
             .custom(coinsArray => {

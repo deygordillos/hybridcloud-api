@@ -23,11 +23,11 @@ export const findAllCoins = async (req: Request, res: Response): Promise<Respons
             const coinsList = await appDataSource.createQueryBuilder(Coins, "coin")
             .leftJoinAndSelect(Rel_Coins_Companies, "rcc", "rcc.coin_id = coin.coin_id AND rcc.company_id = :company_id", {company_id})
             .select([
-                "coin.coin_id", 
-                "coin.coin_name", 
-                "coin.coin_symbol", 
-                "coin.coin_factor",
-                "coin.coin_iso3",
+                "coin.coin_id as coin_id", 
+                "coin.coin_name as coin_name", 
+                "coin.coin_symbol as coin_symbol", 
+                "coin.coin_factor as coin_factor",
+                "coin.coin_iso3 as coin_iso3",
                 "IF(rcc.id_coin_company IS NULL, 0, 1) AS coin_company_active"
             ])
             .where("coin.coin_status = :coin_status", { coin_status: 1 })
@@ -66,16 +66,12 @@ export const findAllCoins = async (req: Request, res: Response): Promise<Respons
  */
 export const assignCoinsToCompanies = async (req: Request, res: Response): Promise<Response> => {
     try {
+        const { company_id } = req.params; // get coin & company_id by param
         const { coins } = req.body;
         console.log({coins});
-
-        const { authorization } = req.headers; // bearer randomhashjwt
-        const split = authorization.split(' ');
-        const accessToken = split[1] || '';
-        if (!accessToken) return res.status(401).json({ message: 'Access Denied. No token provided.'});
-        const decoded  = jwt.verify(accessToken,  process.env.JWT_ACCESS_TOKEN);
-        const jwtdata  = decoded.user;
-
+        // If company not exists
+        if (!company_id) return res.status(404).json({ message: messages.Companies.company_not_exists });
+        
         appDataSource
         .initialize()
         .then(async () => {
@@ -83,7 +79,7 @@ export const assignCoinsToCompanies = async (req: Request, res: Response): Promi
             // Obtengo la data de la empresa en sesión
             const companyRepository = appDataSource.getRepository(Companies);
             const companyData = await companyRepository.findOneBy({
-                company_id: parseInt(jwtdata.company_id)
+                company_id: parseInt(company_id)
             });
             // If company not exists
             if (!companyData) return res.status(400).json({ message: messages.Companies.company_not_exists });
