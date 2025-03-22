@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { body } from "express-validator";
-import { validatorRequestMiddleware } from '../middlewares/validator_request';
-import { checkJwtMiddleware } from '../middlewares/check-jwt';
-import { createSucursal, updateSucursal } from '../controllers/sucursales.controller';
+import { validatorRequestMiddleware } from '../../middlewares/validator_request';
+import { checkJwtMiddleware } from '../../middlewares/check-jwt';
+import { createSucursal, updateSucursal } from '../../controllers/sucursales.controller';
 
 const router = Router();
 router.post('/',
