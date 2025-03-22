@@ -30,7 +30,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
             return res.status(401).json({ error: "Credenciales inválidas" });
         }
 
-        req['user'] = { id: user.user_id, username: user.username };
+        req['user'] = { user_id: user.user_id, username: user.username };
         next();
     }
 };
