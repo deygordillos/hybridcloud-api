@@ -1,4 +1,5 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn } from "typeorm"
+import { Entity, Column, Index, PrimaryGeneratedColumn, OneToMany } from "typeorm"
+import { Companies } from "./companies.entity"
 
 @Index('country_status_name', ['country_status', 'country_name'], {})
 @Index('country_iso2', ['country_iso2'], {})
@@ -55,4 +56,11 @@ export class Countries {
 
     @Column({ length: 100, comment: "country mask_phone", nullable: true })
     mask_phone: string
+
+    // Relationships
+    @OneToMany(() => Companies, (companies) => companies.country_id, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    companies: Companies[];
 }

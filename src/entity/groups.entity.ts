@@ -1,5 +1,6 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from "typeorm"
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm"
 import { Users } from "./users.entity";
+import { Companies } from "./companies.entity";
 
 @Index('group_status_name', ['group_status', 'group_name'], {})
 @Index('group_name', ['group_name'], {})
@@ -28,4 +29,11 @@ export class Groups {
     })
     @JoinColumn({ name: 'user_id' })
     user_id: Users
+
+    // Relationships
+    @OneToMany(() => Companies, (companies) => companies.group_id, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    companies: Companies[];
 }

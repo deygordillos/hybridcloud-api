@@ -1,17 +1,28 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn} from "typeorm"
-import { Rel_Coins_Companies } from "./rel_coins_companies.entity";
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, JoinColumn, ManyToOne} from "typeorm"
+// import { Rel_Coins_Companies } from "./rel_coins_companies.entity";
+import { Groups } from "./groups.entity";
+import { Countries } from "./countries.entity";
 
 @Index('company_status_name', ['company_status', 'company_name'], {})
-@Index('group_id', ['group_id'], {})
-@Index('country_id', ['country_id'], {})
 @Index('company_slug', ['company_slug'], {})
+@Index('company_razon_social', ['company_razon_social'], {})
 
 @Entity('Companies')
 export class Companies {
-    @PrimaryGeneratedColumn({ type: 'int', comment: "id incremental de la empresa" })
+    @PrimaryGeneratedColumn({ type: 'int', unsigned: true, comment: "id incremental de la empresa" })
     company_id: number
 
-    @Column({ length: 50, comment: "nombre de la empresa" })
+    @ManyToOne(() => Groups, (groups) => groups.companies, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    @JoinColumn({ name: 'group_id' })
+    group_id: Groups
+    
+    @Column({ type: 'tinyint', width: 1, default: 0, comment: "1 es principal, 0 no es empresa principal del grupo" })
+    company_is_principal: number
+
+    @Column({ length: 50, unique: true, comment: "nombre de la empresa" })
     company_name: string
 
     @Column({ type: 'tinyint', width: 1, default: 1, comment: "1 activo, 0 inactivo" })
@@ -26,20 +37,23 @@ export class Companies {
     @Column({ length: 7, comment: "hexadecimal de la empresa", nullable: true })
     company_color: string
 
-    @Column({ length: 200, comment: "razon social de la empresa" })
+    @Column({ length: 200, comment: "razon social de la empresa", nullable: true })
     company_razon_social: string
 
-    @Column({ length: 30, comment: "slug de busqueda de la empresa", unique: true })
+    @Column({ length: 100, comment: "slug de busqueda de la empresa", nullable: true })
     company_slug: string
 
     @Column({ length: 30, comment: "rif de la empresa", unique: true })
     company_id_fiscal: string
 
-    @Column({ length: 100, comment: "correo de la empresa" })
+    @Column({ length: 100, comment: "correo de la empresa", nullable: true })
     company_email: string
 
-    @Column({ length: 20, comment: "telefono de la empresa" })
-    company_phone: string
+    @Column({ length: 100, comment: "dirección de la empresa", nullable: true })
+    company_address: string
+
+    @Column({ length: 20, comment: "telefono de la empresa", nullable: true })
+    company_phone1: string
 
     @Column({ length: 20, comment: "telefono 2 de la empresa", nullable: true })
     company_phone2: string
@@ -68,19 +82,27 @@ export class Companies {
     @Column({ length: 200, comment: "correo contacto de la empresa", nullable: true })
     company_contact_email: string
 
-    @Column({ type: 'int', comment: "id del pais donde esta la empresa" })
-    country_id: number
+    @Column({ comment: "fecha de inicio de la licencia" })
+    company_start: Date
 
-    @Column({ type: 'int', comment: "id del grupo empresarial" })
-    group_id: number
+    @Column({ comment: "fecha de fin de la licencia" })
+    company_end: Date
+
+    @ManyToOne(() => Countries, (country) => country.companies, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    @JoinColumn({ name: 'country_id' })
+    country_id: Countries
+
 
     /////////////////////////////////////////////////////////////
     // Relaciones
     /////////////////////////////////////////////////////////////
-    @OneToMany(() => Rel_Coins_Companies, (rel_coins_comp) => rel_coins_comp.companies, {
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-    })
-    @JoinColumn({ referencedColumnName: 'company_id' })
-    coins_companies: Rel_Coins_Companies[];
+    // @OneToMany(() => Rel_Coins_Companies, (rel_coins_comp) => rel_coins_comp.companies, {
+    //     onDelete: "CASCADE",
+    //     onUpdate: "CASCADE",
+    // })
+    // @JoinColumn({ referencedColumnName: 'company_id' })
+    // coins_companies: Rel_Coins_Companies[];
 }
