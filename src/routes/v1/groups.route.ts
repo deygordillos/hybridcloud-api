@@ -24,4 +24,12 @@ router.put('/:id',
     ],
     GroupController.update);
 
+router.patch('/:id', 
+    [
+        authMiddleware,
+        adminMiddleware,
+        body('group_name').notEmpty().trim().withMessage("You must send a group name"),
+        validatorRequestMiddleware,
+    ],
+    GroupController.update);
 export default router

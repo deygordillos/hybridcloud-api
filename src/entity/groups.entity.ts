@@ -22,7 +22,6 @@ export class Groups {
     @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     updated_at: Date;
 
-    @Column({ type: 'int', unsigned: true, comment: "id del usuario que creó el grupo" })
     @ManyToOne(() => Users, (users) => users.groups, {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
