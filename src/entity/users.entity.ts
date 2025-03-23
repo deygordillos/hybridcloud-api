@@ -1,5 +1,6 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm"
 import bcrypt from "bcryptjs";
+import { Groups } from "./groups.entity";
 
 @Index('username', ['username'], {})
 @Index('user_type_username', ['user_type', 'username'], {})
@@ -59,4 +60,11 @@ export class Users {
     async validarPassword(password: string): Promise<boolean> {
         return bcrypt.compare(password, this.password);
     }
+
+    // Relationships
+    @OneToMany(() => Groups, (groups) => groups.user_id, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    groups: Groups[];
 }

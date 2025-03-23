@@ -29,7 +29,7 @@ export const createGroup = async (req: Request, res: Response): Promise<Response
         .initialize()
         .then(async () => {
             const groupRepository = appDataSource.getRepository(Groups);
-            const group = groupRepository.create({ group_name, created_by: user.id, created_at: new Date(), updated_at: new Date() });
+            const group = groupRepository.create({ group_name, user_id: user.id, created_at: new Date(), updated_at: new Date() });
             await groupRepository.save(group);
             appDataSource.destroy();
             res.status(201).json({ message: messages.Groups.group_created, data: group });
