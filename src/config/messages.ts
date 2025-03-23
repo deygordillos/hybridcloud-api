@@ -17,7 +17,9 @@ export default {
         group_created: 'Group created',
         group_updated: 'Group updated',
         group_not_exists: 'Sorry, group not exists',
-        group_needed: 'You must have send an group id'
+        group_exists: 'Sorry, group exists',
+        group_needed: 'You must have send an group id',
+        group_creation_unauthorized: 'You do not have authorization to create groups'
     },
     Companies: {
         company_created: 'Company created',

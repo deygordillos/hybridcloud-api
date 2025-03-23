@@ -2,22 +2,26 @@ import { Router } from 'express'
 import { body } from "express-validator";
 import { validatorRequestMiddleware } from '../../middlewares/validator_request';
 import { authMiddleware } from '../../middlewares/AuthMiddleware';
-import { createGroup, updateGroup } from '../../controllers/groups.controller';
+import { GroupController } from '../../controllers/groups.controller';
+import { adminMiddleware } from '../../middlewares/adminMiddleware';
 
 const router = Router();
 router.post('/',
     [
+        authMiddleware,
+        adminMiddleware,
         body('group_name').notEmpty().trim().withMessage("You must send a group name"),
+        validatorRequestMiddleware
     ],
-    validatorRequestMiddleware,
-    authMiddleware,
-    createGroup);
+    GroupController.create);
 
-router.put('/:id', [
+router.put('/:id', 
+    [
+        authMiddleware,
+        adminMiddleware,
         body('group_name').notEmpty().trim().withMessage("You must send a group name"),
+        validatorRequestMiddleware,
     ],
-    validatorRequestMiddleware,
-    authMiddleware, 
-    updateGroup);
+    GroupController.update);
 
 export default router
