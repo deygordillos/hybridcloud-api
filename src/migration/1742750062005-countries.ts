@@ -151,21 +151,8 @@ export class Countries_1742750062005 implements MigrationInterface {
         }))
 
         await queryRunner.query(`INSERT INTO ${this.table_name} (\`country_iso2\`, \`country_iso3\`, \`prefix_cellphone\`, \`country_name\`, \`min_id_fiscal\`, \`nombre_id_fiscal\`, \`continent_name\`, \`subcontinent_name\`, \`country_iso_coin\`, \`country_iso_coin_name\`, \`country_coin_name\`, \`country_coin_symbol_name\`)  
-        VALUES (:iso2, :iso3, :prefix, :country_name, :min_id_fiscal, :nombre_id_fiscal, :continent_name, :subcontinent_name, :country_iso_coin, :country_iso_coin_name, :country_coin_name, :country_coin_symbol_name)`,
-        [{
-            iso2: 'VE',
-            iso3: 'VEN',
-            prefix: '58',
-            country_name: 'Venezuela',
-            min_id_fiscal: 'RIF',
-            nombre_id_fiscal: 'Registro de Información Fiscal',
-            continent_name: 'América',
-            subcontinent_name: 'América del Sur',
-            country_iso_coin: 'VES',
-            country_iso_coin_name: 'Bolívar Soberano',
-            country_coin_name: 'Bolívar',
-            country_coin_symbol_name: 'Bs.S'
-        }]);
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        ['VE', 'VEN', '58', 'Venezuela', 'RIF', 'Registro de Información Fiscal', 'América', 'América del Sur', 'VES', 'Bolívar Soberano', 'Bolívar', 'Bs.S']);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

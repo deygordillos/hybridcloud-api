@@ -129,14 +129,8 @@ export class Users_1742525063674 implements MigrationInterface {
         // Insert default admin user
         const hashedPassword = await bcrypt.hash("admin", config.BCRYPT_SALT);
         await queryRunner.query(`INSERT INTO ${this.table_name} (username, password, email, first_name, is_admin) 
-            VALUES (:username, :password, :email, :first_name, :is_admin);`, 
-            [{
-                username: 'admin',
-                password: hashedPassword,
-                email: 'admin@admin.com',
-                first_name: 'administrator',
-                is_admin: 1
-            }]
+            VALUES (?, ?, ?, ?, ?);`, 
+            ['admin', hashedPassword, 'admin@admin.com', 'administrator', 1]
         );
     }
 
