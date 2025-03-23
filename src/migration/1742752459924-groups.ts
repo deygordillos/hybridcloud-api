@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table, TableIndex } from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } from "typeorm";
 
 export class Groups_1742752459924 implements MigrationInterface {
 
@@ -15,6 +15,7 @@ export class Groups_1742752459924 implements MigrationInterface {
                         type: "int",
                         isPrimary: true,
                         isGenerated: true,
+                        unsigned: true,
                         generationStrategy: "increment",
                         comment: "id incremental del grupo"
                     },
@@ -63,14 +64,23 @@ export class Groups_1742752459924 implements MigrationInterface {
             columnNames: ['group_name']
         }))
 
-        await queryRunner.createIndex(this.table_name, new TableIndex({
-            name: 'user_id',
-            columnNames: ['user_id']
-        }))
+        await queryRunner.createForeignKey(
+            this.table_name,
+            new TableForeignKey({
+                columnNames: ["user_id"],
+                referencedColumnNames: ["user_id"],
+                referencedTableName: "Users",
+                onUpdate: "CASCADE",
+                onDelete: "CASCADE",
+            }),
+        )
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropIndex(this.table_name, 'user_id');
+        const table = await queryRunner.getTable(this.table_name);
+        const foreignKey = table.foreignKeys.find(fk => fk.columnNames.indexOf("user_id") !== -1);
+        await queryRunner.dropForeignKey(this.table_name, foreignKey);
+        
         await queryRunner.dropIndex(this.table_name, 'group_name');
         await queryRunner.dropIndex(this.table_name, 'group_status_name');
         await queryRunner.dropTable(this.table_name);

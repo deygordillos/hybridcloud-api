@@ -1,6 +1,4 @@
 import { Request, Response } from "express";
-import 'dotenv/config';
-
 import { GroupService } from "../services/GroupService";
 import messages from "../config/messages";
 
