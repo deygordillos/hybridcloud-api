@@ -1,4 +1,4 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import { Entity, Column, Index, PrimaryGeneratedColumn } from "typeorm"
 
 @Index('country_status_name', ['country_status', 'country_name'], {})
 @Index('country_iso2', ['country_iso2'], {})
@@ -8,7 +8,7 @@ import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, Update
 
 @Entity('Countries')
 export class Countries {
-    @PrimaryGeneratedColumn({ type: 'int', comment: "id incremental del pais" })
+    @PrimaryGeneratedColumn({ type: 'int', unsigned: true, comment: "id incremental del pais" })
     country_id: number
 
     @Column({ length: 3, comment: "iso2 del pais" })
