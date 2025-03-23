@@ -9,14 +9,14 @@ import coinsRoutes from './coins.route'
 
 const router = Router();
 
-router.use('/v1/', authRoutes);
-router.use('/v1/auth', authRoutes);
-router.use('/v1/users', usersRoutes);
-router.use('/v1/groups', groupsRoutes);
-router.use('/v1/companies', companiesRoutes);
-router.use('/v1/sucursales', sucursalesRoutes);
-router.use('/v1/taxes', taxesRoutes);
-router.use('/v1/coins', coinsRoutes);
+router.use('/api/v1/', authRoutes);
+router.use('/api/v1/auth', authRoutes);
+router.use('/api/v1/users', usersRoutes);
+router.use('/api/v1/groups', groupsRoutes);
+router.use('/api/v1/companies', companiesRoutes);
+router.use('/api/v1/sucursales', sucursalesRoutes);
+router.use('/api/v1/taxes', taxesRoutes);
+router.use('/api/v1/coins', coinsRoutes);
 
 
 export default router

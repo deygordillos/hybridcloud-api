@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { body, check } from "express-validator";
-import { validatorRequestMiddleware } from '../middlewares/validator_request';
-import { checkJwtMiddleware } from '../middlewares/check-jwt';
-import { findAllCoins, assignCoinsToCompanies, assignCoinsToSucursales } from '../controllers/coins.controller';
+import { validatorRequestMiddleware } from '../../middlewares/validator_request';
+import { checkJwtMiddleware } from '../../middlewares/check-jwt';
+import { findAllCoins, assignCoinsToCompanies, assignCoinsToSucursales } from '../../controllers/coins.controller';
 
 const router = Router();
 

@@ -1,20 +1,18 @@
 import { DataSource } from "typeorm"
-import 'dotenv/config';
-
-const isProduction = process.env.NODE_ENV === 'production';
+import config from "./config/config";
 
 export const appDataSource = new DataSource({
-    type: "mysql",
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306,
-    username: process.env.DB_USERNAME || '',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_DATABASE || '',
-    logging: process.env.DB_DEBUG === 'true' || false,
-    synchronize: process.env.DB_SYNC === 'true' || false,
-    entities: [isProduction ? 'dist/entity/**/*.js' : 'src/entity/**/*.ts'],
-    migrations: [isProduction ? 'dist/migration/**/*.js' : 'src/migration/**/*.ts'],
-    subscribers: [isProduction ? 'dist/subscriber/**/*.js' : 'src/subscriber/**/*.ts']
+    type: config.DB_DRIVER as any,
+    host: config.DB_HOST,
+    port: config.DB_PORT,
+    username: config.DB_USERNAME,
+    password: config.DB_PASSWORD,
+    database: config.DB_DATABASE,
+    logging: config.DB_DEBUG,
+    synchronize: config.DB_SYNC,
+    entities: [config.isProduction ? 'dist/entity/**/*.js' : 'src/entity/**/*.ts'],
+    migrations: [config.isProduction ? 'dist/migration/**/*.js' : 'src/migration/**/*.ts'],
+    subscribers: [config.isProduction ? 'dist/subscriber/**/*.js' : 'src/subscriber/**/*.ts']
 })
 
 export const appDataSourceCompany = (db = '') => { 

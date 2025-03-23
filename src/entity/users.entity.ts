@@ -1,4 +1,5 @@
 import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import bcrypt from "bcryptjs";
 
 @Index('username', ['username'], {})
 @Index('user_type_username', ['user_type', 'username'], {})
@@ -46,12 +47,16 @@ export class Users {
     @Column({ type: 'timestamp' })
     last_login: Date;
 
-    @Column({ length: 700, comment: "access token login", nullable: true })
+    @Column({ length: 700, comment: "access token login", nullable: true, select: false })
     access_token: string
 
-    @Column({ length: 700, comment: "refresh token login", nullable: true })
+    @Column({ length: 700, comment: "refresh token login", nullable: true, select: false })
     refresh_token: string
 
     @Column({ width: 1, default: 0, comment: "1 es user admin, 0 no es user admin" })
     is_admin: number
+
+    async validarPassword(password: string): Promise<boolean> {
+        return bcrypt.compare(password, this.password);
+    }
 }

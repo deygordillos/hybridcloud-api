@@ -37,7 +37,7 @@ export const createUser = async (req: Request, res: Response): Promise<Response>
 
             // Creo el user
             const userRepository = appDataSource.getRepository(Users);
-            const user = userRepository.create({ username, password: hashedPassword, user_type, email, first_name, last_name, user_phone, sucursal_id });
+            const user = userRepository.create({ username, password: hashedPassword, user_type, email, first_name, last_name, user_phone });
             await userRepository.save(user);
 
             res.status(201).json({ message: messages.User.user_created, data: user });
@@ -74,7 +74,7 @@ export const updateUser = async (req: Request, res: Response): Promise<Response>
             const userRepository = appDataSource.getRepository(Users);
 
             const userData = await userRepository.findOneBy({
-                id: parseInt(user_id)
+                user_id: parseInt(user_id)
             });
             // If user not exists
             if (!userData) return res.status(400).json({ message: messages.User.user_not_exists });
@@ -123,7 +123,7 @@ export const assignSucursalesToUser = async (req: Request, res: Response): Promi
         .then(async () => {
             const userRepository = appDataSource.getRepository(Users);
             const userData = await userRepository.findOneBy({
-                id: parseInt(user_id)
+                user_id: parseInt(user_id)
             });
             // If user not exists
             if (!userData) return res.status(400).json({ message: messages.User.user_not_exists });
@@ -137,23 +137,23 @@ export const assignSucursalesToUser = async (req: Request, res: Response): Promi
             // If sucursales not exists
             if (!sucursalData || sucursalData.length == 0) return res.status(400).json({ message: messages.Sucursales.sucursal_not_exists });
             
-            (async () => {
-                const relUserSucRepository = appDataSource.getRepository(Rel_Users_Sucursales);
+            // (async () => {
+            //     const relUserSucRepository = appDataSource.getRepository(Rel_Users_Sucursales);
             
-                try {
-                    const promises = sucursalData.map((sucursal) => {
-                        const relUserSuc = new Rel_Users_Sucursales();
-                        relUserSuc.users = userData;
-                        relUserSuc.sucursales = sucursal;
-                        return relUserSucRepository.save(relUserSuc);
-                    });
+            //     try {
+            //         const promises = sucursalData.map((sucursal) => {
+            //             const relUserSuc = new Rel_Users_Sucursales();
+            //             relUserSuc.users = userData;
+            //             relUserSuc.sucursales = sucursal;
+            //             return relUserSucRepository.save(relUserSuc);
+            //         });
                 
-                    await Promise.all(promises);
-                    console.log("Todas las inserciones exitosas");
-                } catch (error) {
-                    console.error("Error al insertar: ", error.sqlMessage);
-                }
-            })();
+            //         await Promise.all(promises);
+            //         console.log("Todas las inserciones exitosas");
+            //     } catch (error) {
+            //         console.error("Error al insertar: ", error.sqlMessage);
+            //     }
+            // })();
 
             res.status(200).json({ message: messages.User.user_updated });
         })

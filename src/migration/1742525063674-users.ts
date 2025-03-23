@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table, TableIndex } from "typeorm"
 import bcrypt from "bcryptjs"
-import 'dotenv/config';
+import config from "../config/config";
 
 export class Users_1742525063674 implements MigrationInterface {
 
@@ -126,8 +126,7 @@ export class Users_1742525063674 implements MigrationInterface {
         await queryRunner.createIndex("Users", new TableIndex({ name: "name", columnNames: ["first_name", "last_name"] }));
 
         // Insert default admin user
-        const saltRounds = parseInt(process.env.BCRYPT_SALT || "10", 10);
-        const hashedPassword = await bcrypt.hash("admin", saltRounds);
+        const hashedPassword = await bcrypt.hash("admin", config.BCRYPT_SALT);
         await queryRunner.query(`INSERT INTO users (username, password, email, first_name, is_admin) 
             VALUES ('admin', '${hashedPassword}', 'admin@admin.com', 'administrator', 1);`
         );

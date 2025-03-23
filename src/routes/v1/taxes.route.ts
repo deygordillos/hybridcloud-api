@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { body, check } from "express-validator";
-import { validatorRequestMiddleware } from '../middlewares/validator_request';
-import { checkJwtMiddleware } from '../middlewares/check-jwt';
-import { findAllTaxes, createTax, updateTax, assignTaxToSucursales } from '../controllers/taxes.controller';
+import { validatorRequestMiddleware } from '../../middlewares/validator_request';
+import { checkJwtMiddleware } from '../../middlewares/check-jwt';
+import { findAllTaxes, createTax, updateTax, assignTaxToSucursales } from '../../controllers/taxes.controller';
 
 const router = Router();
 
