@@ -151,7 +151,7 @@ export class Countries_1742750062005 implements MigrationInterface {
         }))
 
         await queryRunner.query(`INSERT INTO ${this.table_name} (\`country_iso2\`, \`country_iso3\`, \`prefix_cellphone\`, \`country_name\`, \`min_id_fiscal\`, \`nombre_id_fiscal\`, \`country_language\`, \`continent_name\`, \`subcontinent_name\`, \`country_iso_coin\`, \`country_iso_coin_name\`, \`country_coin_name\`, \`country_coin_symbol_name\`)  
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         ['VE', 'VEN', '58', 'Venezuela', 'RIF', 'Registro de Información Fiscal', 'Español', 'América', 'América del Sur', 'VES', 'Bolívar Soberano', 'Bolívar', 'Bs.S']);
     }
 
