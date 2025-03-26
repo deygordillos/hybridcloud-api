@@ -4,6 +4,7 @@ import { validatorRequestMiddleware } from '../../middlewares/validator_request'
 import { CompaniesController } from '../../controllers/companies.controller';
 import { adminMiddleware } from '../../middlewares/adminMiddleware';
 import { authMiddleware } from '../../middlewares/AuthMiddleware';
+import { AuthController } from '../../controllers/auth.controller';
 
 const router = Router();
 router.post('/',
@@ -60,6 +61,18 @@ router.patch('/:id',
         adminMiddleware,
     ],
     CompaniesController.update);
+
+router.post('/register_admin/:company_id',
+    [
+        authMiddleware,
+        adminMiddleware,
+        body('username').notEmpty().withMessage("You must send a username").trim(),
+        body('password').notEmpty().withMessage("You must send a password").trim(),
+        body('first_name').notEmpty().withMessage("You must send a first name").trim(),
+        body('email').notEmpty().withMessage("Email is required").trim().isEmail().withMessage("Invalid email format"),
+        validatorRequestMiddleware,
+    ],
+    AuthController.registerAdminCompany);
 // router.post('/migrate/:id',
 //     authMiddleware, 
 //     adminMiddleware,
