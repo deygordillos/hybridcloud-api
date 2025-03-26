@@ -3,12 +3,13 @@ import bcrypt from "bcryptjs"
 import config from "../config/config";
 
 export class Users_1742525063674 implements MigrationInterface {
+    table_name = 'Users';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         // Create tables
         await queryRunner.createTable(
             new Table({
-                name: "Users",
+                name: this.table_name,
                 columns: [
                     {
                         name: "user_id",
@@ -120,24 +121,25 @@ export class Users_1742525063674 implements MigrationInterface {
         );
 
         // Create indexes
-        await queryRunner.createIndex("Users", new TableIndex({ name: "username", columnNames: ["username"] }));
-        await queryRunner.createIndex("Users", new TableIndex({ name: "user_type_username", columnNames: ["user_type", "username"] }));
-        await queryRunner.createIndex("Users", new TableIndex({ name: "user_status_username", columnNames: ["user_status", "username"] }));
-        await queryRunner.createIndex("Users", new TableIndex({ name: "name", columnNames: ["first_name", "last_name"] }));
+        await queryRunner.createIndex(this.table_name, new TableIndex({ name: "username", columnNames: ["username"] }));
+        await queryRunner.createIndex(this.table_name, new TableIndex({ name: "user_type_username", columnNames: ["user_type", "username"] }));
+        await queryRunner.createIndex(this.table_name, new TableIndex({ name: "user_status_username", columnNames: ["user_status", "username"] }));
+        await queryRunner.createIndex(this.table_name, new TableIndex({ name: "name", columnNames: ["first_name", "last_name"] }));
 
         // Insert default admin user
         const hashedPassword = await bcrypt.hash("admin", config.BCRYPT_SALT);
-        await queryRunner.query(`INSERT INTO users (username, password, email, first_name, is_admin) 
-            VALUES ('admin', '${hashedPassword}', 'admin@admin.com', 'administrator', 1);`
+        await queryRunner.query(`INSERT INTO ${this.table_name} (username, password, email, first_name, is_admin) 
+            VALUES (?, ?, ?, ?, ?);`, 
+            ['admin', hashedPassword, 'admin@admin.com', 'administrator', 1]
         );
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropIndex("Users", "username");
-        await queryRunner.dropIndex("Users", "user_type_username");
-        await queryRunner.dropIndex("Users", "user_status_username");
-        await queryRunner.dropIndex("Users", "name");
-        await queryRunner.dropTable("Users");
+        await queryRunner.dropIndex(this.table_name, "username");
+        await queryRunner.dropIndex(this.table_name, "user_type_username");
+        await queryRunner.dropIndex(this.table_name, "user_status_username");
+        await queryRunner.dropIndex(this.table_name, "name");
+        await queryRunner.dropTable(this.table_name);
     }
 
 }

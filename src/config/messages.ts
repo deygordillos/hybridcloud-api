@@ -9,40 +9,43 @@ export default {
         user_created: 'User created',
         user_updated: 'User updated',
         user_exists: 'Sorry, user already exists',
-        user_not_exists: 'Sorry, user not exists',
+        user_not_exists: 'Sorry, user does not exists',
         user_complete_required_fields: 'Please, you have to send username, password, email and user_type at least',
         user_needed: 'You must have send an userid'
     },
     Groups: {
         group_created: 'Group created',
         group_updated: 'Group updated',
-        group_not_exists: 'Sorry, group not exists',
-        group_needed: 'You must have send an group id'
+        group_not_exists: 'Sorry, group does not exists',
+        group_exists: 'Sorry, group exists',
+        group_needed: 'You must have send an group id',
+        group_creation_unauthorized: 'You do not have authorization to create groups'
     },
     Companies: {
         company_created: 'Company created',
         company_updated: 'Company updated',
-        company_not_exists: 'Sorry, company not exists',
+        company_not_exists: 'Sorry, company does not exists',
+        company_exists: 'Sorry, company exists',
         company_needed: 'You must have send an company id'
     },
     Country: {
-        country_not_exists: 'Sorry, country not exists'
+        country_not_exists: 'Sorry, country does not exists'
     },
     Sucursales: {
         sucursal_created: 'Sucursal created',
         sucursal_updated: 'Sucursal updated',
-        sucursal_not_exists: 'Sorry, sucursal not exists',
+        sucursal_not_exists: 'Sorry, sucursal does not exists',
         sucursal_needed: 'You must have send an sucursal id'
     },
     Tax: {
         tax_created: 'Tax created',
         tax_updated: 'Tax updated',
         tax_exists: 'Sorry, tax already exists',
-        tax_not_exists: 'Sorry, tax not exists',
+        tax_not_exists: 'Sorry, tax does not exists',
         tax_needed: 'You must have send an tax id'
     },
     Coins: {
         coins_assigned: 'Coins assigned!',
-        coin_not_exists: 'Sorry, coin not exists',
+        coin_not_exists: 'Sorry, coin does not exists',
     },
 }

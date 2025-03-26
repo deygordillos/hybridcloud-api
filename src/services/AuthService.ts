@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { UserRepository } from "../repositories/UserRepository";
 import config from "../config/config";
-import { generarToken } from "../config/jwt";
+import { generateToken } from "../config/jwt";
 import messages from "../config/messages";
 
 export class AuthService {
@@ -19,7 +19,7 @@ export class AuthService {
         }
         if (user.user_status !== 1) throw new Error( messages.Auth.user_not_found);
 
-        const access_token = generarToken(user);
+        const access_token = generateToken(user);
         user.last_login = new Date();
         user.ip_address = ip_address;
         user.access_token = access_token;

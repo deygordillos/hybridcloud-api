@@ -1,37 +1,73 @@
 import { Router } from 'express'
 import { body } from "express-validator";
 import { validatorRequestMiddleware } from '../../middlewares/validator_request';
-import { checkJwtMiddleware } from '../../middlewares/check-jwt';
-import { createCompany, migrateDatabase, updateCompany, revertMigrateDatabase } from '../../controllers/companies.controller';
+import { CompaniesController } from '../../controllers/companies.controller';
+import { adminMiddleware } from '../../middlewares/adminMiddleware';
+import { authMiddleware } from '../../middlewares/AuthMiddleware';
 
 const router = Router();
 router.post('/',
     [
+        authMiddleware,
+        adminMiddleware,
+        body('group_id')
+            .isInt()
+            .custom((value) => {
+                if (typeof value !== 'number') {
+                    throw new Error("You must send a group_id as numeric");
+                }
+                return true;
+            }),
+        body('company_is_principal').notEmpty().trim().isBoolean().withMessage("You must send if is a principal company"),
         body('company_name').notEmpty().trim().withMessage("You must send a company name"),
         body('company_razon_social').notEmpty().trim().withMessage("You must send a business name"),
         body('company_id_fiscal').notEmpty().trim().withMessage("You must send a fiscal id"),
         body('company_email').notEmpty().trim().withMessage("You must send a company email"),
-        body('company_phone').notEmpty().trim().withMessage("You must send a company phone"),
-        body('country_id').notEmpty().trim().withMessage("You must send a country_id"),
-        body('group_id').notEmpty().trim().withMessage("You must send a group_id"),
+        body('company_phone1').notEmpty().trim().withMessage("You must send a company phone1"),
+        body('company_start').notEmpty().withMessage("You must send a licence start").trim()
+            .isISO8601().withMessage("Licence start must be a valid date in ISO8601 format")
+            .toDate(),
+        body('company_end').notEmpty().withMessage("You must send a licence end").trim()
+            .isISO8601().withMessage("Licence end must be a valid date in ISO8601 format")
+            .toDate().custom((value, { req }) => {
+            if (new Date(value) <= new Date(req.body.company_start)) {
+                throw new Error("Licence end must be after licence start");
+            }
+            return true;
+        }),
+        body('country_id')
+            .isInt()
+            .custom((value) => {
+                if (typeof value !== 'number') {
+                    throw new Error("You must send a country_id as numeric");
+                }
+                return true;
+            }),
+        validatorRequestMiddleware,
     ],
-    validatorRequestMiddleware,
-    checkJwtMiddleware,
-    createCompany);
+    CompaniesController.create);
 
-router.put('/:id', [
-        body('company_name').notEmpty().trim().withMessage("You must send a company name"),
+router.put('/:id', 
+    [
+        authMiddleware, 
+        adminMiddleware,
     ],
-    validatorRequestMiddleware,
-    checkJwtMiddleware, 
-    updateCompany);
+    CompaniesController.update);
 
-router.post('/migrate/:id',
-    checkJwtMiddleware, 
-    migrateDatabase);
+router.patch('/:id', 
+    [
+        authMiddleware,
+        adminMiddleware,
+    ],
+    CompaniesController.update);
+// router.post('/migrate/:id',
+//     authMiddleware, 
+//     adminMiddleware,
+//     migrateDatabase);
 
-router.post('/migrate/:id/revert',
-    checkJwtMiddleware, 
-    revertMigrateDatabase);
+// router.post('/migrate/:id/revert',
+//     authMiddleware, 
+//     adminMiddleware,
+//     revertMigrateDatabase);
 
 export default router

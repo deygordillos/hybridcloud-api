@@ -34,12 +34,12 @@ export class Rel_Coins_Companies {
     @JoinColumn({ name: 'coin_id' })
     coins: Coins
 
-    @ManyToOne(() => Companies, (companies) => companies.coins_companies, {
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-    })
-    @JoinColumn({ name: 'company_id' })
-    companies: Companies
+    // @ManyToOne(() => Companies, (companies) => companies.coins_companies, {
+    //     onDelete: "CASCADE",
+    //     onUpdate: "CASCADE",
+    // })
+    // @JoinColumn({ name: 'company_id' })
+    // companies: Companies
 
     @OneToMany(() => Rel_Coins_Companies_Sucursal, (rel_coins_comp) => rel_coins_comp.coins_companies, {
         onDelete: "CASCADE",

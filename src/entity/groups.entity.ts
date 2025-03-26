@@ -1,13 +1,17 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm"
+import { Users } from "./users.entity";
+import { Companies } from "./companies.entity";
 
 @Index('group_status_name', ['group_status', 'group_name'], {})
+@Index('group_name', ['group_name'], {})
+@Index('user_id', ['user_id'], {})
 
 @Entity('Groups')
 export class Groups {
-    @PrimaryGeneratedColumn({ type: 'int', comment: "id incremental del grupo" })
+    @PrimaryGeneratedColumn({ type: 'int', unsigned: true, comment: "id incremental del grupo" })
     group_id: number
 
-    @Column({ length: 50, comment: "nombre del grupo" })
+    @Column({ length: 50, unique: true, comment: "nombre del grupo" })
     group_name: string
 
     @Column({ type: 'tinyint', width: 1, default: 1, comment: "1 activo, 0 inactivo" })
@@ -19,6 +23,17 @@ export class Groups {
     @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     updated_at: Date;
 
-    @Column({ type: 'int', default: 0, comment: "id del usuario que creó el grupo" })
-    created_by: number
+    @ManyToOne(() => Users, (users) => users.groups, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    @JoinColumn({ name: 'user_id' })
+    user_id: Users
+
+    // Relationships
+    @OneToMany(() => Companies, (companies) => companies.group_id, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    companies: Companies[];
 }
