@@ -93,29 +93,29 @@ export const assignCoinsToCompanies = async (req: Request, res: Response): Promi
 
             const repositoryCoinsCompany = appDataSource.getRepository(Rel_Coins_Companies);
             const queryRunner = appDataSource.createQueryRunner()
-            try {
-                await queryRunner.startTransaction()
-                const promises = coinsData.map(async (coinData) => {
-                    const { coin_id } = coinData; 
-                    const datafactor = coins.find(coin => coin.id == coin_id); // obtengo el factor ingresado por body
+            // try {
+            //     await queryRunner.startTransaction()
+            //     const promises = coinsData.map(async (coinData) => {
+            //         const { coin_id } = coinData; 
+            //         const datafactor = coins.find(coin => coin.id == coin_id); // obtengo el factor ingresado por body
                     
-                    const relCoinCompany = new Rel_Coins_Companies();
-                    relCoinCompany.coins = coinData;
-                    relCoinCompany.companies = companyData;
-                    relCoinCompany.coin_factor = parseFloat(datafactor.factor);
-                    await repositoryCoinsCompany.save(relCoinCompany);
-                });
-                await Promise.all(promises);
-                await queryRunner.commitTransaction(); // Confirmar la transacción
-                console.log("Todas las inserciones exitosas");
-                res.status(200).json({ message: messages.Coins.coins_assigned });
-            } catch (error) {
-                console.error("Error al insertar: ", error);
-                await queryRunner.rollbackTransaction(); // Revertir la transacción en caso de error
-                res.status(500).json({ message: 'Error al guardar los datos.' });
-            } finally {
-                await queryRunner.release(); // Liberar la transacción y la conexión
-            }
+            //         const relCoinCompany = new Rel_Coins_Companies();
+            //         relCoinCompany.coins = coinData;
+            //         relCoinCompany.companies = companyData;
+            //         relCoinCompany.coin_factor = parseFloat(datafactor.factor);
+            //         await repositoryCoinsCompany.save(relCoinCompany);
+            //     });
+            //     await Promise.all(promises);
+            //     await queryRunner.commitTransaction(); // Confirmar la transacción
+            //     console.log("Todas las inserciones exitosas");
+            //     res.status(200).json({ message: messages.Coins.coins_assigned });
+            // } catch (error) {
+            //     console.error("Error al insertar: ", error);
+            //     await queryRunner.rollbackTransaction(); // Revertir la transacción en caso de error
+            //     res.status(500).json({ message: 'Error al guardar los datos.' });
+            // } finally {
+            //     await queryRunner.release(); // Liberar la transacción y la conexión
+            // }
         })
         .catch((err) => {
             console.error("Error during Data Source initialization:", err)

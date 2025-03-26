@@ -7,7 +7,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     const authHeader = req.headers.authorization;
 
     if (!authHeader?.startsWith("Bearer ") && !authHeader?.startsWith("Basic ")) {
-        return res.status(401).json({ error: "Token no proporcionado" });
+        return res.status(400).json({ error: "Token no proporcionado" });
     }
 
     if (authHeader?.startsWith("Bearer ")) {
@@ -16,7 +16,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
             req['user'] = verifyToken(token);
             next();
         } catch {
-            return res.status(403).json({ error: "Token inválido" });
+            return res.status(401).json({ error: "Token inválido" });
         }
     }
 
