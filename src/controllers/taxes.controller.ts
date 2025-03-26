@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import messages from "../config/messages";
 import { In } from "typeorm";
 import { Taxes } from "../entity/taxes.entity";
-import { Sucursales } from "../entity/sucursales.entity";
+// import { Sucursales } from "../entity/sucursales.entity";
 import { Rel_Taxes_Sucursales } from "../entity/rel_taxes_sucursales.entity";
 
 export const findAllTaxes = async (req: Request, res: Response): Promise<Response> => {
@@ -196,38 +196,38 @@ export const assignTaxToSucursales = async (req: Request, res: Response): Promis
             // If tax not exists
             if (!taxData) return res.status(404).json({ message: messages.User.user_not_exists });
 
-            const sucursalRepository = appDataSource.getRepository(Sucursales);
-            const sucursalData = await sucursalRepository.find({
-                where: {
-                    sucursal_id: In(sucursal_id),
-                    company_id: jwtdata.company_id
-                }
-            });
+            // const sucursalRepository = appDataSource.getRepository(Sucursales);
+            // const sucursalData = await sucursalRepository.find({
+            //     where: {
+            //         sucursal_id: In(sucursal_id),
+            //         company_id: jwtdata.company_id
+            //     }
+            // });
 
-            // If sucursales not exists
-            if (!sucursalData || sucursalData.length == 0) return res.status(400).json({ message: messages.Sucursales.sucursal_not_exists });
+            // // If sucursales not exists
+            // if (!sucursalData || sucursalData.length == 0) return res.status(400).json({ message: messages.Sucursales.sucursal_not_exists });
 
             const relTaxesSucRepository = appDataSource.getRepository(Rel_Taxes_Sucursales);
             const queryRunner = appDataSource.createQueryRunner()
-            try {
-                await queryRunner.startTransaction()
-                const promises = sucursalData.map(async (sucursal) => {
-                    const relTaxSuc = new Rel_Taxes_Sucursales();
-                    relTaxSuc.taxes = taxData;
-                    relTaxSuc.sucursales = sucursal;
-                    await relTaxesSucRepository.save(relTaxSuc);
-                });
-                await Promise.all(promises);
-                await queryRunner.commitTransaction(); // Confirmar la transacción
-                console.log("Todas las inserciones exitosas");
-                res.status(200).json({ message: messages.Tax.tax_updated });
-            } catch (error) {
-                console.error("Error al insertar: ", error);
-                await queryRunner.rollbackTransaction(); // Revertir la transacción en caso de error
-                res.status(500).json({ message: 'Error al guardar los datos.' });
-            } finally {
-                await queryRunner.release(); // Liberar la transacción y la conexión
-            }
+            // try {
+            //     await queryRunner.startTransaction()
+            //     const promises = sucursalData.map(async (sucursal) => {
+            //         const relTaxSuc = new Rel_Taxes_Sucursales();
+            //         relTaxSuc.taxes = taxData;
+            //         relTaxSuc.sucursales = sucursal;
+            //         await relTaxesSucRepository.save(relTaxSuc);
+            //     });
+            //     await Promise.all(promises);
+            //     await queryRunner.commitTransaction(); // Confirmar la transacción
+            //     console.log("Todas las inserciones exitosas");
+            //     res.status(200).json({ message: messages.Tax.tax_updated });
+            // } catch (error) {
+            //     console.error("Error al insertar: ", error);
+            //     await queryRunner.rollbackTransaction(); // Revertir la transacción en caso de error
+            //     res.status(500).json({ message: 'Error al guardar los datos.' });
+            // } finally {
+            //     await queryRunner.release(); // Liberar la transacción y la conexión
+            // }
         })
         .catch((err) => {
             console.error("Error during Data Source initialization:", err)
