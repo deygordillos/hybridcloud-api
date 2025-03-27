@@ -1,23 +1,32 @@
 import { Request, Response } from "express";
-import { appDataSource } from "../app-data-source"
-import { Equal } from "typeorm";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 import 'dotenv/config';
-import { Users } from "../entity/users.entity";
-import messages from "../config/messages";
-import { Sucursales } from "../entity/sucursales.entity";
-import { Companies } from "../entity/companies.entity";
 import { AuthService } from "../services/AuthService";
+import messages from "../config/messages";
+import { CompanyService } from "../services/CompanyService";
+import { UsersCompaniesService } from "../services/UsersCompaniesService";
 
 
 export class AuthController {
 
-    static async register(req: Request, res: Response) {
+    static async registerAdminCompany(req: Request, res: Response) {
         try {
-            const { username, password } = req.body;
-            const response = await AuthService.register(username, password);
-            res.json(response);
+            const company_id = parseInt(req.params.company_id, 10) || 0; // get user id from URL param
+            const { username, password, first_name, email } = req.body;
+
+            if (!company_id) return res.status(400).json({ message: messages.Companies.company_needed });
+            if (isNaN(company_id)) return res.status(400).json({ error: "Invalid companyId" });
+
+            if (!username || !password || !first_name || !email) {
+                return res.status(400).json({ error: "Username, password, first_name and email are required" });
+            }
+
+            const company = await CompanyService.getCompany(company_id);
+            if (!company) return res.status(404).json({ message: messages.Companies.company_not_exists });
+
+            const user = await AuthService.registerAdmin(username, password, first_name, email);
+
+            const response = await UsersCompaniesService.linkUserToCompany(user, company, 1);
+            res.json({ message: messages.User.user_created });
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
@@ -26,6 +35,9 @@ export class AuthController {
     static async login(req: Request, res: Response) {
         try {
             const { username, password } = req.body;
+            if (!username || !password) {
+                return res.status(400).json({ error: "Username and password are required" });
+            }
             const response = await AuthService.login(username, password, req.ip);
             res.json(response);
         } catch (error) {

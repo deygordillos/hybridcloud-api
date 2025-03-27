@@ -3,7 +3,6 @@ import authRoutes from './auth.route'
 import usersRoutes from './users.route'
 import groupsRoutes from './groups.route'
 import companiesRoutes from './companies.route'
-import sucursalesRoutes from './sucursales.route'
 import taxesRoutes from './taxes.route'
 import coinsRoutes from './coins.route'
 
@@ -14,7 +13,6 @@ router.use('/api/v1/auth', authRoutes);
 router.use('/api/v1/users', usersRoutes);
 router.use('/api/v1/groups', groupsRoutes);
 router.use('/api/v1/companies', companiesRoutes);
-router.use('/api/v1/sucursales', sucursalesRoutes);
 router.use('/api/v1/taxes', taxesRoutes);
 router.use('/api/v1/coins', coinsRoutes);
 

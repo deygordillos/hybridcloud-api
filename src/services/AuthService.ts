@@ -5,11 +5,14 @@ import { generateToken } from "../config/jwt";
 import messages from "../config/messages";
 
 export class AuthService {
-    static async register(username: string, password: string) {
+    static async registerAdmin(username: string, password: string, first_name: string, email: string) {
+        const userFind = await UserRepository.findOne({ where: { username } });
+        if (userFind) throw new Error(messages.User.user_exists);
+
         const hashedPassword = await bcrypt.hash(password, config.BCRYPT_SALT);
-        const user = UserRepository.create({ username, password: hashedPassword });
-        await UserRepository.save(user);
-        return { message: "Usuario registrado con éxito" };
+        const admin_user = UserRepository.create({ username, password: hashedPassword, first_name, email });
+        await UserRepository.save(admin_user);
+        return admin_user;
     }
 
     static async login(username: string, password: string, ip_address: string = null) {

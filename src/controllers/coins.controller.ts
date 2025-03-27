@@ -7,7 +7,7 @@ import { In } from "typeorm";
 import { Coins } from "../entity/coins.entity";
 import { Companies } from "../entity/companies.entity";
 import { Rel_Coins_Companies } from "../entity/rel_coins_companies.entity";
-import { Sucursales } from "../entity/sucursales.entity";
+// import { Sucursales } from "../entity/sucursales.entity";
 import { Rel_Coins_Companies_Sucursal } from "../entity/rel_coins_companies_sucursal.entity";
 
 export const findAllCoins = async (req: Request, res: Response): Promise<Response> => {
@@ -169,39 +169,39 @@ export const assignCoinsToSucursales = async (req: Request, res: Response): Prom
             console.log("assignCoinsToSucursales.coinCompanyData:", coinCompanyData);
 
             // Busco si las sucursales ingresadas son sucursales de la empresa
-            const sucursalRepository = appDataSource.getRepository(Sucursales);
-            const sucursalData = await sucursalRepository.find({
-                where: {
-                    company_id: parseInt(company_id),
-                    sucursal_id: In(sucursal_id)
-                }
-            });
-            // If sucursales not exists
-            if (!sucursalData || sucursalData.length == 0) return res.status(400).json({ message: messages.Sucursales.sucursal_not_exists });
+            // const sucursalRepository = appDataSource.getRepository(Sucursales);
+            // const sucursalData = await sucursalRepository.find({
+            //     where: {
+            //         company_id: parseInt(company_id),
+            //         sucursal_id: In(sucursal_id)
+            //     }
+            // });
+            // // If sucursales not exists
+            // if (!sucursalData || sucursalData.length == 0) return res.status(400).json({ message: messages.Sucursales.sucursal_not_exists });
 
 
             const repositoryCoinsCompanySucursal = appDataSource.getRepository(Rel_Coins_Companies_Sucursal);
             const queryRunner = appDataSource.createQueryRunner()
-            try {
-                await queryRunner.startTransaction()
-                const promises = sucursalData.map(async (sucData) => {
-                    const relCoinCompanySuc = new Rel_Coins_Companies_Sucursal();
-                    relCoinCompanySuc.sucursales = sucData;
-                    relCoinCompanySuc.coins_companies = coinCompanyData;
-                    relCoinCompanySuc.created_at = new Date();
-                    await repositoryCoinsCompanySucursal.save(relCoinCompanySuc);
-                });
-                await Promise.all(promises);
-                await queryRunner.commitTransaction(); // Confirmar la transacción
-                console.log("Todas las inserciones exitosas");
-                res.status(200).json({ message: messages.Coins.coins_assigned });
-            } catch (error) {
-                console.error("Error al insertar: ", error);
-                await queryRunner.rollbackTransaction(); // Revertir la transacción en caso de error
-                res.status(500).json({ message: 'Error al guardar los datos.' });
-            } finally {
-                await queryRunner.release(); // Liberar la transacción y la conexión
-            }
+            // try {
+            //     await queryRunner.startTransaction()
+            //     const promises = sucursalData.map(async (sucData) => {
+            //         const relCoinCompanySuc = new Rel_Coins_Companies_Sucursal();
+            //         relCoinCompanySuc.sucursales = sucData;
+            //         relCoinCompanySuc.coins_companies = coinCompanyData;
+            //         relCoinCompanySuc.created_at = new Date();
+            //         await repositoryCoinsCompanySucursal.save(relCoinCompanySuc);
+            //     });
+            //     await Promise.all(promises);
+            //     await queryRunner.commitTransaction(); // Confirmar la transacción
+            //     console.log("Todas las inserciones exitosas");
+            //     res.status(200).json({ message: messages.Coins.coins_assigned });
+            // } catch (error) {
+            //     console.error("Error al insertar: ", error);
+            //     await queryRunner.rollbackTransaction(); // Revertir la transacción en caso de error
+            //     res.status(500).json({ message: 'Error al guardar los datos.' });
+            // } finally {
+            //     await queryRunner.release(); // Liberar la transacción y la conexión
+            // }
         })
         .catch((err) => {
             console.error("Error during Data Source initialization:", err)

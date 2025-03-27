@@ -7,8 +7,8 @@ import { GroupRepository } from "../repositories/GroupRepository";
 
 export class CompanyService {
     static async create(
-        group_id: number, 
-        company_is_principal: number, 
+        group_id: number,
+        company_is_principal: number,
         company_name: string,
         company_color: string,
         company_razon_social: string,
@@ -40,11 +40,11 @@ export class CompanyService {
         const existingCompany = await CompanyRepository.findOneBy({ company_name });
         if (existingCompany) throw new Error(messages.Companies.company_exists || "Ups! Company already exists.");
 
-        const company = CompanyRepository.create({ 
+        const company = CompanyRepository.create({
             group_id: group,
             company_is_principal,
             company_name,
-            created_at: new Date(), 
+            created_at: new Date(),
             updated_at: new Date(),
             company_color,
             company_razon_social,
@@ -62,7 +62,7 @@ export class CompanyService {
             company_contact_phone,
             company_contact_email,
             company_start,
-            company_end, 
+            company_end,
             country_id: country
         });
         await CompanyRepository.save(company);
@@ -71,7 +71,7 @@ export class CompanyService {
 
     static async update(
         company_id: number,
-        company_is_principal: number, 
+        company_is_principal: number,
         company_name: string,
         company_color: string,
         company_razon_social: string,
@@ -115,5 +115,12 @@ export class CompanyService {
 
         await CompanyRepository.save(company);
         return { message: messages.Companies.company_updated };
+    }
+
+    static async getCompany(company_id: number) {
+        const company = await CompanyRepository.findOneBy({ company_id });
+        if (!company) throw new Error(messages.Companies.company_not_exists || "Ups! Company not exists.");
+
+        return company;
     }
 }

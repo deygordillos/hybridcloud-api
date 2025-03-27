@@ -1,6 +1,5 @@
 import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, JoinColumn, ManyToOne, JoinTable } from "typeorm"
 import { Rel_Coins_Companies } from "./rel_coins_companies.entity";
-import { Sucursales } from "./sucursales.entity";
 
 @Index('idx_id_coin_company', ['id_coin_company'], {})
 @Index('idx_id_sucursal', ['sucursal_id'], {})
@@ -29,10 +28,10 @@ export class Rel_Coins_Companies_Sucursal {
     @JoinColumn({ name: 'id_coin_company' })
     coins_companies: Rel_Coins_Companies;
 
-    @ManyToOne(() => Sucursales, (sucursal) => sucursal.coins_companies_sucursales, {
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-    })
-    @JoinColumn({ name: 'sucursal_id' })
-    sucursales: Sucursales;
+    // @ManyToOne(() => Sucursales, (sucursal) => sucursal.coins_companies_sucursales, {
+    //     onDelete: "CASCADE",
+    //     onUpdate: "CASCADE",
+    // })
+    // @JoinColumn({ name: 'sucursal_id' })
+    // sucursales: Sucursales;
 }

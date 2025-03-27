@@ -1,5 +1,5 @@
 import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, JoinColumn, ManyToOne } from "typeorm"
-import { Sucursales } from "./sucursales.entity"
+// import { Sucursales } from "./sucursales.entity"
 import { Taxes } from "./taxes.entity";
 
 @Index('idx_tax_id', ['tax_id'], {})
@@ -30,10 +30,10 @@ export class Rel_Taxes_Sucursales {
     @JoinColumn({ name: 'tax_id' })
     taxes: Taxes
 
-    @ManyToOne(() => Sucursales, (suc) => suc.users_sucursales, {
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
-    })
-    @JoinColumn({ name: 'sucursal_id' })
-    sucursales: Sucursales
+    // @ManyToOne(() => Sucursales, (suc) => suc.users_sucursales, {
+    //     onDelete: "CASCADE",
+    //     onUpdate: "CASCADE",
+    // })
+    // @JoinColumn({ name: 'sucursal_id' })
+    // sucursales: Sucursales
 }
