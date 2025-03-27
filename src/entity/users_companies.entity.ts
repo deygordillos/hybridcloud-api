@@ -1,4 +1,4 @@
-import { Entity, Index, PrimaryGeneratedColumn, CreateDateColumn, JoinColumn, ManyToOne } from "typeorm"
+import { Entity, Index, PrimaryGeneratedColumn, CreateDateColumn, JoinColumn, ManyToOne, Column } from "typeorm"
 import { Users } from "./users.entity";
 import { Companies } from "./companies.entity";
 
@@ -24,6 +24,9 @@ export class UsersCompanies {
     })
     @JoinColumn({ name: "company_id" })
     company_id: Companies;
+
+    @Column({ type: "tinyint", width: 1, default: 0, comment: "Si es o no user admin de la empresa" })
+    is_company_admin: number
 
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;

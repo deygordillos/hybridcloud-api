@@ -25,7 +25,7 @@ export class AuthController {
 
             const user = await AuthService.registerAdmin(username, password, first_name, email);
 
-            const response = await UsersCompaniesService.linkUserToCompany(user, company);
+            const response = await UsersCompaniesService.linkUserToCompany(user, company, 1);
             res.json({ message: messages.User.user_created });
         } catch (error) {
             res.status(500).json({ error: error.message });

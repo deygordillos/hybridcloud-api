@@ -4,10 +4,11 @@ import { Users } from "../entity/users.entity";
 import { UsersCompaniesRepository } from "../repositories/UsersCompanies";
 
 export class UsersCompaniesService {
-    static async linkUserToCompany(user_id: Users, company_id: Companies) {
+    static async linkUserToCompany(user_id: Users, company_id: Companies, is_company_admin: number = 0) {
         const newRelation = UsersCompaniesRepository.create({
             user_id,
             company_id,
+            is_company_admin,
             created_at: new Date(),
         });
 

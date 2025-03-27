@@ -31,6 +31,13 @@ export class UsersCompanies_1742965181453 implements MigrationInterface {
                         comment: "id de la empresa"
                     },
                     {
+                        name: "is_company_admin",
+                        type: "tinyint",
+                        default: 0,
+                        width: 1,
+                        comment: "Si es o no user admin de la empresa"
+                    },
+                    {
                         name: "created_at",
                         type: "datetime",
                         default: "CURRENT_TIMESTAMP",
