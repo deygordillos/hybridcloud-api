@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CustomersService } from "../services/CustomersService";
 import { CompanyService } from "../services/CompanyService";
+import messages from "../config/messages";
 
 export class CustomersController {
     /**
@@ -48,33 +49,15 @@ export class CustomersController {
             const company_id = req['company_id'] || false;
             if (!company_id) return res.status(400).json({ message: "Company ID is required" });
 
-            /*const { 
-                cust_code
-            } = req.body;
+            // Extraer datos del body y agregar company_id manualmente
+            const customerData = { ...req.body, company_id };
+            const customer = await CustomersService.create(customerData);
 
-            const response = await CompanyService.create(
-                parseInt(group_id), 
-                (company_is_principal == 0 || company_is_principal == 1 ? company_is_principal : 0),
-                company_name || '', 
-                company_color || null, 
-                company_razon_social || null, 
-                company_id_fiscal || null, 
-                company_email || null,
-                company_address || null,
-                company_phone1 || null,
-                company_phone2 || null,
-                company_website || null,
-                company_facebook || null,
-                company_instagram || null,
-                company_url_logo || null,
-                company_contact_name || null,
-                company_contact_phone || null,
-                company_contact_email || null,
-                company_start || Date(),
-                company_end || Date(),
-                parseInt(country_id)
-            );
-            res.json(response);*/
+            // Responder con el nuevo cliente creado
+            return res.status(201).json({
+                message: messages.Customers.customer_created,
+                customer
+            });
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

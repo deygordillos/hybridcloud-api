@@ -14,7 +14,7 @@ export class GroupController {
             const user = req['user'] || {};
             const { group_name } = req.body;
             const response = await GroupService.create(group_name, user);
-            res.json(response);
+            return res.status(201).json(response);
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

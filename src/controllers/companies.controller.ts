@@ -40,7 +40,7 @@ export class CompaniesController {
                 company_end || Date(),
                 parseInt(country_id)
             );
-            res.json(response);
+            return res.status(201).json(response);
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

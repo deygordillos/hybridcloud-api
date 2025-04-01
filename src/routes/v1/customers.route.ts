@@ -18,25 +18,21 @@ router.post('/',
     [
         authMiddleware,
         companyMiddleware,
-        // body('tax_code').notEmpty().trim().withMessage("You must send a tax_code name"),
-        // body('tax_description').notEmpty().trim().withMessage("You must send a tax_description"),
-        // body('tax_siglas').notEmpty().trim().withMessage("You must send a tax_siglas"),
-        // body('tax_type').notEmpty().trim().isInt().isIn([1,2]).withMessage("You must send if tax type. 1 no-affects 2 affects"),
-        // body('tax_percentage').notEmpty().trim().withMessage("tax_percentage"),
-        // body('tax_affects_cost').notEmpty().trim().isInt().isIn([0,1]).withMessage("You must send if tax affects cost. 1 yes 0 no"),
-        //validatorRequestMiddleware
+        body("cust_code").notEmpty().isString().withMessage("cust_code is required"),
+        body("cust_id_fiscal").notEmpty().isString().withMessage("cust_id_fiscal is required")
+            .isLength({ max: 30 }).withMessage("cust_id_fiscal must be a string (max 30 chars)"),
+        body("cust_description").notEmpty().isString().withMessage("cust_description is required")
+            .isLength({ max: 150 }).withMessage("cust_description must be a string (max 150 chars)"),
+        body("cust_email").optional().isEmail().withMessage("Invalid email format"),
+        body("cust_telephone1").optional().isString().isLength({ max: 20 }).withMessage("cust_telephone1 must be a string (max 20 chars)"),
+        validatorRequestMiddleware
     ],
     CustomersController.create);
 
 router.put('/:id', 
     [
         authMiddleware,
-        companyMiddleware,
-        // body('tax_description').notEmpty().trim().withMessage("You must send a tax_description"),
-        // body('tax_status').notEmpty().trim().isInt().isIn([0,1]).withMessage("You must send a tax status. 1 active 0 inactive"),
-        // body('tax_affects_cost').notEmpty().trim().isInt().isIn([0,1]).withMessage("You must send if tax affects cost. 1 yes 0 no"),
-        // body('tax_type').notEmpty().trim().isInt().isIn([1,2]).withMessage("You must send if tax type. 1 no-affects 2 affects"),
-        //validatorRequestMiddleware
+        companyMiddleware
     ],
     CustomersController.create);
 

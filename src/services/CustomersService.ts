@@ -1,11 +1,7 @@
-import slugify from "slugify";
 import messages from "../config/messages";
-// import { Users } from "../entity/users.entity";
 import { CompanyRepository } from "../repositories/CompanyRepository";
-import { CountryRepository } from "../repositories/CountryRepository";
-import { GroupRepository } from "../repositories/GroupRepository";
 import { CustomerRepository } from "../repositories/CustomerRepository";
-import { Companies } from "../entity/companies.entity";
+import { Customers } from "../entity/customers.entity";
 
 export class CustomersService {
     /**
@@ -27,67 +23,11 @@ export class CustomersService {
         return { customers, total };
     }
 
-    static async create(
-        group_id: number,
-        company_is_principal: number,
-        company_name: string,
-        company_color: string,
-        company_razon_social: string,
-        company_id_fiscal: string,
-        company_email: string,
-        company_address: string,
-        company_phone1: string,
-        company_phone2: string,
-        company_website: string,
-        company_facebook: string,
-        company_instagram: string,
-        company_url_logo: string,
-        company_contact_name: string,
-        company_contact_phone: string,
-        company_contact_email: string,
-        company_start: Date,
-        company_end: Date,
-        country_id: number
-    ) {
-        // Verify group by id
-        const group = await GroupRepository.findOneBy({ group_id });
-        if (!group) throw new Error(messages.Groups.group_not_exists || "Ups! Group not exists.");
+    static async create(customerData: Pick<Customers, "company_id" | "cust_code" | "cust_id_fiscal" | "cust_description" | "cust_email" | "cust_telephone1" | "cust_status">) {
+        const newCustomer = CustomerRepository.create(customerData);
+        await CustomerRepository.save(newCustomer);
 
-        // Verify country by id
-        const country = await CountryRepository.findOneBy({ country_id });
-        if (!country) throw new Error(messages.Country.country_not_exists || "Ups! Country not exists.");
-
-        // Verifiy if company exists by name
-        const existingCompany = await CompanyRepository.findOneBy({ company_name });
-        if (existingCompany) throw new Error(messages.Companies.company_exists || "Ups! Company already exists.");
-
-        const company = CompanyRepository.create({
-            group_id: group,
-            company_is_principal,
-            company_name,
-            created_at: new Date(),
-            updated_at: new Date(),
-            company_color,
-            company_razon_social,
-            company_slug: slugify(company_name).toLocaleLowerCase(),
-            company_id_fiscal,
-            company_email,
-            company_address,
-            company_phone1,
-            company_phone2,
-            company_website,
-            company_facebook,
-            company_instagram,
-            company_url_logo,
-            company_contact_name,
-            company_contact_phone,
-            company_contact_email,
-            company_start,
-            company_end,
-            country_id: country
-        });
-        await CompanyRepository.save(company);
-        return { message: messages.Companies.company_created };
+        return newCustomer;
     }
 
     static async update(

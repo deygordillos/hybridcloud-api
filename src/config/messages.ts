@@ -31,6 +31,13 @@ export default {
     Country: {
         country_not_exists: 'Sorry, country does not exists'
     },
+    Customers: {
+        customer_created: 'Customer created',
+        customer_updated: 'Customer updated',
+        customer_not_exists: 'Sorry, customer does not exists',
+        customer_exists: 'Sorry, customer exists',
+        customer_needed: 'You must have send an customer id'
+    },
     Sucursales: {
         sucursal_created: 'Sucursal created',
         sucursal_updated: 'Sucursal updated',
