@@ -7,9 +7,12 @@ import { CustomersController } from '../../controllers/customers.controller';
 
 const router = Router();
 
-// router.get('/',
-//     authMiddleware,
-//     findAllTaxes);
+router.get('/',
+    [
+        authMiddleware,
+        companyMiddleware
+    ],
+    CustomersController.getCustomersByCompany);
 
 router.post('/',
     [
