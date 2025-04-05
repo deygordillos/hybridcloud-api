@@ -7,7 +7,7 @@ import { GroupRepository } from "../repositories/GroupRepository";
 
 export class CompanyService {
     static async create(
-        company_id: number,
+        group_id: number,
         company_is_principal: number,
         company_name: string,
         company_color: string,
