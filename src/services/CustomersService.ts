@@ -46,13 +46,32 @@ export class CustomersService {
      */
     static async update(
         customer: Customers,
-        customerData: Pick<Customers, "cust_description" | "cust_status" | "cust_address" | "cust_address_complement" | 
-            "cust_address_city" | "cust_address_state" | "cust_email" | "cust_telephone1" | "cust_telephone2" | "cust_cellphone">
+        customerData: Pick<Customers, 
+            "cust_description" | 
+            "cust_status" | 
+            "cust_address" | 
+            "cust_address_complement" | 
+            "cust_address_city" | 
+            "cust_address_state" | 
+            "cust_email" | 
+            "cust_telephone1" | 
+            "cust_telephone2" | 
+            "cust_cellphone"
+        >
     ) {
-        customer.cust_status = (customerData.cust_status == 0 || customerData.cust_status == 1 ? customerData.cust_status : 1);
+        customer.cust_description = customerData.cust_description;
+        customer.cust_status = (customerData.cust_status === 0 || customerData.cust_status === 1) ? customerData.cust_status : 1;
+        customer.cust_address = customerData.cust_address;
+        customer.cust_address_complement = customerData.cust_address_complement;
+        customer.cust_address_city = customerData.cust_address_city;
+        customer.cust_address_state = customerData.cust_address_state;
+        customer.cust_email = customerData.cust_email;
+        customer.cust_telephone1 = customerData.cust_telephone1;
+        customer.cust_telephone2 = customerData.cust_telephone2;
+        customer.cust_cellphone = customerData.cust_cellphone;
         customer.updated_at = new Date();
 
-        await CustomerRepository.save(customerData);
+        await CustomerRepository.save(customer);
         return { message: messages.Customers.customer_updated };
     }
 
