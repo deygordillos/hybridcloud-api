@@ -14,7 +14,7 @@ export class CustomersService {
         const [customers, total] = await CustomerRepository
             .createQueryBuilder("customer")
             .where("customer.company_id = :company_id", { company_id })
-            .orderBy("customer.customer_id", "DESC")
+            .orderBy("customer.cust_id", "DESC")
             .offset(offset)
             .limit(limit)
             .getManyAndCount(); // Obtiene clientes + total de registros
