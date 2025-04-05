@@ -34,7 +34,7 @@ router.put('/:id',
         authMiddleware,
         companyMiddleware
     ],
-    CustomersController.create);
+    CustomersController.update);
 
 router.patch('/:id', 
     [
