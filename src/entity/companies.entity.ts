@@ -2,6 +2,7 @@ import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, Update
 // import { Rel_Coins_Companies } from "./rel_coins_companies.entity";
 import { Groups } from "./groups.entity";
 import { Countries } from "./countries.entity";
+import { Customers } from "./customers.entity";
 
 @Index('company_status_name', ['company_status', 'company_name'], {})
 @Index('company_slug', ['company_slug'], {})
@@ -99,10 +100,9 @@ export class Companies {
     /////////////////////////////////////////////////////////////
     // Relaciones
     /////////////////////////////////////////////////////////////
-    // @OneToMany(() => Rel_Coins_Companies, (rel_coins_comp) => rel_coins_comp.companies, {
-    //     onDelete: "CASCADE",
-    //     onUpdate: "CASCADE",
-    // })
-    // @JoinColumn({ referencedColumnName: 'company_id' })
-    // coins_companies: Rel_Coins_Companies[];
+    @OneToMany(() => Customers, (cust) => cust.company_id, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
+    customers: Customers[];
 }
