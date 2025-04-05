@@ -49,6 +49,7 @@ export class CustomersService {
         customerData: Pick<Customers, 
             "cust_description" | 
             "cust_status" | 
+            "cust_exempt" |
             "cust_address" | 
             "cust_address_complement" | 
             "cust_address_city" | 
@@ -61,6 +62,7 @@ export class CustomersService {
     ) {
         customer.cust_description = customerData.cust_description;
         customer.cust_status = (customerData.cust_status === 0 || customerData.cust_status === 1) ? customerData.cust_status : 1;
+        customer.cust_exempt = (customerData.cust_exempt === 0 || customerData.cust_exempt === 1) ? customerData.cust_exempt : 1;
         customer.cust_address = customerData.cust_address;
         customer.cust_address_complement = customerData.cust_address_complement;
         customer.cust_address_city = customerData.cust_address_city;
