@@ -36,4 +36,10 @@ router.put('/:id',
     ],
     CustomersController.create);
 
+router.patch('/:id', 
+    [
+        authMiddleware,
+        companyMiddleware
+    ],
+    CustomersController.update);
 export default router

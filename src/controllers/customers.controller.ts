@@ -62,4 +62,29 @@ export class CustomersController {
             res.status(500).json({ error: error.message });
         }
     }
+
+    /**
+     * Update a customer
+     * @param req Request object { }
+     * @param res Response object
+     * @returns 
+     */
+    static async update(req: Request, res: Response) {
+        try {
+            const customer_id = parseInt(req.params.id, 10) || 0; // get customer_id from URL param
+            if (!customer_id) return res.status(400).json({ message: messages.Customers.customer_needed });
+            if (isNaN(customer_id)) return res.status(400).json({ error: "Invalid customer_id" });
+
+            const customer = await CustomersService.findCustomerById(customer_id);
+            if (!customer) throw new Error(messages.Customers.customer_not_exists || "Ups! Customer not exists.");
+
+            const response = await CustomersService.update(
+                customer,
+                req.body
+            );
+            res.json(response);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 }
