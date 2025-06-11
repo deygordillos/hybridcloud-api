@@ -3,6 +3,18 @@ import { Users } from "../entity/users.entity";
 import { GroupRepository } from "../repositories/GroupRepository";
 
 export class GroupService {
+    static async findGroups(offset: number = 0, limit: number = 10) {
+        const total = await GroupRepository.count();
+        const groups = await GroupRepository.find({
+            skip: offset,
+            take: limit,
+            order: {
+                group_id: "DESC"
+            }
+        })
+        return { total: total, filtered: groups.length, data: groups }
+    }
+
     static async create(group_name: string, user: Users) {
         // Verificar si el grupo ya existe
         const existingGroup = await GroupRepository.findOneBy({ group_name });
