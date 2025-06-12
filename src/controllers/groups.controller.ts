@@ -4,6 +4,25 @@ import messages from "../config/messages";
 
 export class GroupController {
     /**
+     * List all groups
+     * @param req Request object { }
+     * @param res Response object
+     * @returns 
+     */
+    static async list(req: Request, res: Response) {
+        try {
+            const user = req['user'] || {};
+            const { offset, limit } = req.query;
+            const offsetNumber = parseInt(offset as string, 10) || 0; // Default to 0 if not provided
+            const limitNumber = parseInt(limit as string, 10) || 10; // Default to 10 if not provided
+            const response = await GroupService.findGroups(offsetNumber, limitNumber);
+            return res.status(201).json(response);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    /**
      * Create a company group
      * @param req Request object { group_name  }
      * @param res Response object

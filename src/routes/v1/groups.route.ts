@@ -6,6 +6,13 @@ import { GroupController } from '../../controllers/groups.controller';
 import { adminMiddleware } from '../../middlewares/adminMiddleware';
 
 const router = Router();
+router.get('/',
+    [
+        authMiddleware,
+        adminMiddleware
+    ],
+    GroupController.list);
+
 router.post('/',
     [
         authMiddleware,
