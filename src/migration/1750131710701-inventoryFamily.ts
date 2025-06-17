@@ -57,7 +57,8 @@ export class InventoryFamily_1750131710701 implements MigrationInterface {
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
             name: 'company_inventoryFamily',
-            columnNames: ['company_id', 'inv_family_code', 'inv_family_name']
+            isUnique: true,
+            columnNames: ['company_id', 'inv_family_code']
         }))
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
