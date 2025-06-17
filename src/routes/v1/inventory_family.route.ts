@@ -28,7 +28,7 @@ router.post('/',
 router.put('/:id', 
     [
         authMiddleware,
-        companyMiddleware
+        companyMiddleware,
     ],
     InventoryFamilyController.update);
 

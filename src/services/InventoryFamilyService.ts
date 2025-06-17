@@ -51,7 +51,7 @@ export class InventoryFamilyService {
      * @returns 
      */
     static async update(inv_family: InventoryFamily, data: Pick<InventoryFamily, "inv_family_name" | "inv_family_status">) {
-        inv_family.inv_family_name = data.inv_family_name;
+        inv_family.inv_family_name = data.inv_family_name.length > 0 ? data.inv_family_name : inv_family.inv_family_name;
         inv_family.inv_family_status = (data.inv_family_status === 0 || data.inv_family_status === 1) ? data.inv_family_status : 1;
         inv_family.updated_at = new Date();
 
