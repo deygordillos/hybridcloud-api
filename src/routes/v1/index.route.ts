@@ -7,6 +7,7 @@ import taxesRoutes from './taxes.route'
 import coinsRoutes from './coins.route'
 import customersRoute from './customers.route'
 import inventoryFamily from './inventory_family.route'
+import inventoryStorage from './inventory_storage.route'
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use('/api/v1/customers', customersRoute);
 router.use('/api/v1/taxes', taxesRoutes);
 router.use('/api/v1/coins', coinsRoutes);
 router.use('/api/v1/inventory/family', inventoryFamily);
+router.use('/api/v1/inventory/storage', inventoryStorage);
 
 export default router
