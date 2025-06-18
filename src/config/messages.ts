@@ -18,7 +18,7 @@ export default {
         group_updated: 'Group updated',
         group_not_exists: 'Sorry, group does not exists',
         group_exists: 'Sorry, group exists',
-        group_needed: 'You must have send an group id',
+        group_needed: 'You must have send a group id',
         group_creation_unauthorized: 'You do not have authorization to create groups'
     },
     Companies: {
@@ -26,7 +26,7 @@ export default {
         company_updated: 'Company updated',
         company_not_exists: 'Sorry, company does not exists',
         company_exists: 'Sorry, company exists',
-        company_needed: 'You must have send an company id'
+        company_needed: 'You must have send a company id'
     },
     Country: {
         country_not_exists: 'Sorry, country does not exists'
@@ -36,23 +36,30 @@ export default {
         customer_updated: 'Customer updated',
         customer_not_exists: 'Sorry, customer does not exists',
         customer_exists: 'Sorry, customer exists',
-        customer_needed: 'You must have send an customer id'
+        customer_needed: 'You must have send a customer id'
     },
     Sucursales: {
         sucursal_created: 'Sucursal created',
         sucursal_updated: 'Sucursal updated',
         sucursal_not_exists: 'Sorry, sucursal does not exists',
-        sucursal_needed: 'You must have send an sucursal id'
+        sucursal_needed: 'You must have send a sucursal id'
     },
     Tax: {
         tax_created: 'Tax created',
         tax_updated: 'Tax updated',
         tax_exists: 'Sorry, tax already exists',
         tax_not_exists: 'Sorry, tax does not exists',
-        tax_needed: 'You must have send an tax id'
+        tax_needed: 'You must have send a tax id'
     },
     Coins: {
         coins_assigned: 'Coins assigned!',
         coin_not_exists: 'Sorry, coin does not exists',
+    },
+    InventoryFamily: {
+        invFamily_created: 'Inventory family created',
+        invFamily_updated: 'Inventory family updated',
+        invFamily_not_exists: 'Sorry, Inventory family does not exists',
+        invFamily_exists: 'Sorry, Inventory family exists',
+        invFamily_needed: 'You must have send an inventory family id'
     },
 }
