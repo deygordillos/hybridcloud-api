@@ -1,45 +1,55 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, JoinColumn, OneToMany } from "typeorm"
-import { Rel_Taxes_Sucursales } from "./rel_taxes_sucursales.entity"
+import {
+    Entity,
+    Column,
+    Index,
+    PrimaryGeneratedColumn,
+    CreateDateColumn,
+    UpdateDateColumn,
+    ManyToOne,
+    JoinColumn,
+    OneToMany
+} from "typeorm";
+import { Companies } from "./companies.entity";
+import { Rel_Taxes_Sucursales } from "./rel_taxes_sucursales.entity";
 
-@Index('tax_company_status_code', ['company_id', 'tax_status', 'tax_code'], {})
-@Index('company_id_code', ['company_id', 'tax_code'], {})
-@Index('company_id', ['company_id'], {})
-@Index('tax_type', ['tax_type'], {})
-
+@Index('company_tax_code', ['company_id', 'tax_code'], { unique: true })
+@Index('tax_name_desc', ['tax_name', 'tax_description'])
+@Index('tax_status', ['tax_status'])
 @Entity('Taxes')
 export class Taxes {
-    @PrimaryGeneratedColumn()
-    tax_id: number
+    @PrimaryGeneratedColumn({ unsigned: true })
+    tax_id: number;
 
-    @Column({ length: 10, comment: "codigo del impuesto" })
-    tax_code: string
+    @Column({ type: "int", unsigned: true })
+    company_id: number;
 
-    @Column({ length: 80, comment: "descripcion del impuesto", nullable: true })
-    tax_description: string
+    @ManyToOne(() => Companies, { onDelete: "CASCADE", onUpdate: "CASCADE" })
+    @JoinColumn({ name: 'company_id' })
+    company: Companies;
 
-    @Column({ width: 1, default: 1, comment: "1 activo, 0 inactivo" })
-    tax_status: number
+    @Column({ type: "varchar", length: 20, comment: "tax code of the products" })
+    tax_code: string;
 
-    @Column({ length: 30, comment: "siglas del impuesto", nullable: true })
-    tax_siglas: string
+    @Column({ type: "varchar", length: 50, comment: "tax name of the products" })
+    tax_name: string;
 
-    @Column({ width: 1, default: 2, comment: "1 exento, 2 afecto" })
-    tax_type: number
+    @Column({ type: "varchar", length: 150, comment: "tax description of the products" })
+    tax_description: string;
 
-    @Column({ width: 3, comment: "porcentaje de impuesto", default: 0 })
-    tax_percentage: number
+    @Column({ type: "tinyint", width: 1, default: 1, comment: "1 active, 0 inactive" })
+    tax_status: number;
 
-    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @Column({ type: "tinyint", width: 1, default: 1, comment: "1 excent, 2 percent" })
+    tax_type: number;
+
+    @Column({ type: "float", precision: 5, scale: 2, default: 0.0, comment: "percentage" })
+    tax_percentage: number;
+
+    @CreateDateColumn({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
     created_at: Date;
 
-    @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn({ type: "datetime", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP" })
     updated_at: Date;
-
-    @Column({ width: 1, default: 0, comment: "Afecta costo. 1 si, 0 no" })
-    tax_affects_cost: number
-
-    @Column({ type: 'int', comment: "id de la empresa" })
-    company_id: number
 
     /////////////////////////////////////////////////////////////
     // Relaciones

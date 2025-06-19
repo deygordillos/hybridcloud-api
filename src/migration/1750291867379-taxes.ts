@@ -59,7 +59,7 @@ export class Taxes_1750291867379 implements MigrationInterface {
                         default: 0.0,
                         precision: 5,
                         scale: 2,
-                        comment: "1 excent, 2 percent",
+                        comment: "percentage",
                     },
                     {
                         name: "created_at",
