@@ -37,11 +37,13 @@ export class Inventory_1750303338066 implements MigrationInterface {
                         name: "inv_description",
                         type: "varchar",
                         length: "100",
+                        isNullable: true,
                         comment: "description of the inventory",
                     },
                     {
                         name: "inv_description_detail",
                         type: "mediumtext",
+                        isNullable: true,
                         comment: "detailed description of the inventory",
                     },
                     {
@@ -59,32 +61,56 @@ export class Inventory_1750303338066 implements MigrationInterface {
                         comment: "1 product, 2 service",
                     },
                     {
-                        name: "inv_is_exempt",
+                        name: "inv_has_variants",
                         type: "tinyint",
-                        default: 1,
+                        default: 0,
                         width: 1,
                         comment: "1 yes, 0 not",
                     },
                     {
-                        name: "inv_current_existence",
-                        type: "float",
-                        default: 0.0,
-                        precision: 10,
-                        scale: 5,
-                        comment: "current existence of the inventory",
+                        name: "inv_is_exempt",
+                        type: "tinyint",
+                        default: 0,
+                        width: 1,
+                        comment: "1 yes, 0 not",
                     },
                     {
-                        name: "inv_previous_existence",
+                        name: "inv_stock",
                         type: "float",
                         default: 0.0,
                         precision: 10,
                         scale: 5,
-                        comment: "previous existence of the inventory",
+                        comment: "current existence of the total product in the inventory",
+                    },
+                    {
+                        name: "inv_previous_stock",
+                        type: "float",
+                        default: 0.0,
+                        precision: 10,
+                        scale: 5,
+                        comment: "previous existence of the total product in the inventory",
+                    },
+                    {
+                        name: "inv_avg_cost",
+                        type: "float",
+                        default: 0.0,
+                        precision: 10,
+                        scale: 5,
+                        comment: "average cost of the inventory",
+                    },
+                    {
+                        name: "inv_avg_cost_previous",
+                        type: "float",
+                        default: 0.0,
+                        precision: 10,
+                        scale: 5,
+                        comment: "previous avg cost of the inventory",
                     },
                     {
                         name: "inv_url_image",
                         type: "varchar",
                         length: "100",
+                        isNullable: true,
                         comment: "URL of the image of the inventory",
                     },
                     {
@@ -143,7 +169,9 @@ export class Inventory_1750303338066 implements MigrationInterface {
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         const table = await queryRunner.getTable(this.table_name);
+        const foreignKeyCompany2 = table.foreignKeys.find(fk => fk.columnNames.indexOf("id_inv_family") !== -1);
         const foreignKeyCompany = table.foreignKeys.find(fk => fk.columnNames.indexOf("company_id") !== -1);
+        await queryRunner.dropForeignKey(this.table_name, foreignKeyCompany2);
         await queryRunner.dropForeignKey(this.table_name, foreignKeyCompany);
 
         await queryRunner.dropIndex(this.table_name, 'inv_status_type_exempt');
