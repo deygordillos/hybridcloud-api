@@ -1,54 +1,94 @@
 import { Router } from 'express'
-import { body, check } from "express-validator";
+import { body } from "express-validator";
 import { validatorRequestMiddleware } from '../../middlewares/validator_request';
-import { checkJwtMiddleware } from '../../middlewares/check-jwt';
-import { findAllTaxes, createTax, updateTax, assignTaxToSucursales } from '../../controllers/taxes.controller';
+import { authMiddleware } from '../../middlewares/AuthMiddleware';
+import { TaxesController } from '../../controllers/taxes.controller';
+import { companyMiddleware } from '../../middlewares/companyMiddleware';
+
+// Enum para tax_type
+export enum TaxTypeEnum {
+    EXCENT = 1,
+    PERCENT = 2
+}
 
 const router = Router();
 
 router.get('/',
-    checkJwtMiddleware,
-    findAllTaxes);
+    [
+        authMiddleware,
+        companyMiddleware
+    ],
+    TaxesController.getTaxesByCompany);
 
 router.post('/',
     [
-        body('tax_code').notEmpty().trim().withMessage("You must send a tax_code name"),
-        body('tax_description').notEmpty().trim().withMessage("You must send a tax_description"),
-        body('tax_siglas').notEmpty().trim().withMessage("You must send a tax_siglas"),
-        body('tax_type').notEmpty().trim().isInt().isIn([1,2]).withMessage("You must send if tax type. 1 no-affects 2 affects"),
-        body('tax_percentage').notEmpty().trim().withMessage("tax_percentage"),
-        body('tax_affects_cost').notEmpty().trim().isInt().isIn([0,1]).withMessage("You must send if tax affects cost. 1 yes 0 no")
+        authMiddleware,
+        companyMiddleware,
+        body('tax_code')
+            .notEmpty().trim().isString().withMessage("You must send a tax_code"),
+        body('tax_name')
+            .notEmpty().trim().isString().withMessage("You must send a tax_name"),
+        body('tax_description')
+            .optional().trim().isString().withMessage("tax_description must be a string"),
+        body('tax_type')
+            .notEmpty().isInt().isIn([TaxTypeEnum.EXCENT, TaxTypeEnum.PERCENT]).withMessage("You must send a tax_type (1 excent, 2 percent)"),
+        body('tax_percentage')
+            .notEmpty().withMessage("You must send a valid tax_percentage")
+            .isFloat({ min: 0 }).withMessage("You must send a valid tax_percentage")
+            .custom((value) => {
+                if (typeof value === 'string') {
+                    throw new Error("tax_percentage must be a number, not a string");
+                }
+                return true;
+            }),
+        validatorRequestMiddleware
     ],
-    validatorRequestMiddleware,
-    checkJwtMiddleware,
-    createTax);
+    TaxesController.create);
 
-router.put('/:id', [
-        body('tax_description').notEmpty().trim().withMessage("You must send a tax_description"),
-        body('tax_status').notEmpty().trim().isInt().isIn([0,1]).withMessage("You must send a tax status. 1 active 0 inactive"),
-        body('tax_affects_cost').notEmpty().trim().isInt().isIn([0,1]).withMessage("You must send if tax affects cost. 1 yes 0 no"),
-        body('tax_type').notEmpty().trim().isInt().isIn([1,2]).withMessage("You must send if tax type. 1 no-affects 2 affects"),
-    ],
-    validatorRequestMiddleware,
-    checkJwtMiddleware, 
-    updateTax);
-
-router.put('/assign_sucursales/:id', checkJwtMiddleware, 
+router.put('/:id',
     [
-        // Valida que "sucursal_id" sea un array
-        check('sucursal_id').isArray().notEmpty().isLength({min: 1}).withMessage('El campo "sucursal_id" debe ser un array de números'),
-        // Valida que cada elemento del array sea un número
-        check('sucursal_id.*').isNumeric().withMessage('Cada elemento del array debe ser un número'),
-        // Opcional: Valida que no haya elementos duplicados en el array
-        check('sucursal_id').custom((value) => {
-            if (value.length === 0) {
-                throw new Error('Debe ingresar valores');
-            } else if (new Set(value).size !== value.length) {
-                throw new Error('No se permiten elementos duplicados en el array');
-            }
-            return true;
-        })
+        authMiddleware,
+        companyMiddleware,
+        body('tax_name')
+            .notEmpty().trim().isString().withMessage("You must send a tax_name"),
+        body('tax_description').optional()
+            .trim().isString().withMessage("tax_description must be a string"),
+        body('tax_type')
+            .notEmpty().isInt().isIn([TaxTypeEnum.EXCENT, TaxTypeEnum.PERCENT]).withMessage("You must send a tax_type (1 excent, 2 percent)"),
+        body('tax_percentage')
+            .notEmpty().withMessage("You must send a valid tax_percentage")
+            .isFloat({ min: 0 }).withMessage("You must send a valid tax_percentage")
+            .custom((value) => {
+                if (typeof value === 'string') {
+                    throw new Error("tax_percentage must be a number, not a string");
+                }
+                return true;
+            }),
+        validatorRequestMiddleware
     ],
-    validatorRequestMiddleware,
-    assignTaxToSucursales);
+    TaxesController.update);
+
+router.patch('/:id',
+    [
+        authMiddleware,
+        companyMiddleware,
+        body('tax_name').optional()
+            .notEmpty().trim().isString().withMessage("You must send a tax_name"),
+        body('tax_description').optional()
+            .trim().isString().withMessage("tax_description must be a string"),
+        body('tax_type').optional()
+            .notEmpty().isInt().isIn([TaxTypeEnum.EXCENT, TaxTypeEnum.PERCENT]).withMessage("You must send a tax_type (1 excent, 2 percent)"),
+        body('tax_percentage').optional()
+            .notEmpty().withMessage("You must send a valid tax_percentage")
+            .isFloat({ min: 0 }).withMessage("You must send a valid tax_percentage")
+            .custom((value) => {
+                if (typeof value === 'string') {
+                    throw new Error("tax_percentage must be a number, not a string");
+                }
+                return true;
+            }),
+        validatorRequestMiddleware
+    ],
+    TaxesController.update);
+
 export default router
