@@ -57,6 +57,13 @@ export default {
         coins_assigned: 'Coins assigned!',
         coin_not_exists: 'Sorry, coin does not exists',
     },
+    Inventory: {
+        inv_created: 'Inventory created',
+        inv_updated: 'Inventory updated',
+        inv_not_exists: 'Sorry, Inventory does not exists',
+        inv_exists: 'Sorry, Inventory exists',
+        inv_needed: 'You must have send an inventory id'
+    },
     InventoryFamily: {
         invFamily_created: 'Inventory family created',
         invFamily_updated: 'Inventory family updated',
