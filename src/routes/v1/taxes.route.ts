@@ -51,8 +51,8 @@ router.put('/:id',
         companyMiddleware,
         body('tax_name')
             .notEmpty().trim().isString().withMessage("You must send a tax_name"),
-        body('tax_description')
-            .optional().trim().isString().withMessage("tax_description must be a string"),
+        body('tax_description').optional()
+            .trim().isString().withMessage("tax_description must be a string"),
         body('tax_type')
             .notEmpty().isInt().isIn([TaxTypeEnum.EXCENT, TaxTypeEnum.PERCENT]).withMessage("You must send a tax_type (1 excent, 2 percent)"),
         body('tax_percentage')
@@ -72,13 +72,13 @@ router.patch('/:id',
     [
         authMiddleware,
         companyMiddleware,
-        body('tax_name')
+        body('tax_name').optional()
             .notEmpty().trim().isString().withMessage("You must send a tax_name"),
-        body('tax_description')
-            .optional().trim().isString().withMessage("tax_description must be a string"),
-        body('tax_type')
+        body('tax_description').optional()
+            .trim().isString().withMessage("tax_description must be a string"),
+        body('tax_type').optional()
             .notEmpty().isInt().isIn([TaxTypeEnum.EXCENT, TaxTypeEnum.PERCENT]).withMessage("You must send a tax_type (1 excent, 2 percent)"),
-        body('tax_percentage')
+        body('tax_percentage').optional()
             .notEmpty().withMessage("You must send a valid tax_percentage")
             .isFloat({ min: 0 }).withMessage("You must send a valid tax_percentage")
             .custom((value) => {
