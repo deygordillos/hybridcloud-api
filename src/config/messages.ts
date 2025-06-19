@@ -1,3 +1,5 @@
+import { InventoryStorage } from "../entity/inventoryStorage.entity";
+
 export default {
     Auth: {
         user_not_found: 'User not found',
@@ -61,5 +63,12 @@ export default {
         invFamily_not_exists: 'Sorry, Inventory family does not exists',
         invFamily_exists: 'Sorry, Inventory family exists',
         invFamily_needed: 'You must have send an inventory family id'
+    },
+    InventoryStorage: {
+        invStorage_created: 'Inventory storage created',
+        invStorage_updated: 'Inventory storage updated',
+        invStorage_not_exists: 'Sorry, Inventory storage does not exists',
+        invStorage_exists: 'Sorry, Inventory storage exists',
+        invStorage_needed: 'You must have send an inventory storage id'
     },
 }
