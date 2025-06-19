@@ -88,4 +88,4 @@ Contributions are welcome. Please open an issue or pull request for suggestions 
 
 ## License
 
-In LICENSE.txt or LICENSE
+In LICENSE file.
