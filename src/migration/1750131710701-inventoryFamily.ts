@@ -25,20 +25,41 @@ export class InventoryFamily_1750131710701 implements MigrationInterface {
                         name: "inv_family_code",
                         type: "varchar",
                         length: "20",
-                        comment: "código de la familia de productos"
+                        comment: "product family code"
                     },
                     {
                         name: "inv_family_name",
                         type: "varchar",
                         length: "80",
-                        comment: "nombre de la familia de productos"
+                        comment: "product family name"
                     },
                     {
                         name: "inv_family_status",
                         type: "tinyint",
                         default: 1,
                         width: 1,
-                        comment: "1 activo, 0 inactivo"
+                        comment: "1 active, 0 inactive"
+                    },
+                    {
+                        name: "inv_is_stockable",
+                        type: "tinyint",
+                        default: 1,
+                        width: 1,
+                        comment: "If products are stockable. 1 yes, 0 no"
+                    },
+                    {
+                        name: "inv_is_lot_managed",
+                        type: "tinyint",
+                        default: 0,
+                        width: 1,
+                        comment: "If products are lot managed. 1 yes, 0 no"
+                    },
+                    {
+                        name: "tax_id",
+                        type: "int",
+                        unsigned: true,
+                        isNullable: true,
+                        comment: "Default tax id"
                     },
                     {
                         name: "created_at",

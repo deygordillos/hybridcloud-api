@@ -18,11 +18,6 @@ export class Inventory_1750303338066 implements MigrationInterface {
                         generationStrategy: "increment"
                     },
                     {
-                        name: "company_id",
-                        type: "int",
-                        unsigned: true
-                    },
-                    {
                         name: "id_inv_family",
                         type: "int",
                         unsigned: true
@@ -72,39 +67,35 @@ export class Inventory_1750303338066 implements MigrationInterface {
                         type: "tinyint",
                         default: 0,
                         width: 1,
-                        comment: "1 yes, 0 not",
+                        comment: "If product is tax exempt. 1 yes, 0 not",
                     },
                     {
-                        name: "inv_stock",
-                        type: "float",
-                        default: 0.0,
-                        precision: 10,
-                        scale: 5,
-                        comment: "current existence of the total product in the inventory",
+                        name: "inv_is_stockable",
+                        type: "tinyint",
+                        default: 1,
+                        width: 1,
+                        comment: "If product is stockable. 1 yes, 0 not",
                     },
                     {
-                        name: "inv_previous_stock",
-                        type: "float",
-                        default: 0.0,
-                        precision: 10,
-                        scale: 5,
-                        comment: "previous existence of the total product in the inventory",
+                        name: "inv_is_lot_managed",
+                        type: "tinyint",
+                        default: 0,
+                        width: 1,
+                        comment: "If product is lot managed. 1 yes, 0 not",
                     },
                     {
-                        name: "inv_avg_cost",
-                        type: "float",
-                        default: 0.0,
-                        precision: 10,
-                        scale: 5,
-                        comment: "average cost of the inventory",
+                        name: "inv_brand",
+                        type: "varchar",
+                        length: "100",
+                        isNullable: true,
+                        comment: "product brand",
                     },
                     {
-                        name: "inv_avg_cost_previous",
-                        type: "float",
-                        default: 0.0,
-                        precision: 10,
-                        scale: 5,
-                        comment: "previous avg cost of the inventory",
+                        name: "inv_model",
+                        type: "varchar",
+                        length: "100",
+                        isNullable: true,
+                        comment: "description of the inventory",
                     },
                     {
                         name: "inv_url_image",
@@ -129,9 +120,9 @@ export class Inventory_1750303338066 implements MigrationInterface {
         );
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
-            name: 'company_inv_code',
+            name: 'id_inv_family_inv_code',
             isUnique: true,
-            columnNames: ['company_id', 'inv_code']
+            columnNames: ['id_inv_family', 'inv_code']
         }))
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
@@ -147,17 +138,6 @@ export class Inventory_1750303338066 implements MigrationInterface {
         await queryRunner.createForeignKey(
             this.table_name,
             new TableForeignKey({
-                columnNames: ["company_id"],
-                referencedColumnNames: ["company_id"],
-                referencedTableName: "Companies",
-                onUpdate: "CASCADE",
-                onDelete: "CASCADE",
-            }),
-        )
-
-        await queryRunner.createForeignKey(
-            this.table_name,
-            new TableForeignKey({
                 columnNames: ["id_inv_family"],
                 referencedColumnNames: ["id_inv_family"],
                 referencedTableName: "InventoryFamily",
@@ -169,14 +149,12 @@ export class Inventory_1750303338066 implements MigrationInterface {
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         const table = await queryRunner.getTable(this.table_name);
-        const foreignKeyCompany2 = table.foreignKeys.find(fk => fk.columnNames.indexOf("id_inv_family") !== -1);
-        const foreignKeyCompany = table.foreignKeys.find(fk => fk.columnNames.indexOf("company_id") !== -1);
-        await queryRunner.dropForeignKey(this.table_name, foreignKeyCompany2);
+        const foreignKeyCompany = table.foreignKeys.find(fk => fk.columnNames.indexOf("id_inv_family") !== -1);
         await queryRunner.dropForeignKey(this.table_name, foreignKeyCompany);
 
         await queryRunner.dropIndex(this.table_name, 'inv_status_type_exempt');
         await queryRunner.dropIndex(this.table_name, 'inv_code');
-        await queryRunner.dropIndex(this.table_name, 'company_inv_code');
+        await queryRunner.dropIndex(this.table_name, 'id_inv_family_inv_code');
         await queryRunner.dropTable(this.table_name);
     }
 
