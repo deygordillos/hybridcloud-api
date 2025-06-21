@@ -37,7 +37,7 @@ export class InventoryFamilyService {
      * @param data Inventory Family data
      * @returns 
      */
-    static async create(inventoryFamily: Pick<InventoryFamily, "company_id" | "inv_family_code" | "inv_family_name" | "inv_family_status">) {
+    static async create(inventoryFamily: Pick<InventoryFamily, "company_id" | "inv_family_code" | "inv_family_name" | "inv_family_status" | "inv_is_stockable" | "inv_is_lot_managed" | "tax_id">) {
         const newInventoryF = InventoryFamilyRepository.create(inventoryFamily);
         await InventoryFamilyRepository.save(newInventoryF);
 
@@ -50,9 +50,12 @@ export class InventoryFamilyService {
      * @param customerData 
      * @returns 
      */
-    static async update(inv_family: InventoryFamily, data: Pick<InventoryFamily, "inv_family_name" | "inv_family_status">) {
+    static async update(inv_family: InventoryFamily, data: Pick<InventoryFamily, "inv_family_name" | "inv_family_status" | "inv_is_stockable" | "inv_is_lot_managed" | "tax_id">) {
         inv_family.inv_family_name = data.inv_family_name.length > 0 ? data.inv_family_name : inv_family.inv_family_name;
         inv_family.inv_family_status = (data.inv_family_status === 0 || data.inv_family_status === 1) ? data.inv_family_status : 1;
+        inv_family.inv_is_stockable = (data.inv_is_stockable === 0 || data.inv_is_stockable === 1) ? data.inv_is_stockable : 1;
+        inv_family.inv_is_lot_managed = (data.inv_is_lot_managed === 0 || data.inv_is_lot_managed === 1) ? data.inv_is_lot_managed : 0;
+        inv_family.tax_id = data.tax_id ?? inv_family.tax_id;
         inv_family.updated_at = new Date();
 
         await InventoryFamilyRepository.save(inv_family);

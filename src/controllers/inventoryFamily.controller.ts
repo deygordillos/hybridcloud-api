@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import messages from "../config/messages";
 import { InventoryFamilyService } from "../services/InventoryFamilyService";
+import { TaxesService } from "../services/TaxesService";
 
 export class InventoryFamilyController {
     /**
@@ -40,6 +41,7 @@ export class InventoryFamilyController {
     /**
      * Create an inventory family
      * @param req Request object 
+     * example: {"company_id":1,"inv_family_code":"ELEC","inv_family_name":"Electronics","inv_family_status":1,"inv_is_stockable":1,"inv_is_lot_managed":0,"tax_id":1}
      * @param res Response object
      * @returns 
      */
@@ -49,6 +51,13 @@ export class InventoryFamilyController {
             if (!company_id) return res.status(400).json({ message: "Company ID is required" });
 
             const data = { ...req.body, company_id };
+
+            // If tax_id is given, validate if it is one of the company
+            const { tax_id } = req.body
+            if (tax_id) {
+                const tax_exists = await TaxesService.findTaxById(tax_id);
+                if (!tax_exists) return res.status(400).json({ message: messages.Tax.tax_not_exists })
+            }
 
             const invFamilyExists = await InventoryFamilyService.findInventoryFamilyByCode(data.inv_family_code || '');
             if (invFamilyExists) return res.status(400).json({ message: messages.InventoryFamily.invFamily_exists });
