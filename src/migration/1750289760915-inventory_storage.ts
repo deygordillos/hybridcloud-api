@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } from "typeorm";
 
 export class InventoryStorage_1750289760915 implements MigrationInterface {
-    table_name = 'InventoryStorage';
+    table_name = 'inventory_storage';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(

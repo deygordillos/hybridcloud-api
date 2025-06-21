@@ -13,7 +13,7 @@ import { Companies } from "./companies.entity";
 @Index("company_inv_storage_code", ["company_id", "inv_storage_code"], { unique: true })
 @Index("inv_storage_name", ["inv_storage_name"])
 @Index("inv_storage_status", ["inv_storage_status"])
-@Entity("InventoryStorage")
+@Entity("inventory_storage")
 export class InventoryStorage {
     @PrimaryGeneratedColumn({ unsigned: true })
     id_inv_storage: number;

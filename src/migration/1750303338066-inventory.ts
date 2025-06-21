@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } f
 
 export class Inventory_1750303338066 implements MigrationInterface {
 
-    table_name = 'Inventory';
+    table_name = 'inventory';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
@@ -140,7 +140,7 @@ export class Inventory_1750303338066 implements MigrationInterface {
             new TableForeignKey({
                 columnNames: ["id_inv_family"],
                 referencedColumnNames: ["id_inv_family"],
-                referencedTableName: "InventoryFamily",
+                referencedTableName: "inventory_family",
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
             }),
