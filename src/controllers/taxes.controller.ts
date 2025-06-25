@@ -50,7 +50,7 @@ export class TaxesController {
             const company_id = req['company_id'] || false;
             if (!company_id) return res.status(400).json({ message: "Company ID is required" });
 
-            const { tax_code, tax_name, tax_description, tax_status, tax_type, tax_percentage } = req.body;
+            const { tax_code, tax_name, tax_description, tax_status, tax_type, tax_value } = req.body;
 
             // Check if tax already exists
             const taxExists = await TaxesService.findTaxByCode(company_id, tax_code);
@@ -63,7 +63,7 @@ export class TaxesController {
                 tax_description,
                 tax_status,
                 tax_type,
-                tax_percentage
+                tax_value
             });
 
             return res.status(201).json({ message: messages.Tax?.tax_created ?? "Tax created", data: tax });
@@ -87,14 +87,14 @@ export class TaxesController {
             const tax = await TaxesService.findTaxById(tax_id);
             if (!tax) return res.status(404).json({ message: messages.Tax?.tax_not_exists ?? "Tax does not exist" });
 
-            const { tax_name, tax_description, tax_status, tax_type, tax_percentage } = req.body;
+            const { tax_name, tax_description, tax_status, tax_type, tax_value } = req.body;
 
             const response = await TaxesService.update(tax, {
                 tax_name,
                 tax_description,
                 tax_status,
                 tax_type,
-                tax_percentage
+                tax_value
             });
 
             return res.status(200).json(response);

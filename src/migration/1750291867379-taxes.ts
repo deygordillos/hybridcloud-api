@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } from "typeorm";
 
 export class Taxes_1750291867379 implements MigrationInterface {
-    table_name = 'Taxes';
+    table_name = 'taxes';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
@@ -37,6 +37,7 @@ export class Taxes_1750291867379 implements MigrationInterface {
                         name: "tax_description",
                         type: "varchar",
                         length: "150",
+                        isNullable: true,
                         comment: "tax description of the products",
                     },
                     {
@@ -49,17 +50,24 @@ export class Taxes_1750291867379 implements MigrationInterface {
                     {
                         name: "tax_type",
                         type: "tinyint",
-                        default: 1,
+                        default: 2,
                         width: 1,
-                        comment: "1 excent, 2 percent",
+                        comment: "1 excent, 2 percent, 3 fixed",
                     },
                     {
-                        name: "tax_percentage",
+                        name: "tax_value",
                         type: "float",
                         default: 0.0,
                         precision: 5,
                         scale: 2,
-                        comment: "percentage",
+                        comment: "tax value",
+                    },
+                    {
+                        name: "currency_id",
+                        type: "int",
+                        unsigned: true,
+                        isNullable: true,
+                        comment: "Currency tax id"
                     },
                     {
                         name: "created_at",

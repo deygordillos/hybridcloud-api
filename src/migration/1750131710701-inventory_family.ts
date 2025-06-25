@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } from "typeorm";
 
-export class InventoryStorage_1750289760915 implements MigrationInterface {
-    table_name = 'InventoryStorage';
+export class InventoryFamily_1750131710701 implements MigrationInterface {
+    table_name = 'inventory_family';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
@@ -9,7 +9,7 @@ export class InventoryStorage_1750289760915 implements MigrationInterface {
                 name: this.table_name,
                 columns: [
                     {
-                        name: "id_inv_storage",
+                        name: "id_inv_family",
                         type: "int",
                         isPrimary: true,
                         isGenerated: true,
@@ -22,23 +22,44 @@ export class InventoryStorage_1750289760915 implements MigrationInterface {
                         unsigned: true
                     },
                     {
-                        name: "inv_storage_code",
+                        name: "inv_family_code",
                         type: "varchar",
                         length: "20",
-                        comment: "storage code for the product"
+                        comment: "product family code"
                     },
                     {
-                        name: "inv_storage_name",
+                        name: "inv_family_name",
                         type: "varchar",
                         length: "80",
-                        comment: "storage name for the product"
+                        comment: "product family name"
                     },
                     {
-                        name: "inv_storage_status",
+                        name: "inv_family_status",
                         type: "tinyint",
                         default: 1,
                         width: 1,
                         comment: "1 active, 0 inactive"
+                    },
+                    {
+                        name: "inv_is_stockable",
+                        type: "tinyint",
+                        default: 1,
+                        width: 1,
+                        comment: "If products are stockable. 1 yes, 0 no"
+                    },
+                    {
+                        name: "inv_is_lot_managed",
+                        type: "tinyint",
+                        default: 0,
+                        width: 1,
+                        comment: "If products are lot managed. 1 yes, 0 no"
+                    },
+                    {
+                        name: "tax_id",
+                        type: "int",
+                        unsigned: true,
+                        isNullable: true,
+                        comment: "Default tax id"
                     },
                     {
                         name: "created_at",
@@ -56,19 +77,19 @@ export class InventoryStorage_1750289760915 implements MigrationInterface {
         );
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
-            name: 'company_inv_storage_code',
+            name: 'company_inventoryFamily',
             isUnique: true,
-            columnNames: ['company_id', 'inv_storage_code']
+            columnNames: ['company_id', 'inv_family_code']
         }))
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
-            name: 'inv_storage_name',
-            columnNames: ['inv_storage_name']
+            name: 'inv_family_name',
+            columnNames: ['inv_family_name']
         }))
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
-            name: 'inv_storage_status',
-            columnNames: ['inv_storage_status']
+            name: 'inv_family_status',
+            columnNames: ['inv_family_status']
         }))
 
         await queryRunner.createForeignKey(
@@ -88,9 +109,9 @@ export class InventoryStorage_1750289760915 implements MigrationInterface {
         const foreignKeyCompany = table.foreignKeys.find(fk => fk.columnNames.indexOf("company_id") !== -1);
         await queryRunner.dropForeignKey(this.table_name, foreignKeyCompany);
 
-        await queryRunner.dropIndex(this.table_name, 'inv_storage_status');
-        await queryRunner.dropIndex(this.table_name, 'inv_storage_name');
-        await queryRunner.dropIndex(this.table_name, 'company_inv_storage_code');
+        await queryRunner.dropIndex(this.table_name, 'inv_family_status');
+        await queryRunner.dropIndex(this.table_name, 'inv_family_name');
+        await queryRunner.dropIndex(this.table_name, 'company_inventoryFamily');
         await queryRunner.dropTable(this.table_name);
     }
 

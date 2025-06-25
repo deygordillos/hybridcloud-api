@@ -1,6 +1,7 @@
 import { Taxes } from "../entity/taxes.entity";
 import { TaxesRepository } from "../repositories/TaxesRepository";
 import messages from "../config/messages";
+import { Companies } from "../entity/companies.entity";
 
 export class TaxesService {
     /**
@@ -27,7 +28,7 @@ export class TaxesService {
     /**
      * Find tax by code and company
      */
-    static async findTaxByCode(company_id: number, tax_code: string) {
+    static async findTaxByCode(company_id: Companies, tax_code: string) {
         return await TaxesRepository.findOneBy({ company_id, tax_code });
     }
 
@@ -41,7 +42,7 @@ export class TaxesService {
     /**
      * Create a tax
      */
-    static async create(tax: Pick<Taxes, "company_id" | "tax_code" | "tax_name" | "tax_description" | "tax_status" | "tax_type" | "tax_percentage">) {
+    static async create(tax: Pick<Taxes, "company_id" | "tax_code" | "tax_name" | "tax_description" | "tax_status" | "tax_type" | "tax_value">) {
         const newTax = TaxesRepository.create(tax);
         await TaxesRepository.save(newTax);
         return newTax;
@@ -50,13 +51,13 @@ export class TaxesService {
     /**
      * Update a tax
      */
-    static async update(tax: Taxes, data: Pick<Taxes, "tax_name" | "tax_description" | "tax_status" | "tax_type" | "tax_percentage">) {
+    static async update(tax: Taxes, data: Pick<Taxes, "tax_name" | "tax_description" | "tax_status" | "tax_type" | "tax_value">) {
         console.log({data});
         tax.tax_name = data.tax_name ?? tax.tax_name;
         tax.tax_description = data.tax_description ?? tax.tax_description;
         tax.tax_status = (data.tax_status === 0 || data.tax_status === 1) ? data.tax_status : tax.tax_status;
         tax.tax_type = (data.tax_type === 1 || data.tax_type === 2) ? data.tax_type : tax.tax_type;
-        tax.tax_percentage = typeof data.tax_percentage === "number" ? data.tax_percentage : tax.tax_percentage;
+        tax.tax_value = typeof data.tax_value === "number" ? data.tax_value : tax.tax_value;
         tax.updated_at = new Date();
 
         await TaxesRepository.save(tax);
