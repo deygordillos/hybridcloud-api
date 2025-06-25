@@ -58,7 +58,7 @@ export class InventoryController {
             if (!inventoryFamily) return res.status(400).json({ message: messages.InventoryFamily?.invFamily_not_exists ?? "Inventory family does not exist" });
 
             // Check if inventory already exists
-            const inventoryExists = await InventoryService.findInventoryByCode(inventoryFamily, data.inv_code);
+            const inventoryExists = await InventoryService.findInventoryByCode(company_id, data.inv_code);
             if (inventoryExists) return res.status(400).json({ message: messages.Inventory?.inv_exists ?? "Inventory already exists" });
 
             const inventory = await InventoryService.create(data);

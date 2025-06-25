@@ -16,7 +16,7 @@ export class InventoryService {
     ) {
         const [data, total] = await InventoryRepository
             .createQueryBuilder("inv")
-            .innerJoinAndSelect("inv.inventoryFamily", "family")
+            .innerJoinAndSelect("inv.id_inv_family", "family")
             .where("family.company_id = :company_id", { company_id })
             .andWhere("inv.inv_status = :inv_status", { inv_status })
             .orderBy("inv.inv_id", "ASC")
@@ -30,10 +30,13 @@ export class InventoryService {
     /**
      * Find inventory by code and product family company
      */
-    static async findInventoryByCode(id_inv_family: InventoryFamily, inv_code: string) {
-        return await InventoryRepository.findOne({
-            where: { id_inv_family, inv_code }
-        });
+    static async findInventoryByCode(company_id: Companies, inv_code: string) {
+        return await InventoryRepository
+            .createQueryBuilder("inv")
+            .innerJoinAndSelect("inv.id_inv_family", "family")
+            .where("family.company_id = :company_id", { company_id })
+            .andWhere("inv.inv_code = :inv_code", { inv_code })
+            .getOne();
     }
 
     /**
@@ -57,7 +60,7 @@ export class InventoryService {
      */
     static async update(
         inventory: Inventory,
-        data: Partial<Omit<Inventory, "inv_id" | "company_id" | "created_at" | "updated_at">>
+        data: Partial<Omit<Inventory, "inv_id" | "id_inv_family" | "created_at" | "updated_at">>
     ) {
         for (const key in data) {
             if (data[key] !== undefined) {
