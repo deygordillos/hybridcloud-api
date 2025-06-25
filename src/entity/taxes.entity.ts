@@ -6,9 +6,11 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     ManyToOne,
-    JoinColumn
+    JoinColumn,
+    OneToMany
 } from "typeorm";
 import { Companies } from "./companies.entity";
+import { InventoryTaxes } from "./inventory_taxes";
 
 @Index('company_tax_code', ['company_id', 'tax_code'], { unique: true })
 @Index('tax_name_desc', ['tax_name', 'tax_description'])
@@ -48,4 +50,7 @@ export class Taxes {
 
     @UpdateDateColumn({ type: "datetime", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP" })
     updated_at: Date;
+
+    @OneToMany(() => InventoryTaxes, inventoryTaxes => inventoryTaxes.tax)
+    inventoryTaxes: InventoryTaxes[];
 }

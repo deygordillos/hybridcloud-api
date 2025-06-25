@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import messages from "../config/messages";
 import { InventoryService } from "../services/InventoryService";
 import { InventoryFamilyService } from "../services/InventoryFamilyService";
-
 export class InventoryController {
     /**
      * List inventories by company
@@ -52,6 +51,7 @@ export class InventoryController {
             if (!company_id) return res.status(400).json({ message: "Company ID is required" });
 
             const data = { ...req.body, company_id };
+            const taxes: number[] = Array.isArray(req.body.taxes) ? req.body.taxes : [];
 
             // Check if familyExists
             const inventoryFamily = await InventoryFamilyService.findInventoryFamilyById(data.id_inv_family);
@@ -61,12 +61,11 @@ export class InventoryController {
             const inventoryExists = await InventoryService.findInventoryByCode(company_id, data.inv_code);
             if (inventoryExists) return res.status(400).json({ message: messages.Inventory?.inv_exists ?? "Inventory already exists" });
 
-            const inventory = await InventoryService.create(data);
-
+            const inventory = await InventoryService.create(data, taxes);
             return res.status(201).json({ message: messages.Inventory?.inv_created ?? "Inventory created", data: inventory });
         } catch (e) {
             console.error('InventoryController.create catch error: ', e);
-            return res.status(500).json({ message: 'error', data: e?.name ?? e });
+            return res.status(500).json({ error: e?.message || e });
         }
     }
 
@@ -84,7 +83,8 @@ export class InventoryController {
             const inventory = await InventoryService.findInventoryById(inv_id);
             if (!inventory) return res.status(404).json({ message: messages.Inventory?.inv_not_exists ?? "Inventory does not exist" });
             
-            const {id_inv_family} = req.body
+            const { id_inv_family } = req.body
+
             if (id_inv_family) {
                 // Check if familyExists
                 const inventoryFamily = await InventoryFamilyService.findInventoryFamilyById(id_inv_family);
@@ -96,7 +96,7 @@ export class InventoryController {
             return res.status(200).json(response);
         } catch (e) {
             console.error('InventoryController.update catch error: ', e);
-            return res.status(500).json({ message: 'error', data: e?.name ?? e });
+            return res.status(500).json({ error: e?.message || e });
         }
     }
 }
