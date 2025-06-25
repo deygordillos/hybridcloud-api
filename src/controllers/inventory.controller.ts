@@ -83,6 +83,13 @@ export class InventoryController {
 
             const inventory = await InventoryService.findInventoryById(inv_id);
             if (!inventory) return res.status(404).json({ message: messages.Inventory?.inv_not_exists ?? "Inventory does not exist" });
+            
+            const {id_inv_family} = req.body
+            if (id_inv_family) {
+                // Check if familyExists
+                const inventoryFamily = await InventoryFamilyService.findInventoryFamilyById(id_inv_family);
+                if (!inventoryFamily) return res.status(404).json({ message: messages.InventoryFamily?.invFamily_not_exists ?? "Inventory family does not exist" });
+            }
 
             const response = await InventoryService.update(inventory, req.body);
 
