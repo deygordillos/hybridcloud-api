@@ -77,7 +77,7 @@ export class InventoryStorageController {
             if (isNaN(id_inv_storage)) return res.status(400).json({ error: "Invalid inventory storage Id" });
 
             const invStorage = await InventoryStorageService.findInventoryStorageById(id_inv_storage);
-            if (!invStorage) return res.status(400).json({ message: messages.InventoryStorage?.invStorage_not_exists ?? "Inventory Storage does not exist" });
+            if (!invStorage) return res.status(404).json({ message: messages.InventoryStorage?.invStorage_not_exists ?? "Inventory Storage does not exist" });
 
             const response = await InventoryStorageService.update(
                 invStorage,

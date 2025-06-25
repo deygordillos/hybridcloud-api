@@ -86,7 +86,7 @@ export class InventoryFamilyController {
             if (isNaN(id_inv_family)) return res.status(400).json({ error: "Invalid inventory family Id" });
 
             const invFamily = await InventoryFamilyService.findInventoryFamilyById(id_inv_family);
-            if (!invFamily) return res.status(400).json({ message: messages.InventoryFamily.invFamily_not_exists });
+            if (!invFamily) return res.status(404).json({ message: messages.InventoryFamily.invFamily_not_exists });
 
             const response = await InventoryFamilyService.update(
                 invFamily,

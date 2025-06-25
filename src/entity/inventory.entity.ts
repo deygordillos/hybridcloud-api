@@ -18,9 +18,12 @@ export class Inventory {
     @PrimaryGeneratedColumn({ unsigned: true })
     inv_id: number;
 
+    @Column({ type: "int", unsigned: true })
+    id_inv_family: number;
+
     @ManyToOne(() => InventoryFamily, { onDelete: "CASCADE", onUpdate: "CASCADE" })
     @JoinColumn({ name: 'id_inv_family' })
-    id_inv_family: InventoryFamily;
+    inventoryFamily: InventoryFamily;
 
     @Column({ type: "varchar", length: 50, comment: "product code of the inventory" })
     inv_code: string;
