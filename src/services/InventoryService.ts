@@ -3,7 +3,7 @@ import { InventoryRepository } from "../repositories/InventoryRepository";
 import messages from "../config/messages";
 import { Companies } from "../entity/companies.entity";
 import { appDataSource } from "../app-data-source";
-import { InventoryTaxes } from "../entity/inventory_taxes";
+import { InventoryTaxes } from "../entity/inventory_taxes.entity";
 
 export class InventoryService {
     /**
@@ -18,6 +18,8 @@ export class InventoryService {
         const [data, total] = await InventoryRepository
             .createQueryBuilder("inv")
             .innerJoinAndSelect("inv.inventoryFamily", "family")
+            .leftJoinAndSelect("inv.inventoryTaxes", "invtaxes")
+            .leftJoinAndSelect("invtaxes.tax", "taxes")
             .where("family.company_id = :company_id", { company_id })
             .andWhere("inv.inv_status = :inv_status", { inv_status })
             .orderBy("inv.inv_id", "ASC")

@@ -10,7 +10,7 @@ import {
     OneToMany
 } from "typeorm";
 import { Companies } from "./companies.entity";
-import { InventoryTaxes } from "./inventory_taxes";
+import { InventoryTaxes } from "./inventory_taxes.entity";
 
 @Index('company_tax_code', ['company_id', 'tax_code'], { unique: true })
 @Index('tax_name_desc', ['tax_name', 'tax_description'])
