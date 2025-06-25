@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import messages from "../config/messages";
 import { InventoryService } from "../services/InventoryService";
 import { InventoryFamilyService } from "../services/InventoryFamilyService";
+import { TaxesService } from "../services/TaxesService";
+import { InventoryTaxesService } from "../services/InventoryTaxesService";
 export class InventoryController {
     /**
      * List inventories by company
@@ -84,11 +86,25 @@ export class InventoryController {
             if (!inventory) return res.status(404).json({ message: messages.Inventory?.inv_not_exists ?? "Inventory does not exist" });
             
             const { id_inv_family } = req.body
+            const taxes: number[] = Array.isArray(req.body.taxes) ? req.body.taxes : [];
 
             if (id_inv_family) {
                 // Check if familyExists
                 const inventoryFamily = await InventoryFamilyService.findInventoryFamilyById(id_inv_family);
                 if (!inventoryFamily) return res.status(404).json({ message: messages.InventoryFamily?.invFamily_not_exists ?? "Inventory family does not exist" });
+            }
+
+            // If taxes are provided, update associations
+            if (taxes.length > 0) {
+                // Validate all tax IDs exist before associating
+                for (const tax_id of taxes) {
+                    const taxExists = await TaxesService.findTaxById(tax_id);
+                    if (!taxExists) {
+                        return res.status(404).json({ message: `Tax with id ${tax_id} does not exist` });
+                    }
+                }
+                // Remove previous associations and add new ones
+                await InventoryTaxesService.replaceTaxes(inv_id, taxes);
             }
 
             const response = await InventoryService.update(inventory, req.body);

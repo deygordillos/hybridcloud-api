@@ -19,4 +19,13 @@ export class InventoryTaxesService {
         const records = taxes.map(tax_id => ({ inv_id, tax_id }));
         return await InventoryTaxesRepository.save(records);
     }
+
+    static async replaceTaxes(inv_id: number, taxes: number[]) {
+        // Remove all previous associations
+        await InventoryTaxesRepository.delete({ inv_id });
+        // Add new associations
+        if (taxes.length > 0) {
+            return await this.bulkCreate(inv_id, taxes);
+        }
+    }
 }
