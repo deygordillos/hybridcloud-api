@@ -52,6 +52,18 @@ router.post('/',
             .optional().isString().withMessage("inv_model must be a string"),
         body("inv_url_image")
             .optional().isString().withMessage("inv_url_image must be a string"),
+        body("taxes")
+            .optional()
+            .isArray({ min: 1 }).withMessage("taxes must be an array of numeric IDs")
+            .custom((arr) => {
+                if (!Array.isArray(arr)) return true; // skip if not present
+                for (const id of arr) {
+                    if (typeof id !== "number" || !Number.isInteger(id)) {
+                        throw new Error("Each tax ID in taxes must be an integer number");
+                    }
+                }
+                return true;
+            }),
         validatorRequestMiddleware
     ],
     InventoryController.create
@@ -81,6 +93,18 @@ router.put('/:id',
             .optional().isString().withMessage("inv_model must be a string"),
         body("inv_url_image")
             .optional().isString().withMessage("inv_url_image must be a string"),
+        body("taxes")
+            .optional()
+            .isArray({ min: 1 }).withMessage("taxes must be an array of numeric IDs")
+            .custom((arr) => {
+                if (!Array.isArray(arr)) return true; // skip if not present
+                for (const id of arr) {
+                    if (typeof id !== "number" || !Number.isInteger(id)) {
+                        throw new Error("Each tax ID in taxes must be an integer number");
+                    }
+                }
+                return true;
+            }),
         validatorRequestMiddleware
     ],
     InventoryController.update
@@ -110,6 +134,18 @@ router.patch('/:id',
             .optional().isString().withMessage("inv_model must be a string"),
         body("inv_url_image")
             .optional().isString().withMessage("inv_url_image must be a string"),
+        body("taxes")
+            .optional()
+            .isArray({ min: 1 }).withMessage("taxes must be an array of numeric IDs")
+            .custom((arr) => {
+                if (!Array.isArray(arr)) return true; // skip if not present
+                for (const id of arr) {
+                    if (typeof id !== "number" || !Number.isInteger(id)) {
+                        throw new Error("Each tax ID in taxes must be an integer number");
+                    }
+                }
+                return true;
+            }),
         validatorRequestMiddleware
     ],
     InventoryController.update

@@ -2,6 +2,8 @@ import { Inventory } from "../entity/inventory.entity";
 import { InventoryRepository } from "../repositories/InventoryRepository";
 import messages from "../config/messages";
 import { Companies } from "../entity/companies.entity";
+import { appDataSource } from "../app-data-source";
+import { InventoryTaxes } from "../entity/inventory_taxes.entity";
 
 export class InventoryService {
     /**
@@ -16,6 +18,8 @@ export class InventoryService {
         const [data, total] = await InventoryRepository
             .createQueryBuilder("inv")
             .innerJoinAndSelect("inv.inventoryFamily", "family")
+            .leftJoinAndSelect("inv.inventoryTaxes", "invtaxes")
+            .leftJoinAndSelect("invtaxes.tax", "taxes")
             .where("family.company_id = :company_id", { company_id })
             .andWhere("inv.inv_status = :inv_status", { inv_status })
             .orderBy("inv.inv_id", "ASC")
@@ -47,11 +51,40 @@ export class InventoryService {
 
     /**
      * Create an inventory
+     * @param inventory Inventory
+     * @param taxes Taxes. Optional
      */
-    static async create(inventory: Partial<Inventory>) {
-        const newInventory = InventoryRepository.create(inventory);
-        await InventoryRepository.save(newInventory);
-        return newInventory;
+    static async create(inventory: Partial<Inventory>, taxes: number[] = []) {
+        return await appDataSource.transaction(async transactionalEntityManager => {
+
+            const newInventory = transactionalEntityManager.create(Inventory, inventory);
+            await transactionalEntityManager.save(newInventory);
+
+            // Validar y asociar taxes
+            if (taxes && taxes.length > 0) {
+                // Validar que todos los taxes existen
+                const foundTaxes = await transactionalEntityManager
+                    .getRepository("Taxes")
+                    .createQueryBuilder("tax")
+                    .whereInIds(taxes)
+                    .getMany();
+
+                if (foundTaxes.length !== taxes.length) {
+                    throw new Error("One or more tax IDs do not exist");
+                }
+
+                // Asociar taxes
+                const invTaxes = taxes.map(tax_id => {
+                    return transactionalEntityManager.create(InventoryTaxes, {
+                        inv_id: newInventory.inv_id,
+                        tax_id
+                    });
+                });
+                await transactionalEntityManager.save(invTaxes);
+            }
+
+            return newInventory;
+        });
     }
 
     /**
