@@ -4,6 +4,7 @@ import { InventoryService } from "../services/InventoryService";
 import { InventoryFamilyService } from "../services/InventoryFamilyService";
 import { TaxesService } from "../services/TaxesService";
 import { InventoryTaxesService } from "../services/InventoryTaxesService";
+import { InventoryVariantsService } from "../services/InventoryVariantsService";
 export class InventoryController {
     /**
      * List inventories by company
@@ -54,6 +55,7 @@ export class InventoryController {
 
             const data = { ...req.body, company_id };
             const taxes: number[] = Array.isArray(req.body.taxes) ? req.body.taxes : [];
+            const variants = Array.isArray(req.body.variants) ? req.body.variants : [];
 
             // Check if familyExists
             const inventoryFamily = await InventoryFamilyService.findInventoryFamilyById(data.id_inv_family);
@@ -64,6 +66,27 @@ export class InventoryController {
             if (inventoryExists) return res.status(400).json({ message: messages.Inventory?.inv_exists ?? "Inventory already exists" });
 
             const inventory = await InventoryService.create(data, taxes);
+
+            // Associate variants if provided
+            if (variants.length > 0) {
+                for (const variant of variants) {
+                    // variant debe tener al menos inv_var_sku y un array de atributos (attr_values)
+                    const { inv_var_sku, inv_var_status = 1, attr_values = [] } = variant;
+                    // Crea la variante
+                    const createdVariant = await InventoryVariantsService.createVariant({
+                        inv_id: inventory.inv_id,
+                        inv_var_sku,
+                        inv_var_status
+                    });
+                    if (Array.isArray(attr_values) && attr_values.length > 0) {
+                        await InventoryVariantsService.addAttributesToVariant(
+                            createdVariant.inv_var_id,
+                            attr_values
+                        );
+                    }
+                }
+            }
+
             return res.status(201).json({ message: messages.Inventory?.inv_created ?? "Inventory created", data: inventory });
         } catch (e) {
             console.error('InventoryController.create catch error: ', e);
@@ -87,6 +110,7 @@ export class InventoryController {
             
             const { id_inv_family } = req.body
             const taxes: number[] = Array.isArray(req.body.taxes) ? req.body.taxes : [];
+            const variants = Array.isArray(req.body.variants) ? req.body.variants : [];
 
             if (id_inv_family) {
                 // Check if familyExists
@@ -105,6 +129,37 @@ export class InventoryController {
                 }
                 // Remove previous associations and add new ones
                 await InventoryTaxesService.replaceTaxes(inv_id, taxes);
+            }
+
+            // If variants are provided, update associations
+            if (variants.length > 0) {
+                for (const variant of variants) {
+                    const { inv_var_sku, inv_var_status = 1, attr_values = [] } = variant;
+
+                    let createdVariant = await InventoryVariantsService.findBySku(inv_id, inv_var_sku);
+
+                    if (createdVariant) {
+                        // Si viene el id, actualiza la variante existente
+                        createdVariant = await InventoryVariantsService.updateVariant(createdVariant.inv_var_id, {
+                            inv_var_sku,
+                            inv_var_status
+                        });
+                    } else {
+                        // Si no viene id, crea una nueva variante
+                        createdVariant = await InventoryVariantsService.createVariant({
+                            inv_id,
+                            inv_var_sku,
+                            inv_var_status
+                        });
+                    }
+
+                    if (Array.isArray(attr_values) && attr_values.length > 0) {
+                        await InventoryVariantsService.upsertAttributesToVariant(
+                            createdVariant.inv_var_id,
+                            attr_values
+                        );
+                    }
+                }
             }
 
             const response = await InventoryService.update(inventory, req.body);
