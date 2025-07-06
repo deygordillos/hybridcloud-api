@@ -4,6 +4,8 @@ import { InventoryService } from "../services/InventoryService";
 import { InventoryFamilyService } from "../services/InventoryFamilyService";
 import { TaxesService } from "../services/TaxesService";
 import { InventoryTaxesService } from "../services/InventoryTaxesService";
+import { InventoryVariantsService } from "../services/InventoryVariantsService";
+import { InventoryAttrsService } from "../services/InventoryAttrsService";
 export class InventoryController {
     /**
      * List inventories by company
@@ -54,6 +56,7 @@ export class InventoryController {
 
             const data = { ...req.body, company_id };
             const taxes: number[] = Array.isArray(req.body.taxes) ? req.body.taxes : [];
+            const variants = Array.isArray(req.body.variants) ? req.body.variants : [];
 
             // Check if familyExists
             const inventoryFamily = await InventoryFamilyService.findInventoryFamilyById(data.id_inv_family);
@@ -63,11 +66,17 @@ export class InventoryController {
             const inventoryExists = await InventoryService.findInventoryByCode(company_id, data.inv_code);
             if (inventoryExists) return res.status(400).json({ message: messages.Inventory?.inv_exists ?? "Inventory already exists" });
 
-            const inventory = await InventoryService.create(data, taxes);
+            const inventory = await InventoryService.create(data, taxes, variants);
+
             return res.status(201).json({ message: messages.Inventory?.inv_created ?? "Inventory created", data: inventory });
         } catch (e) {
-            console.error('InventoryController.create catch error: ', e);
-            return res.status(500).json({ error: e?.message || e });
+            if (e instanceof Error) {
+                console.error('InventoryController.create catch error: ', e.message, e.stack);
+                return res.status(400).json({ error: e.message });
+            } else {
+                console.error('InventoryController.create catch error: ', e);
+                return res.status(500).json({ error: e?.message || e });
+            }
         }
     }
 
@@ -87,6 +96,7 @@ export class InventoryController {
             
             const { id_inv_family } = req.body
             const taxes: number[] = Array.isArray(req.body.taxes) ? req.body.taxes : [];
+            const variants = Array.isArray(req.body.variants) ? req.body.variants : [];
 
             if (id_inv_family) {
                 // Check if familyExists
@@ -107,12 +117,53 @@ export class InventoryController {
                 await InventoryTaxesService.replaceTaxes(inv_id, taxes);
             }
 
+            // If variants are provided, update associations
+            if (variants.length > 0) {
+                for (const variant of variants) {
+                    const { inv_var_sku, inv_var_status = 1, attr_values = [] } = variant;
+
+                    let createdVariant = await InventoryVariantsService.findBySku(inv_id, inv_var_sku);
+
+                    if (createdVariant) {
+                        // Si viene el id, actualiza la variante existente
+                        createdVariant = await InventoryVariantsService.updateVariant(createdVariant.inv_var_id, {
+                            inv_var_sku,
+                            inv_var_status
+                        });
+                    } else {
+                        // Si no viene id, crea una nueva variante
+                        createdVariant = await InventoryVariantsService.createVariant({
+                            inv_id,
+                            inv_var_sku,
+                            inv_var_status
+                        });
+                    }
+
+                    if (Array.isArray(attr_values) && attr_values.length > 0) {
+                        // Validar que todos los attr_values existan antes de asociar
+                        for (const inv_attrval_id of attr_values) {
+                            const exists = await InventoryAttrsService.findAttrValueById(inv_attrval_id);
+                            if (!exists) return res.status(404).json({ message: `Attribute value with id ${inv_attrval_id} does not exist` });
+                        }
+                        await InventoryVariantsService.upsertAttributesToVariant(
+                            createdVariant.inv_var_id,
+                            attr_values
+                        );
+                    }
+                }
+            }
+
             const response = await InventoryService.update(inventory, req.body);
 
             return res.status(200).json(response);
         } catch (e) {
-            console.error('InventoryController.update catch error: ', e);
-            return res.status(500).json({ error: e?.message || e });
+            if (e instanceof Error) {
+                console.error('InventoryController.create catch error: ', e.message, e.stack);
+                return res.status(400).json({ error: e.message });
+            } else {
+                console.error('InventoryController.create catch error: ', e);
+                return res.status(500).json({ error: e?.message || e });
+            }
         }
     }
 }
