@@ -65,32 +65,17 @@ export class InventoryController {
             const inventoryExists = await InventoryService.findInventoryByCode(company_id, data.inv_code);
             if (inventoryExists) return res.status(400).json({ message: messages.Inventory?.inv_exists ?? "Inventory already exists" });
 
-            const inventory = await InventoryService.create(data, taxes);
-
-            // Associate variants if provided
-            if (variants.length > 0) {
-                for (const variant of variants) {
-                    // variant debe tener al menos inv_var_sku y un array de atributos (attr_values)
-                    const { inv_var_sku, inv_var_status = 1, attr_values = [] } = variant;
-                    // Crea la variante
-                    const createdVariant = await InventoryVariantsService.createVariant({
-                        inv_id: inventory.inv_id,
-                        inv_var_sku,
-                        inv_var_status
-                    });
-                    if (Array.isArray(attr_values) && attr_values.length > 0) {
-                        await InventoryVariantsService.addAttributesToVariant(
-                            createdVariant.inv_var_id,
-                            attr_values
-                        );
-                    }
-                }
-            }
+            const inventory = await InventoryService.create(data, taxes, variants);
 
             return res.status(201).json({ message: messages.Inventory?.inv_created ?? "Inventory created", data: inventory });
         } catch (e) {
-            console.error('InventoryController.create catch error: ', e);
-            return res.status(500).json({ error: e?.message || e });
+            if (e instanceof Error) {
+                console.error('InventoryController.create catch error: ', e.message, e.stack);
+                return res.status(400).json({ error: e.message });
+            } else {
+                console.error('InventoryController.create catch error: ', e);
+                return res.status(500).json({ error: e?.message || e });
+            }
         }
     }
 
@@ -154,6 +139,11 @@ export class InventoryController {
                     }
 
                     if (Array.isArray(attr_values) && attr_values.length > 0) {
+                        // Validar que todos los attr_values existan antes de asociar
+                        for (const attrval_id of attr_values) {
+                            const exists = await InventoryVariantsService.findAttrValueById(attrval_id);
+                            if (!exists) return res.status(404).json({ message: `Attribute value with id ${attrval_id} does not exist` });
+                        }
                         await InventoryVariantsService.upsertAttributesToVariant(
                             createdVariant.inv_var_id,
                             attr_values
@@ -166,8 +156,13 @@ export class InventoryController {
 
             return res.status(200).json(response);
         } catch (e) {
-            console.error('InventoryController.update catch error: ', e);
-            return res.status(500).json({ error: e?.message || e });
+            if (e instanceof Error) {
+                console.error('InventoryController.create catch error: ', e.message, e.stack);
+                return res.status(400).json({ error: e.message });
+            } else {
+                console.error('InventoryController.create catch error: ', e);
+                return res.status(500).json({ error: e?.message || e });
+            }
         }
     }
 }

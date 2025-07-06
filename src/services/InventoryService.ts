@@ -4,6 +4,7 @@ import messages from "../config/messages";
 import { Companies } from "../entity/companies.entity";
 import { appDataSource } from "../app-data-source";
 import { InventoryTaxes } from "../entity/inventory_taxes.entity";
+import { InventoryVariants } from "../entity/inventory_variants.entity";
 
 export class InventoryService {
     /**
@@ -54,15 +55,15 @@ export class InventoryService {
      * @param inventory Inventory
      * @param taxes Taxes. Optional
      */
-    static async create(inventory: Partial<Inventory>, taxes: number[] = []) {
+    static async create(inventory: Partial<Inventory>, taxes: number[] = [], variants: any[] = []) {
         return await appDataSource.transaction(async transactionalEntityManager => {
 
             const newInventory = transactionalEntityManager.create(Inventory, inventory);
             await transactionalEntityManager.save(newInventory);
 
-            // Validar y asociar taxes
+            // Associate taxes if provided
             if (taxes && taxes.length > 0) {
-                // Validar que todos los taxes existen
+                // Validate that all tax IDs exist
                 const foundTaxes = await transactionalEntityManager
                     .getRepository("Taxes")
                     .createQueryBuilder("tax")
@@ -73,7 +74,6 @@ export class InventoryService {
                     throw new Error("One or more tax IDs do not exist");
                 }
 
-                // Asociar taxes
                 const invTaxes = taxes.map(tax_id => {
                     return transactionalEntityManager.create(InventoryTaxes, {
                         inv_id: newInventory.inv_id,
@@ -81,6 +81,49 @@ export class InventoryService {
                     });
                 });
                 await transactionalEntityManager.save(invTaxes);
+            }
+
+            // Associate variants if provided
+            if (variants.length > 0) {
+                for (const variant of variants) {
+                    // variant debe tener al menos inv_var_sku y un array de atributos (attr_values)
+                    const { inv_var_sku, inv_var_status = 1, attr_values = [] } = variant;
+
+                    let existsVariant = await transactionalEntityManager
+                        .getRepository("InventoryVariants")
+                        .findOne({ where: { inv_id: newInventory.inv_id, inv_var_sku } });
+                    if (existsVariant) throw new Error(`Variant with SKU ${inv_var_sku} already exists for this inventory`);
+
+                    // Create the variant
+                    const createdVariant = transactionalEntityManager.create(InventoryVariants, {
+                        inv_id: newInventory.inv_id,
+                        inv_var_sku,
+                        inv_var_status
+                    });
+                    await transactionalEntityManager.save(InventoryVariants, createdVariant);
+
+                    // Associate attributes if provided
+                    if (Array.isArray(attr_values) && attr_values.length > 0) {
+                        // Validate that all attribute values exist
+                        const foundAttrValues = await transactionalEntityManager
+                            .getRepository("InventoryVariantsAttrs")
+                            .createQueryBuilder("var_attr")
+                            .whereInIds(attr_values)
+                            .getMany();
+
+                        if (foundAttrValues.length !== attr_values.length) {
+                            throw new Error("One or more attribute values do not exist");
+                        }
+                        
+                        const attrRecords = attr_values.map(inv_attrval_id => ({
+                            inv_var_id: createdVariant.inv_var_id,
+                            inv_attrval_id
+                        }));
+                        await transactionalEntityManager
+                            .getRepository("InventoryVariantsAttrs")
+                            .save(attrRecords);
+                    }
+                }
             }
 
             return newInventory;

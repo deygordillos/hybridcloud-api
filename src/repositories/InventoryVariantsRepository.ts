@@ -1,4 +1,4 @@
 import { appDataSource } from "../app-data-source";
-import { InventoryVariantsAttrs } from "../entity/inventory_variants_attrs.entity";
+import { InventoryVariants } from "../entity/inventory_variants.entity";
 
-export const InventoryVariantsAttrsRepository = appDataSource.getRepository(InventoryVariantsAttrs);
+export const InventoryVariantsRepository = appDataSource.getRepository(InventoryVariants);

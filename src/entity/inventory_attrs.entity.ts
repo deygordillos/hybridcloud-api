@@ -6,9 +6,11 @@ import {
     JoinColumn,
     CreateDateColumn,
     UpdateDateColumn,
-    Index
+    Index,
+    OneToMany
 } from "typeorm";
 import { Companies } from "./companies.entity";
+import { InventoryAttrsValues } from "./inventory_attrs_values.entity";
 
 @Index('company_attr_name', ['company_id', 'attr_name'], { unique: true })
 @Index('attr_status', ['attr_status'])
@@ -38,4 +40,7 @@ export class InventoryAttrs {
 
     @UpdateDateColumn({ type: "datetime", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP" })
     updated_at: Date;
+
+    @OneToMany(() => InventoryAttrsValues, (attrValue) => attrValue.inventoryAttr, { cascade: true })
+    attr_values: InventoryAttrsValues[];
 }

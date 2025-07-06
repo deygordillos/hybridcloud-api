@@ -12,6 +12,7 @@ import {
 import { Inventory } from "./inventory.entity";
 import { InventoryVariantsAttrs } from "./inventory_variants_attrs.entity";
 
+@Index('inv_id_inv_var_sku', ['inv_id', 'inv_var_sku'])
 @Index('inv_var_sku_inv_var_status', ['inv_var_sku', 'inv_var_status'])
 @Index('inv_var_status', ['inv_var_status'])
 @Entity('inventory_variants')

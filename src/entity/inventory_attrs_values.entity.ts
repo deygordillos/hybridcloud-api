@@ -15,12 +15,12 @@ export class InventoryAttrsValues {
     @PrimaryGeneratedColumn({ unsigned: true })
     inv_attrval_id: number;
 
-    @Column({ type: "int", unsigned: true })
+    @Column({ type: "int", unsigned: true, select: false })
     inv_attr_id: number;
 
     @ManyToOne(() => InventoryAttrs, { onDelete: "CASCADE", onUpdate: "CASCADE" })
     @JoinColumn({ name: 'inv_attr_id' })
-    inventoryAttribute: InventoryAttrs;
+    inventoryAttr: InventoryAttrs;
 
     @Column({ type: "varchar", length: 150, comment: "value of the inventory attribute" })
     attr_value: string;

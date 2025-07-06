@@ -2,8 +2,8 @@ import { appDataSource } from "../app-data-source";
 import { InventoryVariants } from "../entity/inventory_variants.entity";
 import { InventoryVariantsAttrs } from "../entity/inventory_variants_attrs.entity";
 import { InventoryAttrsValuesRepository } from "../repositories/InventoryAttrsValuesRepository";
-import { InventoryVariantsAttrsRepository } from "../repositories/InventoryVariantsRepository";
-import { InventoryVariantsRepository } from "../repositories/InventoryVariantsRepository copy";
+import { InventoryVariantsRepository } from "../repositories/InventoryVariantsRepository";
+import { InventoryVariantsAttrsRepository } from "../repositories/InventoryVariantsAttrsRepository";
 
 export class InventoryVariantsService {
 
@@ -66,6 +66,13 @@ export class InventoryVariantsService {
     static async bulkCreateVariants(variants: Partial<InventoryVariants>[]) {
         const records = InventoryVariantsRepository.create(variants);
         return await InventoryVariantsRepository.save(records);
+    }
+
+    /**
+     * Find an attribute value by its ID
+     */
+    static async findAttrValueById(inv_attrval_id: number) {
+        return await InventoryAttrsValuesRepository.findOne({ where: { inv_attrval_id } });
     }
 
     /**

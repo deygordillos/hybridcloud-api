@@ -1,6 +1,6 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
-export class InventoryVariantsAttrs_1751747115352 implements MigrationInterface {
+export class InventoryVariantsAttrs_1751747453215 implements MigrationInterface {
 
     table_name = 'inventory_variants_attrs';
 

@@ -51,6 +51,11 @@ export class InventoryVariants_1751747115352 implements MigrationInterface {
         );
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
+            name: 'inv_id_inv_var_sku',
+            columnNames: ['inv_id', 'inv_var_sku']
+        }))
+
+        await queryRunner.createIndex(this.table_name, new TableIndex({
             name: 'inv_var_sku_inv_var_status',
             columnNames: ['inv_var_sku', 'inv_var_status']
         }))
@@ -79,6 +84,7 @@ export class InventoryVariants_1751747115352 implements MigrationInterface {
 
         await queryRunner.dropIndex(this.table_name, 'inv_var_status');
         await queryRunner.dropIndex(this.table_name, 'inv_var_sku_inv_var_status');
+        await queryRunner.dropIndex(this.table_name, 'inv_id_inv_var_sku');
         await queryRunner.dropTable(this.table_name);
     }
 
