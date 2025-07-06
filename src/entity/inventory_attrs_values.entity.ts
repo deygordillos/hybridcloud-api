@@ -15,7 +15,7 @@ export class InventoryAttrsValues {
     @PrimaryGeneratedColumn({ unsigned: true })
     inv_attrval_id: number;
 
-    @Column({ type: "int", unsigned: true, select: false })
+    @Column({ type: "int", unsigned: true })
     inv_attr_id: number;
 
     @ManyToOne(() => InventoryAttrs, { onDelete: "CASCADE", onUpdate: "CASCADE" })

@@ -18,9 +18,40 @@ export class InventoryService {
     ) {
         const [data, total] = await InventoryRepository
             .createQueryBuilder("inv")
-            .innerJoinAndSelect("inv.inventoryFamily", "family")
-            .leftJoinAndSelect("inv.inventoryTaxes", "invtaxes")
-            .leftJoinAndSelect("invtaxes.tax", "taxes")
+            .select([
+                "inv.inv_id",
+                "inv.inv_code",
+                "inv.inv_description",
+                "inv.inv_status",
+                "inv.inv_type",
+                "inv.inv_has_variants",
+                "inv.inv_is_exempt",
+                "inv.inv_is_stockable",
+                "inv.inv_is_lot_managed",
+                "inv.inv_brand",
+                "inv.inv_model",
+                "family.id_inv_family",
+                "family.inv_family_code",
+                "family.inv_family_name",
+                "invvariants.inv_var_id",
+                "invvariants.inv_var_sku",
+                "invvariants.inv_var_status",
+                "variantAttrs.inv_attrval_id",
+                "attrValue.attr_value",
+                "inventoryAttr.attr_name",
+                "taxes.tax_id",
+                "taxes.tax_code",
+                "taxes.tax_name",
+                "taxes.tax_type",
+                "taxes.tax_value",
+            ])
+            .innerJoin("inv.inventoryFamily", "family")
+            .leftJoin("inv.inventoryTaxes", "invtaxes")
+            .leftJoin("invtaxes.tax", "taxes")
+            .leftJoin("inv.inventoryVariants", "invvariants")
+            .leftJoin("invvariants.variantAttrs", "variantAttrs")
+            .leftJoin("variantAttrs.attrValue", "attrValue")
+            .leftJoin("attrValue.inventoryAttr", "inventoryAttr")
             .where("family.company_id = :company_id", { company_id })
             .andWhere("inv.inv_status = :inv_status", { inv_status })
             .orderBy("inv.inv_id", "ASC")
@@ -106,8 +137,8 @@ export class InventoryService {
                     if (Array.isArray(attr_values) && attr_values.length > 0) {
                         // Validate that all attribute values exist
                         const foundAttrValues = await transactionalEntityManager
-                            .getRepository("InventoryVariantsAttrs")
-                            .createQueryBuilder("var_attr")
+                            .getRepository("InventoryAttrsValues")
+                            .createQueryBuilder("attrval")
                             .whereInIds(attr_values)
                             .getMany();
 

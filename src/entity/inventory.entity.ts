@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { InventoryFamily } from "./inventoryFamily.entity";
 import { InventoryTaxes } from "./inventory_taxes.entity";
+import { InventoryVariants } from "./inventory_variants.entity";
 
 @Index('id_inv_family_inv_code', ['id_inv_family', 'inv_code'], { unique: true })
 @Index('inv_code', ['inv_code', 'inv_description'])
@@ -71,4 +72,7 @@ export class Inventory {
 
     @OneToMany(() => InventoryTaxes, inventoryTaxes => inventoryTaxes.inventory)
     inventoryTaxes: InventoryTaxes[];
+
+    @OneToMany(() => InventoryVariants, inventoryVariants => inventoryVariants.inventory)
+    inventoryVariants: InventoryVariants[];
 }
