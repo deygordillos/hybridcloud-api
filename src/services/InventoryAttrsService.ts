@@ -8,11 +8,17 @@ export class InventoryAttrsService {
     /**
      * Get all attributes by company
      */
-    static async getAllByCompany(company_id: number) {
-        return await InventoryAttrsRepository.find({
+    static async getAllByCompany(company_id: number, offset: number = 0, limit: number = 10, attr_status: number = 1) {
+        const [data, total] = await InventoryAttrsRepository.findAndCount({
             where: { company_id },
             relations: ["attr_values"],
+            skip: offset,
+            take: limit,
+            order: { inv_attr_id: "ASC" },
+            ...(attr_status ? { where: { attr_status } } : {})
         });
+
+        return { data, total }
     }
 
     /**
@@ -63,7 +69,20 @@ export class InventoryAttrsService {
         return await InventoryAttrsValuesRepository.save(attrValue);
     }
 
+    /**
+     * Find an attribute value by attribute ID and value
+     * @param inv_attr_id Attribute ID
+     * @param attr_value Attribute value
+     * @returns InventoryAttrsValues or null if not found
+     */
     static async findAttrValue(inv_attr_id: number, attr_value: string) {
         return await InventoryAttrsValuesRepository.findOne({ where: { inv_attr_id, attr_value } });
+    }
+
+    /**
+     * Find an attribute value by its ID
+     */
+    static async findAttrValueById(inv_attrval_id: number) {
+        return await InventoryAttrsValuesRepository.findOne({ where: { inv_attrval_id } });
     }
 }

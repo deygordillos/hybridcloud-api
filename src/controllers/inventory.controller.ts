@@ -5,6 +5,7 @@ import { InventoryFamilyService } from "../services/InventoryFamilyService";
 import { TaxesService } from "../services/TaxesService";
 import { InventoryTaxesService } from "../services/InventoryTaxesService";
 import { InventoryVariantsService } from "../services/InventoryVariantsService";
+import { InventoryAttrsService } from "../services/InventoryAttrsService";
 export class InventoryController {
     /**
      * List inventories by company
@@ -140,9 +141,9 @@ export class InventoryController {
 
                     if (Array.isArray(attr_values) && attr_values.length > 0) {
                         // Validar que todos los attr_values existan antes de asociar
-                        for (const attrval_id of attr_values) {
-                            const exists = await InventoryVariantsService.findAttrValueById(attrval_id);
-                            if (!exists) return res.status(404).json({ message: `Attribute value with id ${attrval_id} does not exist` });
+                        for (const inv_attrval_id of attr_values) {
+                            const exists = await InventoryAttrsService.findAttrValueById(inv_attrval_id);
+                            if (!exists) return res.status(404).json({ message: `Attribute value with id ${inv_attrval_id} does not exist` });
                         }
                         await InventoryVariantsService.upsertAttributesToVariant(
                             createdVariant.inv_var_id,

@@ -69,13 +69,6 @@ export class InventoryVariantsService {
     }
 
     /**
-     * Find an attribute value by its ID
-     */
-    static async findAttrValueById(inv_attrval_id: number) {
-        return await InventoryAttrsValuesRepository.findOne({ where: { inv_attrval_id } });
-    }
-
-    /**
      * Associate attributes to a variant
      */
     static async addAttributesToVariant(inv_var_id: number, attrs: number[]) {
