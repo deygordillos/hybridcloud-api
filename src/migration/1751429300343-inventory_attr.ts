@@ -5,17 +5,19 @@ export class InventoryAttrs_1751429300343 implements MigrationInterface {
     table_name = 'inventory_attrs';
     
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const isTest = process.env.NODE_ENV === 'test';
+
         await queryRunner.createTable(
             new Table({
                 name: this.table_name,
                 columns: [
                     {
                         name: "inv_attr_id",
-                        type: "int",
+                        type: isTest ? "integer" : "int",
                         isPrimary: true,
                         isGenerated: true,
-                        unsigned: true,
-                        generationStrategy: "increment"
+                        generationStrategy: "increment",
+                        ...(isTest ? {} : { unsigned: true })
                     },
                     {
                         name: "company_id",

@@ -17,10 +17,10 @@ export class Groups {
     @Column({ type: 'tinyint', width: 1, default: 1, comment: "1 activo, 0 inactivo" })
     group_status: number
 
-    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
-    @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
     updated_at: Date;
 
     @ManyToOne(() => Users, (users) => users.groups, {

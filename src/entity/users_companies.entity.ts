@@ -28,6 +28,6 @@ export class UsersCompanies {
     @Column({ type: "tinyint", width: 1, default: 0, comment: "Si es o no user admin de la empresa" })
     is_company_admin: number
 
-    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 }

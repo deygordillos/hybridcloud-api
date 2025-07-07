@@ -8,7 +8,7 @@ import { Customers } from "./customers.entity";
 @Index('company_slug', ['company_slug'], {})
 @Index('company_razon_social', ['company_razon_social'], {})
 
-@Entity('Companies')
+@Entity('companies')
 export class Companies {
     @PrimaryGeneratedColumn({ type: 'int', unsigned: true, comment: "id incremental de la empresa" })
     company_id: number
@@ -29,10 +29,10 @@ export class Companies {
     @Column({ type: 'tinyint', width: 1, default: 1, comment: "1 activo, 0 inactivo" })
     company_status: number
 
-    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
-    @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
     updated_at: Date;
 
     @Column({ length: 7, comment: "hexadecimal de la empresa", nullable: true })
@@ -83,11 +83,11 @@ export class Companies {
     @Column({ length: 200, comment: "correo contacto de la empresa", nullable: true })
     company_contact_email: string
 
-    @Column({ comment: "fecha de inicio de la licencia" })
-    company_start: Date
+    @Column({ comment: "fecha de inicio de la licencia", nullable: true })
+    company_start: Date | null
 
-    @Column({ comment: "fecha de fin de la licencia" })
-    company_end: Date
+    @Column({ comment: "fecha de fin de la licencia", nullable: true })
+    company_end: Date | null
 
     @ManyToOne(() => Countries, (country) => country.companies, {
         onDelete: "CASCADE",

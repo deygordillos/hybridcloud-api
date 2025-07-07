@@ -39,14 +39,14 @@ export class Users {
     @Column({ length: 20, comment: "user phone number", nullable: true })
     user_phone: string
 
-    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
-    @UpdateDateColumn({ type: 'timestamp' })
+    @UpdateDateColumn({ type: 'datetime' })
     updated_at: Date;
 
-    @Column({ type: 'timestamp' })
-    last_login: Date;
+    @Column({ type: 'datetime', nullable: true, comment: "last login date" })
+    last_login: Date | null;
 
     @Column({ length: 700, comment: "access token login", nullable: true, select: false })
     access_token: string

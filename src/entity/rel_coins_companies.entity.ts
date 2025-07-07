@@ -21,7 +21,7 @@ export class Rel_Coins_Companies {
     @Column({ type: 'decimal', precision: 10, scale: 6,default: 1, comment: "factor de conversión" })
     coin_factor: number
     
-    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
     /////////////////////////////////////////////////////////////

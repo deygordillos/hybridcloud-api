@@ -15,7 +15,7 @@ export class Rel_Coins_Companies_Sucursal {
     @Column({ type: "int", comment: "id sucursal de la empresa" })
     sucursal_id: number;
 
-    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
     /////////////////////////////////////////////////////////////

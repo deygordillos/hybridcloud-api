@@ -6,6 +6,8 @@ export class Users_1742525063674 implements MigrationInterface {
     table_name = 'Users';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const isTest = process.env.NODE_ENV === 'test';
+
         // Create tables
         await queryRunner.createTable(
             new Table({
@@ -13,11 +15,11 @@ export class Users_1742525063674 implements MigrationInterface {
                 columns: [
                     {
                         name: "user_id",
-                        type: "int",
+                        type: isTest ? "integer" : "int",
                         isPrimary: true,
                         isGenerated: true,
-                        unsigned: true,
-                        generationStrategy: "increment"
+                        generationStrategy: "increment",
+                        ...(isTest ? {} : { unsigned: true })
                     },
                     {
                         name: "ip_address",
@@ -82,17 +84,19 @@ export class Users_1742525063674 implements MigrationInterface {
                     },
                     {
                         name: "created_at",
-                        type: "timestamp",
+                        type: "datetime",
                         default: "CURRENT_TIMESTAMP"
                     },
                     {
                         name: "updated_at",
-                        type: "timestamp",
+                        type: "datetime",
                         default: "CURRENT_TIMESTAMP"
                     },
                     {
                         name: "last_login",
-                        type: "timestamp"
+                        type: "datetime",
+                        isNullable: true,
+                        comment: "last login date"
                     },
                     {
                         name: "access_token",

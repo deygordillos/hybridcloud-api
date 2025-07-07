@@ -2,9 +2,10 @@ import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } f
 
 export class Companies_1742758897231 implements MigrationInterface {
 
-    table_name = 'Companies';
+    table_name = 'companies';
         
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const isTest = process.env.NODE_ENV === 'test';
 
         await queryRunner.createTable(
             new Table({
@@ -12,12 +13,12 @@ export class Companies_1742758897231 implements MigrationInterface {
                 columns: [
                     {
                         name: "company_id",
-                        type: "int",
+                        type: isTest ? "integer" : "int",
                         isPrimary: true,
                         isGenerated: true,
-                        unsigned: true,
                         generationStrategy: "increment",
-                        comment: "id incremental de la empresa"
+                        comment: "id incremental de la empresa",
+                        ...(isTest ? {} : { unsigned: true })
                     },
                     {
                         name: "group_id",
@@ -172,11 +173,13 @@ export class Companies_1742758897231 implements MigrationInterface {
                     {
                         name: "company_start",
                         type: "date",
+                        isNullable: true,
                         comment: "fecha de inicio de la licencia"
                     },
                     {
                         name: "company_end",
                         type: "date",
+                        isNullable: true,
                         comment: "fecha de fin de la licencia"
                     },
                     {
