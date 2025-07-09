@@ -12,14 +12,21 @@ export function successResponse(res: Response, message: string = 'Success', code
         success: true,
         message,
         data
-      };
+    };
     
-      if (pagination) {
+    if (pagination) {
         response.pagination = pagination;
-      }
-    return res.status(code).json({ response });
+    }
+    return res.status(code).json( response );
 }
 
 export function errorResponse(res: Response, message: string = 'Error', code: number = 500, errors : any = null) {
-    return res.status(code).json({ success: false, message, errors });
+    const response: any = {
+        success: false,
+        message
+    };
+    if (errors) {
+        response.errors = errors;
+    }
+    return res.status(code).json( response );
 }

@@ -386,13 +386,7 @@ router.patch('/:id',
         companyMiddleware,
         param("id")
             .notEmpty().withMessage("id is required")
-            .isInt({ min: 1 }).withMessage("You must send a valid id")
-            .custom((value) => {
-                if (typeof value === 'string') {
-                    throw new Error("id must be a number, not a string");
-                }
-                return true;
-            }),
+            .isInt({ min: 1 }).withMessage("You must send a valid id"),
         body("inv_var_id")
             .optional()
             .isInt({ min: 1 }).withMessage("You must send a valid inv_var_id")
@@ -455,37 +449,6 @@ router.patch('/:id',
         validatorRequestMiddleware
     ],
     InventoryLotsController.update
-);
-
-/**
- * @route DELETE /api/v1/inventory/lots/:id
- * @desc Delete an inventory lot
- * @access Private (requires authentication and company context)
- * @param {number} id - The ID of the inventory lot to delete
- * @returns {Object} Success message
- * @example
- * DELETE /api/v1/inventory/lots/456
- * Response: {
- *   "success": true,
- *   "message": "Inventory lot deleted successfully"
- * }
- */
-router.delete('/:id',
-    [
-        authMiddleware,
-        companyMiddleware,
-        param("id")
-            .notEmpty().withMessage("id is required")
-            .isInt({ min: 1 }).withMessage("You must send a valid id")
-            .custom((value) => {
-                if (typeof value === 'string') {
-                    throw new Error("id must be a number, not a string");
-                }
-                return true;
-            }),
-        validatorRequestMiddleware
-    ],
-    InventoryLotsController.delete
 );
 
 /**

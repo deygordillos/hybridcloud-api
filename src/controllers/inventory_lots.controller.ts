@@ -35,13 +35,15 @@ export class InventoryLotsController {
 
             // Validate lot data
             const validation = await InventoryLotsService.validateLotData(lotData);
-            if (!validation.isValid) {
-                return errorResponse(res, "Validation failed", 400, validation.errors);
-            }
+            if (!validation.isValid) return errorResponse(res, "Validation failed", 400, validation.errors);
 
             // Validate that the inventory variant exists
             const variant = await InventoryVariantsService.findById(lotData.inv_var_id!);
-            if (!variant) return errorResponse(res, "Inventory variant not found", 400);
+            if (!variant) return errorResponse(res, "Inventory variant not found", 404);
+
+            // Validate that the inventory variant exists
+            const filteredLots = await InventoryLotsService.findAllByVariantId(lotData.inv_var_id!);
+            if (filteredLots.length > 0) return errorResponse(res, "Variant has already a lot", 400);
 
             // Check if lot number already exists
             const lotExists = await InventoryLotsService.checkLotNumberExists(lotData.lot_number!);
@@ -90,30 +92,6 @@ export class InventoryLotsController {
             return successResponse(res, "Inventory lot updated successfully", 200, updatedLot);
         } catch (error) {
             console.error("Error updating inventory lot:", error);
-            return errorResponse(res, "Internal server error", 500);
-        }
-    }
-
-    /**
-     * Delete inventory lot
-     */
-    static async delete(req: Request, res: Response) {
-        try {
-            const { id } = req.params;
-            const lotId = parseInt(id);
-
-            if (isNaN(lotId)) return errorResponse(res, "Invalid lot ID", 400);
-
-            // Check if lot exists
-            const existingLot = await InventoryLotsService.findById(lotId);
-            if (!existingLot) return errorResponse(res, "Inventory lot not found", 404);
-
-            const deleted = await InventoryLotsService.delete(lotId);
-            if (!deleted) return errorResponse(res, "Failed to delete inventory lot", 500);
-
-            return successResponse(res, "Inventory lot deleted successfully", 200);
-        } catch (error) {
-            console.error("Error deleting inventory lot:", error);
             return errorResponse(res, "Internal server error", 500);
         }
     }
