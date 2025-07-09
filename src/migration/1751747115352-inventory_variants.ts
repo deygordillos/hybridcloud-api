@@ -5,17 +5,19 @@ export class InventoryVariants_1751747115352 implements MigrationInterface {
     table_name = 'inventory_variants';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const isTest = process.env.NODE_ENV === 'test';
+
         await queryRunner.createTable(
             new Table({
                 name: this.table_name,
                 columns: [
                     {
                         name: "inv_var_id",
-                        type: "int",
+                        type: isTest ? "integer" : "int",
                         isPrimary: true,
                         isGenerated: true,
-                        unsigned: true,
-                        generationStrategy: "increment"
+                        generationStrategy: "increment",
+                        ...(isTest ? {} : { unsigned: true })
                     },
                     {
                         name: "inv_id",

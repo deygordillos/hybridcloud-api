@@ -18,7 +18,7 @@ export class Coins {
     @Column({ width: 1, default: 1, comment: "1 activo, 0 inactivo" })
     coin_status: number
 
-    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 
     @Column({ type: 'decimal', precision: 10, scale: 6, default: 1, comment: "factor de conversión" })

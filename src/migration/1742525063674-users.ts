@@ -6,6 +6,8 @@ export class Users_1742525063674 implements MigrationInterface {
     table_name = 'Users';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const isTest = process.env.NODE_ENV === 'test';
+
         // Create tables
         await queryRunner.createTable(
             new Table({
@@ -13,11 +15,11 @@ export class Users_1742525063674 implements MigrationInterface {
                 columns: [
                     {
                         name: "user_id",
-                        type: "int",
+                        type: isTest ? "integer" : "int",
                         isPrimary: true,
                         isGenerated: true,
-                        unsigned: true,
-                        generationStrategy: "increment"
+                        generationStrategy: "increment",
+                        ...(isTest ? {} : { unsigned: true })
                     },
                     {
                         name: "ip_address",
@@ -82,17 +84,19 @@ export class Users_1742525063674 implements MigrationInterface {
                     },
                     {
                         name: "created_at",
-                        type: "timestamp",
+                        type: "datetime",
                         default: "CURRENT_TIMESTAMP"
                     },
                     {
                         name: "updated_at",
-                        type: "timestamp",
+                        type: "datetime",
                         default: "CURRENT_TIMESTAMP"
                     },
                     {
                         name: "last_login",
-                        type: "timestamp"
+                        type: "datetime",
+                        isNullable: true,
+                        comment: "last login date"
                     },
                     {
                         name: "access_token",
@@ -126,12 +130,18 @@ export class Users_1742525063674 implements MigrationInterface {
         await queryRunner.createIndex(this.table_name, new TableIndex({ name: "user_status_username", columnNames: ["user_status", "username"] }));
         await queryRunner.createIndex(this.table_name, new TableIndex({ name: "name", columnNames: ["first_name", "last_name"] }));
 
-        // Insert default admin user
-        const hashedPassword = await bcrypt.hash("admin", config.BCRYPT_SALT);
-        await queryRunner.query(`INSERT INTO ${this.table_name} (username, password, email, first_name, is_admin) 
-            VALUES (?, ?, ?, ?, ?);`, 
-            ['admin', hashedPassword, 'admin@admin.com', 'administrator', 1]
+        const [existing] = await queryRunner.query(
+        `SELECT 1 FROM ${this.table_name} WHERE username = ? LIMIT 1`,
+        ['admin']
         );
+        if (!existing) {
+            // Insert default admin user
+            const hashedPassword = await bcrypt.hash("admin", config.BCRYPT_SALT);
+            await queryRunner.query(`INSERT INTO ${this.table_name} (username, password, email, first_name, is_admin) 
+                VALUES (?, ?, ?, ?, ?);`, 
+                ['admin', hashedPassword, 'admin@admin.com', 'administrator', 1]
+            );
+        }
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

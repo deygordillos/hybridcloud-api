@@ -4,7 +4,6 @@
   "description": "API for Hybrid Systems - Insite Venezuela",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node dist/index.js",
     "dev": "tsc-watch --onSuccess \"ts-node ./src/index.ts\" ",
     "build": "tsc",
@@ -12,7 +11,10 @@
     "migration:create": "npx typeorm migration:create ./src/migration/migration",
     "migration:generate": "npm run typeorm -- migration:generate -d ./src/app-data-source.ts ./src/migration/migration",
     "migration:run": "npm run typeorm -- migration:run -d ./src/app-data-source.ts",
-    "migration:revert": "npm run typeorm -- migration:revert -d ./src/app-data-source.ts"
+    "migration:revert": "npm run typeorm -- migration:revert -d ./src/app-data-source.ts",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -23,13 +25,18 @@
     "api",
     "insiteve"
   ],
-  "author": "Insite Venezuela",
-  "license": "MIT",
+  "author": "Dey Gordillo",
+  "license": "See LICENSE",
   "bugs": {
     "url": "https://gitlab.com/hybrid-insite/express-api-hybrid/issues"
   },
   "homepage": "https://gitlab.com/hybrid-insite/express-api-hybrid#readme",
   "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.0.3",
+    "sqlite3": "^5.1.7",
+    "supertest": "^7.1.1",
+    "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "tsc-watch": "^6.0.4",
     "tsconfig-paths": "^4.2.0",

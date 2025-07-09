@@ -34,7 +34,7 @@ export class Inventory {
     @Column({ type: "varchar", length: 100, nullable: true, comment: "description of the inventory" })
     inv_description: string | null;
 
-    @Column({ type: "mediumtext", nullable: true, comment: "detailed description of the inventory" })
+    @Column({ type: "text", nullable: true, comment: "detailed description of the inventory" })
     inv_description_detail: string | null;
 
     @Column({ type: "tinyint", width: 1, default: 1, comment: "1 active, 0 inactive" })

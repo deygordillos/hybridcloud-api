@@ -5,17 +5,19 @@ export class TypesOfPrices_1751237417321 implements MigrationInterface {
     table_name = 'types_of_prices';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const isTest = process.env.NODE_ENV === 'test';
+
         await queryRunner.createTable(
             new Table({
                 name: this.table_name,
                 columns: [
                     {
                         name: "typeprice_id",
-                        type: "int",
+                        type: isTest ? "integer" : "int",
                         isPrimary: true,
                         isGenerated: true,
-                        unsigned: true,
-                        generationStrategy: "increment"
+                        generationStrategy: "increment",
+                        ...(isTest ? {} : { unsigned: true })
                     },
                     {
                         name: "company_id",

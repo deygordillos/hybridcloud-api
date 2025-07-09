@@ -5,6 +5,7 @@ export class Customers_1743044472599 implements MigrationInterface {
     table_name = 'Customers';
             
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const isTest = process.env.NODE_ENV === 'test';
 
         await queryRunner.createTable(
             new Table({
@@ -12,11 +13,11 @@ export class Customers_1743044472599 implements MigrationInterface {
                 columns: [
                     {
                         name: "cust_id",
-                        type: "int",
+                        type: isTest ? "integer" : "int",
                         isPrimary: true,
                         isGenerated: true,
-                        unsigned: true,
-                        generationStrategy: "increment"
+                        generationStrategy: "increment",
+                        ...(isTest ? {} : { unsigned: true })
                     },
                     {
                         name: "company_id",

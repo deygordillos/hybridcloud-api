@@ -5,6 +5,8 @@ export class Groups_1742752459924 implements MigrationInterface {
     table_name = 'Groups';
     
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const isTest = process.env.NODE_ENV === 'test';
+
         // Create tables
         await queryRunner.createTable(
             new Table({
@@ -12,12 +14,12 @@ export class Groups_1742752459924 implements MigrationInterface {
                 columns: [
                     {
                         name: "group_id",
-                        type: "int",
+                        type: isTest ? "integer" : "int",
                         isPrimary: true,
                         isGenerated: true,
-                        unsigned: true,
                         generationStrategy: "increment",
-                        comment: "id incremental del grupo"
+                        comment: "id incremental del grupo",
+                        ...(isTest ? {} : { unsigned: true })
                     },
                     {
                         name: "group_name",
