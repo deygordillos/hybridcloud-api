@@ -1,11 +1,16 @@
 import { InventoryFamilyService } from "../../src/services/InventoryFamilyService";
 import { appDataSource } from '../../src/app-data-source';
 import { createTestCompany } from "../helpers/setupTestData";
+import { Companies } from "../../src/entity/companies.entity";
+
+let company: Companies;
 
 beforeAll(async () => {
   process.env.NODE_ENV = 'test';
   await appDataSource.initialize();
   await appDataSource.runMigrations();
+
+  company = await createTestCompany()
 });
 
 afterAll(async () => {
@@ -14,7 +19,6 @@ afterAll(async () => {
 
 describe('Inventory Family Service', () => {
   it('should create an inventory family', async () => {
-    const company = await createTestCompany()
 
     const inventory_family = await InventoryFamilyService.create({
       company_id: company,
@@ -31,8 +35,6 @@ describe('Inventory Family Service', () => {
   });
 
   it('should get all inventory family', async () => {
-    const company = await createTestCompany()
-
     const { data, total } = await InventoryFamilyService.getInventoryFamilyByCompanyId(company.company_id);
     expect(data.length).toBeGreaterThan(0);
   });

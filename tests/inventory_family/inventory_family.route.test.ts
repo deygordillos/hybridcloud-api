@@ -39,8 +39,8 @@ describe('Inventory Family Routes', () => {
 
   it('should get inventory families', async () => {
     const res = await request(app)
-      .set(authHeader(token))
-      .get('/api/v1/inventory/family');
+      .get('/api/v1/inventory/family')
+      .set(authHeader(token));
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body.data)).toBe(true);
   });

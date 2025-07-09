@@ -12,16 +12,22 @@ export const authHeader = (token: string) => ({
 });
 
 export const createTestCompany = async () => {
-  const hashedPassword = await bcrypt.hash("admin", config.BCRYPT_SALT);
-  const user = UserRepository.create({
-    username: "admin" + Math.floor(Math.random() * 1000),
-    password: hashedPassword,
-    first_name: "Admin",
-    last_name: "User",
-    email: "admin@test.com",
-    is_admin: 1
+  let admin_user = await UserRepository.findOne({
+    where: { username: 'admin' }
   });
-  const admin_user = await UserRepository.save(user)
+
+  if (!admin_user) {
+    const hashedPassword = await bcrypt.hash("admin", config.BCRYPT_SALT);
+    const user = UserRepository.create({
+      username: "admin",
+      password: hashedPassword,
+      first_name: "Admin",
+      last_name: "User",
+      email: "admin@test.com",
+      is_admin: 1
+    });
+    admin_user = await UserRepository.save(user)
+  }
 
   const group = GroupRepository.create({
     group_name: "Test Group",
@@ -42,27 +48,31 @@ export const createTestCompany = async () => {
 };
 
 export const createTestUserAndToken = async (company: Companies) => {
-
-  const hashedPassword = await bcrypt.hash("test", config.BCRYPT_SALT);
-  const user = UserRepository.create({
-    username: 'test',
-    password: hashedPassword,
-    first_name: 'Juan',
-    last_name: 'Perez',
-    email: 'test2@gmail.com'
+  let test_user = await UserRepository.findOne({
+    where: { username: 'test' }
   });
-  await UserRepository.save(user);
+  if (!test_user) {
+    const hashedPassword = await bcrypt.hash("test", config.BCRYPT_SALT);
+    const user = UserRepository.create({
+      username: 'test',
+      password: hashedPassword,
+      first_name: 'Juan',
+      last_name: 'Perez',
+      email: 'test2@gmail.com'
+    });
+    test_user = await UserRepository.save(user);
+  }
 
-  const access_token = generateToken(user);
-  const refresh_token = generateRefreshToken(user);
+  const access_token = generateToken(test_user);
+  const refresh_token = generateRefreshToken(test_user);
 
   const is_company_admin : number = 1;
   const newRelation = UsersCompaniesRepository.create({
-      user_id: user,
+      user_id: test_user,
       company_id: company,
       is_company_admin
   });
   await UsersCompaniesRepository.save(newRelation);
 
-  return { access_token, refresh_token, data: user };
+  return { access_token, refresh_token, data: test_user };
 };

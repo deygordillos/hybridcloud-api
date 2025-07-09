@@ -130,12 +130,18 @@ export class Users_1742525063674 implements MigrationInterface {
         await queryRunner.createIndex(this.table_name, new TableIndex({ name: "user_status_username", columnNames: ["user_status", "username"] }));
         await queryRunner.createIndex(this.table_name, new TableIndex({ name: "name", columnNames: ["first_name", "last_name"] }));
 
-        // Insert default admin user
-        const hashedPassword = await bcrypt.hash("admin", config.BCRYPT_SALT);
-        await queryRunner.query(`INSERT INTO ${this.table_name} (username, password, email, first_name, is_admin) 
-            VALUES (?, ?, ?, ?, ?);`, 
-            ['admin', hashedPassword, 'admin@admin.com', 'administrator', 1]
+        const [existing] = await queryRunner.query(
+        `SELECT 1 FROM ${this.table_name} WHERE username = ? LIMIT 1`,
+        ['admin']
         );
+        if (!existing) {
+            // Insert default admin user
+            const hashedPassword = await bcrypt.hash("admin", config.BCRYPT_SALT);
+            await queryRunner.query(`INSERT INTO ${this.table_name} (username, password, email, first_name, is_admin) 
+                VALUES (?, ?, ?, ?, ?);`, 
+                ['admin', hashedPassword, 'admin@admin.com', 'administrator', 1]
+            );
+        }
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
