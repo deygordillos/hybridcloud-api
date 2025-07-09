@@ -7,6 +7,15 @@ import { InventoryVariantsAttrsRepository } from "../repositories/InventoryVaria
 
 export class InventoryVariantsService {
 
+    /**
+     * Find inventory variant by ID
+     */
+    static async findById(inv_var_id: number) {
+        return await InventoryVariantsRepository.findOne({
+            where: { inv_var_id }
+        });
+    }
+
     static async findBySku(inv_id: number, inv_var_sku: string) {
         return await InventoryVariantsRepository.findOne({
             where: {

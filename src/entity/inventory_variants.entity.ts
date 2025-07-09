@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { Inventory } from "./inventory.entity";
 import { InventoryVariantsAttrs } from "./inventory_variants_attrs.entity";
+import { InventoryLots } from "./inventory_lots.entity";
 
 @Index('inv_id_inv_var_sku', ['inv_id', 'inv_var_sku'])
 @Index('inv_var_sku_inv_var_status', ['inv_var_sku', 'inv_var_status'])
@@ -41,4 +42,7 @@ export class InventoryVariants {
 
     @OneToMany(() => InventoryVariantsAttrs, iva => iva.inventoryVariant)
     variantAttrs: InventoryVariantsAttrs[];
+
+    @OneToMany(() => InventoryLots, lot => lot.inventoryVariant)
+    inventoryLots: InventoryLots[];
 }
