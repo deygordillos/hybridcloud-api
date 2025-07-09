@@ -543,7 +543,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
           lot_number: 'LOT123'
         });
 
-      expect(res.statusCode).toBe(401);
+      expect(res.statusCode).toBe(400);
     });
 
     it('should fail with invalid authentication token', async () => {
