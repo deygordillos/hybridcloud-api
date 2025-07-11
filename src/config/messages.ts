@@ -102,4 +102,12 @@ export default {
         storage_exists: 'Sorry, Lot storage exists',
         storage_needed: 'You must have send a lot storage id'
     },
+    InventoryMovements: {
+        movement_created: 'Inventory movement created',
+        movement_updated: 'Inventory movement updated',
+        movement_deleted: 'Inventory movement deleted',
+        movement_not_exists: 'Sorry, Inventory movement does not exists',
+        movement_exists: 'Sorry, Inventory movement exists',
+        movement_needed: 'You must have send an inventory movement id'
+    },
 }
