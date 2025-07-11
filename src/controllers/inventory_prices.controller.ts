@@ -90,6 +90,7 @@ export class InventoryPricesController {
      */
     static async create(req: Request, res: Response) {
         try {
+            const { user_id } = req['user'] || { user_id: 0 };
             const data = req.body;
 
             // Validate required fields
@@ -121,7 +122,7 @@ export class InventoryPricesController {
                 );
             }
 
-            const price = await InventoryPricesService.create(data);
+            const price = await InventoryPricesService.create(data, user_id);
 
             return successResponse(res, 
                 messages.InventoryPrices?.price_created ?? "Inventory price created", 
@@ -147,6 +148,7 @@ export class InventoryPricesController {
      */
     static async update(req: Request, res: Response) {
         try {
+            const { user_id } = req['user'] || { user_id: 0 };
             const inv_price_id = parseInt(req.params.id, 10);
             if (!inv_price_id) return errorResponse(res, 
                 messages.InventoryPrices?.price_needed ?? "Inventory price ID is required", 
@@ -167,7 +169,7 @@ export class InventoryPricesController {
                 }
             }
 
-            const response = await InventoryPricesService.update(price, req.body);
+            const response = await InventoryPricesService.update(price, req.body, user_id);
 
             return successResponse(res, response.message, 200, response.data);
         } catch (e) {

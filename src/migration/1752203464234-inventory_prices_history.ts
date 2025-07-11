@@ -1,8 +1,8 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } from "typeorm";
 
-export class InventoryPrices_1752105600781 implements MigrationInterface {
+export class InventoryPricesHistory_1752203464234 implements MigrationInterface {
 
-    table_name = 'inventory_prices';
+    table_name = 'inventory_prices_history';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         const isTest = process.env.NODE_ENV === 'test';
@@ -12,7 +12,7 @@ export class InventoryPrices_1752105600781 implements MigrationInterface {
                 name: this.table_name,
                 columns: [
                     {
-                        name: "inv_price_id",
+                        name: "inv_price_hist_id",
                         type: isTest ? "integer" : "int",
                         isPrimary: true,
                         isGenerated: true,
@@ -154,11 +154,6 @@ export class InventoryPrices_1752105600781 implements MigrationInterface {
                         default: "CURRENT_TIMESTAMP",
                     },
                     {
-                        name: "updated_at",
-                        type: "datetime",
-                        default: "CURRENT_TIMESTAMP",
-                    },
-                    {
                         name: "user_id",
                         type: "int",
                         unsigned: true,
@@ -168,6 +163,16 @@ export class InventoryPrices_1752105600781 implements MigrationInterface {
             }),
             true,
         );
+
+        await queryRunner.createIndex(this.table_name, new TableIndex({
+            name: 'inv_var_id',
+            columnNames: ['inv_var_id']
+        }))
+
+        await queryRunner.createIndex(this.table_name, new TableIndex({
+            name: 'typeprice_id',
+            columnNames: ['typeprice_id']
+        }))
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
             name: 'inv_var_id_typeprice_id',
@@ -184,52 +189,20 @@ export class InventoryPrices_1752105600781 implements MigrationInterface {
             columnNames: ['currency_id_ref']
         }))
 
-        await queryRunner.createForeignKey(
-            this.table_name,
-            new TableForeignKey({
-                columnNames: ["inv_var_id"],
-                referencedColumnNames: ["inv_var_id"],
-                referencedTableName: "inventory_variants",
-                onUpdate: "CASCADE",
-                onDelete: "CASCADE",
-            }),
-        )
+        await queryRunner.createIndex(this.table_name, new TableIndex({
+            name: 'user_id',
+            columnNames: ['user_id']
+        }))
 
-        await queryRunner.createForeignKey(
-            this.table_name,
-            new TableForeignKey({
-                columnNames: ["typeprice_id"],
-                referencedColumnNames: ["typeprice_id"],
-                referencedTableName: "types_of_prices",
-                onUpdate: "CASCADE",
-                onDelete: "CASCADE",
-            }),
-        )
-
-        await queryRunner.createForeignKey(
-            this.table_name,
-            new TableForeignKey({
-                columnNames: ["user_id"],
-                referencedColumnNames: ["user_id"],
-                referencedTableName: "users",
-                onUpdate: "CASCADE",
-                onDelete: "CASCADE",
-            }),
-        )
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        const table = await queryRunner.getTable(this.table_name);
-        const foreignKeyCompany = table.foreignKeys.find(fk => fk.columnNames.indexOf("typeprice_id") !== -1);
-        const foreignKeyCompany2 = table.foreignKeys.find(fk => fk.columnNames.indexOf("inv_var_id") !== -1);
-        const foreignKeyCompany3 = table.foreignKeys.find(fk => fk.columnNames.indexOf("user_id") !== -1);
-        await queryRunner.dropForeignKey(this.table_name, foreignKeyCompany);
-        await queryRunner.dropForeignKey(this.table_name, foreignKeyCompany2);
-        await queryRunner.dropForeignKey(this.table_name, foreignKeyCompany3);
-
+        await queryRunner.dropIndex(this.table_name, 'user_id');
         await queryRunner.dropIndex(this.table_name, 'currency_id_ref');
         await queryRunner.dropIndex(this.table_name, 'currency_id_local');
         await queryRunner.dropIndex(this.table_name, 'inv_var_id_typeprice_id');
+        await queryRunner.dropIndex(this.table_name, 'typeprice_id');
+        await queryRunner.dropIndex(this.table_name, 'inv_var_id');
         await queryRunner.dropTable(this.table_name);
     }
 

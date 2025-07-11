@@ -5,7 +5,6 @@ import {
     ManyToOne,
     JoinColumn,
     CreateDateColumn,
-    UpdateDateColumn,
     Index
 } from "typeorm";
 import { InventoryVariants } from "./inventory_variants.entity";
@@ -13,13 +12,13 @@ import { TypesOfPrices } from "./types_of_prices.entity";
 import { Users } from "./users.entity";
 
 @Index('inv_var_id_typeprice_id', ['inv_var_id', 'typeprice_id'])
-@Index('currency_id_local', ['currency_id_local'])
-@Index('currency_id_ref', ['currency_id_ref'])
+@Index('inv_var_id', ['inv_var_id'])
+@Index('typeprice_id', ['typeprice_id'])
 @Index('user_id', ['user_id'])
-@Entity('inventory_prices')
-export class InventoryPrices {
+@Entity('inventory_prices_history')
+export class InventoryPricesHistory {
     @PrimaryGeneratedColumn({ unsigned: true })
-    inv_price_id: number;
+    inv_price_hist_id: number;
 
     @Column({ type: "int", unsigned: true })
     inv_var_id: number;
@@ -165,17 +164,6 @@ export class InventoryPrices {
     currency_id_ref: number;
 
     @Column({ 
-        type: "int", 
-        unsigned: true,
-        comment: "User ID who created this price" 
-    })
-    user_id: number;
-
-    @ManyToOne(() => Users, { onDelete: "CASCADE", onUpdate: "CASCADE" })
-    @JoinColumn({ name: 'user_id' })
-    usersInventoryPrices: Users;
-
-    @Column({ 
         type: "date", 
         default: () => "CURRENT_TIMESTAMP" 
     })
@@ -187,10 +175,15 @@ export class InventoryPrices {
     })
     created_at: Date;
 
-    @UpdateDateColumn({ 
-        type: "datetime", 
-        default: () => "CURRENT_TIMESTAMP", 
-        onUpdate: "CURRENT_TIMESTAMP" 
+    
+    @Column({ 
+        type: "int", 
+        unsigned: true,
+        comment: "User ID who made this change" 
     })
-    updated_at: Date;
+    user_id: number;
+
+    @ManyToOne(() => Users, { onDelete: "CASCADE", onUpdate: "CASCADE" })
+    @JoinColumn({ name: 'user_id' })
+    usersInventoryPricesHistory: Users;
 } 
