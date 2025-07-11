@@ -78,4 +78,12 @@ export default {
         invStorage_exists: 'Sorry, Inventory storage exists',
         invStorage_needed: 'You must have send an inventory storage id'
     },
+    InventoryPrices: {
+        price_created: 'Inventory price created',
+        price_updated: 'Inventory price updated',
+        price_deleted: 'Inventory price deleted',
+        price_not_exists: 'Sorry, Inventory price does not exists',
+        price_exists: 'Sorry, Inventory price exists',
+        price_needed: 'You must have send an inventory price id'
+    },
 }

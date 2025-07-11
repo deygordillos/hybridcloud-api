@@ -6,10 +6,10 @@ export const validatorRequestMiddleware = (req: Request, res: Response, next: Ne
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ message: 'error', errors: errors.array() });
+            return res.status(400).json({ success: false, message: 'error', errors: errors.array() });
         }
         next();
     } catch (error) {
-        return res.status(400).json({ message: 'Error al validar request'});
+        return res.status(400).json({ success: false, message: 'Error al validar request'});
     }
 }
