@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } f
 
 export class UsersCompanies_1742965181453 implements MigrationInterface {
 
-    table_name = 'UsersCompanies';
+    table_name = 'users_companies';
             
     public async up(queryRunner: QueryRunner): Promise<void> {
         const isTest = process.env.NODE_ENV === 'test';

@@ -6,7 +6,7 @@ import { Companies } from "./companies.entity";
 @Index('idx_company_id', ['company_id'], {})
 @Index('idx_user_company', ['user_id', 'company_id'], {})
 
-@Entity('UsersCompanies')
+@Entity('users_companies')
 export class UsersCompanies {
     @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
     user_company_id: number
