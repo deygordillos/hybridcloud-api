@@ -433,15 +433,15 @@ router.put(
  *   "message": "Inventory movement deleted"
  * }
  */
-router.delete(
-    "/:id",
-    [
-        authMiddleware,
-        companyMiddleware,
-        param("id").isInt({ min: 1 }).withMessage("Movement ID must be a positive integer"),
-        validatorRequestMiddleware
-    ],
-    InventoryMovementsController.delete
-);
+// router.delete(
+//     "/:id",
+//     [
+//         authMiddleware,
+//         companyMiddleware,
+//         param("id").isInt({ min: 1 }).withMessage("Movement ID must be a positive integer"),
+//         validatorRequestMiddleware
+//     ],
+//     InventoryMovementsController.delete
+// );
 
 export default router; 

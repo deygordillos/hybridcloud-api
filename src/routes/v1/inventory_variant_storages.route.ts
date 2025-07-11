@@ -258,16 +258,16 @@ router.put(
  *   "message": "Variant storage deleted"
  * }
  */
-router.delete(
-    "/:id",
-    [
-        authMiddleware,
-        companyMiddleware,
-        param("id").isInt({ min: 1 }).withMessage("Storage ID must be a positive integer"),
-        validatorRequestMiddleware
-    ],
-    InventoryVariantStoragesController.delete
-);
+// router.delete(
+//     "/:id",
+//     [
+//         authMiddleware,
+//         companyMiddleware,
+//         param("id").isInt({ min: 1 }).withMessage("Storage ID must be a positive integer"),
+//         validatorRequestMiddleware
+//     ],
+//     InventoryVariantStoragesController.delete
+// );
 
 /**
  * @route PATCH /api/v1/inventory/variant-storages/variant/:variantId/storage/:storageId/stock

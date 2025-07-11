@@ -336,16 +336,16 @@ router.put(
  *   "message": "Lot storage deleted"
  * }
  */
-router.delete(
-    "/:id",
-    [
-        authMiddleware,
-        companyMiddleware,
-        param("id").isInt({ min: 1 }).withMessage("Storage ID must be a positive integer"),
-        validatorRequestMiddleware
-    ],
-    InventoryLotsStoragesController.delete
-);
+// router.delete(
+//     "/:id",
+//     [
+//         authMiddleware,
+//         companyMiddleware,
+//         param("id").isInt({ min: 1 }).withMessage("Storage ID must be a positive integer"),
+//         validatorRequestMiddleware
+//     ],
+//     InventoryLotsStoragesController.delete
+// );
 
 /**
  * @route PATCH /api/v1/inventory/lots-storages/lot/:lotId/storage/:storageId/stock
