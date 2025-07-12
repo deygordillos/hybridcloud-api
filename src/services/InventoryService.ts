@@ -78,7 +78,24 @@ export class InventoryService {
      * Find inventory by id
      */
     static async findInventoryById(inv_id: number) {
-        return await InventoryRepository.findOneBy({ inv_id });
+        return await InventoryRepository.findOne({ 
+            where: {
+                inv_id
+            },
+            relations: {
+                inventoryFamily: true,
+                inventoryTaxes: {
+                    tax: true
+                },
+                inventoryVariants: {
+                    variantAttrs: {
+                        attrValue: {
+                            inventoryAttr: true
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**

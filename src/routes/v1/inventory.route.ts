@@ -86,15 +86,18 @@ router.post('/',
                     ) {
                         throw new Error("inv_var_status must be 0 or 1 if provided");
                     }
-                    if (
-                        !Array.isArray(variant.attr_values) ||
-                        variant.attr_values.length === 0
-                    ) {
-                        throw new Error("Each variant must have a non-empty attr_values array");
-                    }
-                    for (const id of variant.attr_values) {
-                        if (typeof id !== "number" || !Number.isInteger(id) || id < 1) {
-                            throw new Error("Each attr_values item must be a valid inv_attrval_id (integer > 0)");
+
+                    if ("attr_values" in variant) {
+                        if (
+                            !Array.isArray(variant.attr_values) ||
+                            variant.attr_values.length === 0
+                        ) {
+                            throw new Error("Each variant must have a non-empty attr_values array");
+                        }
+                        for (const id of variant.attr_values) {
+                            if (typeof id !== "number" || !Number.isInteger(id) || id < 1) {
+                                throw new Error("Each attr_values item must be a valid inv_attrval_id (integer > 0)");
+                            }
                         }
                     }
                 }
@@ -163,15 +166,18 @@ router.put('/:id',
                     ) {
                         throw new Error("inv_var_status must be 0 or 1 if provided");
                     }
-                    if (
-                        !Array.isArray(variant.attr_values) ||
-                        variant.attr_values.length === 0
-                    ) {
-                        throw new Error("Each variant must have a non-empty attr_values array");
-                    }
-                    for (const id of variant.attr_values) {
-                        if (typeof id !== "number" || !Number.isInteger(id) || id < 1) {
-                            throw new Error("Each attr_values item must be a valid inv_attrval_id (integer > 0)");
+
+                    if ("attr_values" in variant) {
+                        if (
+                            !Array.isArray(variant.attr_values) ||
+                            variant.attr_values.length === 0
+                        ) {
+                            throw new Error("Each variant must have a non-empty attr_values array");
+                        }
+                        for (const id of variant.attr_values) {
+                            if (typeof id !== "number" || !Number.isInteger(id) || id < 1) {
+                                throw new Error("Each attr_values item must be a valid inv_attrval_id (integer > 0)");
+                            }
                         }
                     }
                 }
@@ -240,15 +246,18 @@ router.patch('/:id',
                     ) {
                         throw new Error("inv_var_status must be 0 or 1 if provided");
                     }
-                    if (
-                        !Array.isArray(variant.attr_values) ||
-                        variant.attr_values.length === 0
-                    ) {
-                        throw new Error("Each variant must have a non-empty attr_values array");
-                    }
-                    for (const id of variant.attr_values) {
-                        if (typeof id !== "number" || !Number.isInteger(id) || id < 1) {
-                            throw new Error("Each attr_values item must be a valid inv_attrval_id (integer > 0)");
+
+                    if ("attr_values" in variant) {
+                        if (
+                            !Array.isArray(variant.attr_values) ||
+                            variant.attr_values.length === 0
+                        ) {
+                            throw new Error("Each variant must have a non-empty attr_values array");
+                        }
+                        for (const id of variant.attr_values) {
+                            if (typeof id !== "number" || !Number.isInteger(id) || id < 1) {
+                                throw new Error("Each attr_values item must be a valid inv_attrval_id (integer > 0)");
+                            }
                         }
                     }
                 }
