@@ -39,35 +39,40 @@ export class InventoryLotsStorages_1752207228804 implements MigrationInterface {
                         type: "decimal",
                         precision: 10,
                         scale: 3,
-                        comment: "Stock of the inventory in the storage"
+                        comment: "Stock of the inventory in the storage",
+                        default: 0
                     },
                     {
                         name: "inv_ls_stock_reserved",
                         type: "decimal",
                         precision: 10,
                         scale: 3,
-                        comment: "Stock of the inventory in the storage reserved"
+                        comment: "Stock of the inventory in the storage reserved",
+                        default: 0
                     },
                     {
                         name: "inv_ls_stock_committed",
                         type: "decimal",
                         precision: 10,
                         scale: 3,
-                        comment: "Stock of the inventory in the storage committed"
+                        comment: "Stock of the inventory in the storage committed",
+                        default: 0
                     },
                     {
                         name: "inv_ls_stock_prev",
                         type: "decimal",
                         precision: 10,
                         scale: 3,
-                        comment: "Stock of the inventory in the storage prev"
+                        comment: "Stock of the inventory in the storage prev",
+                        default: 0
                     },
                     {
                         name: "inv_ls_stock_min",
                         type: "decimal",
                         precision: 10,
                         scale: 3,
-                        comment: "Stock of the inventory in the storage min"
+                        comment: "Stock of the inventory in the storage min",
+                        default: 0
                     },
                     {
                         name: "created_at",

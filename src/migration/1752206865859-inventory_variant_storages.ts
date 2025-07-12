@@ -34,6 +34,7 @@ export class InventoryVariantStorages_1752206865859 implements MigrationInterfac
                         type: "decimal",
                         precision: 10,
                         scale: 3,
+                        default: 0,
                         comment: "Stock of the inventory in the storage"
                     },
                     {
@@ -41,6 +42,7 @@ export class InventoryVariantStorages_1752206865859 implements MigrationInterfac
                         type: "decimal",
                         precision: 10,
                         scale: 3,
+                        default: 0,
                         comment: "Stock of the inventory in the storage reserved"
                     },
                     {
@@ -48,6 +50,7 @@ export class InventoryVariantStorages_1752206865859 implements MigrationInterfac
                         type: "decimal",
                         precision: 10,
                         scale: 3,
+                        default: 0,
                         comment: "Stock of the inventory in the storage committed"
                     },
                     {
@@ -55,6 +58,7 @@ export class InventoryVariantStorages_1752206865859 implements MigrationInterfac
                         type: "decimal",
                         precision: 10,
                         scale: 3,
+                        default: 0,
                         comment: "Stock of the inventory in the storage prev"
                     },
                     {
@@ -62,6 +66,7 @@ export class InventoryVariantStorages_1752206865859 implements MigrationInterfac
                         type: "decimal",
                         precision: 10,
                         scale: 3,
+                        default: 0,
                         comment: "Stock of the inventory in the storage min"
                     },
                     {

@@ -39,7 +39,8 @@ export class InventoryVariantStorages {
         type: "decimal", 
         precision: 10, 
         scale: 3,
-        comment: "Stock of the inventory in the storage" 
+        comment: "Stock of the inventory in the storage",
+        default: 0
     })
     inv_vs_stock: number;
 
@@ -47,7 +48,8 @@ export class InventoryVariantStorages {
         type: "decimal", 
         precision: 10, 
         scale: 3,
-        comment: "Stock of the inventory in the storage reserved" 
+        comment: "Stock of the inventory in the storage reserved",
+        default: 0
     })
     inv_vs_stock_reserved: number;
 
@@ -55,7 +57,8 @@ export class InventoryVariantStorages {
         type: "decimal", 
         precision: 10, 
         scale: 3,
-        comment: "Stock of the inventory in the storage committed" 
+        comment: "Stock of the inventory in the storage committed",
+        default: 0
     })
     inv_vs_stock_committed: number;
 
@@ -63,7 +66,8 @@ export class InventoryVariantStorages {
         type: "decimal", 
         precision: 10, 
         scale: 3,
-        comment: "Stock of the inventory in the storage prev" 
+        comment: "Stock of the inventory in the storage prev",
+        default: 0
     })
     inv_vs_stock_prev: number;
 
@@ -71,7 +75,8 @@ export class InventoryVariantStorages {
         type: "decimal", 
         precision: 10, 
         scale: 3,
-        comment: "Stock of the inventory in the storage min" 
+        comment: "Stock of the inventory in the storage min",
+        default: 0
     })
     inv_vs_stock_min: number;
 

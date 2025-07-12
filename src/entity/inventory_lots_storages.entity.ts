@@ -48,7 +48,8 @@ export class InventoryLotsStorages {
         type: "decimal", 
         precision: 10, 
         scale: 3,
-        comment: "Stock of the inventory in the storage" 
+        comment: "Stock of the inventory in the storage",
+        default: 0
     })
     inv_ls_stock: number;
 
@@ -56,7 +57,8 @@ export class InventoryLotsStorages {
         type: "decimal", 
         precision: 10, 
         scale: 3,
-        comment: "Stock of the inventory in the storage reserved" 
+        comment: "Stock of the inventory in the storage reserved",
+        default: 0
     })
     inv_ls_stock_reserved: number;
 
@@ -64,7 +66,8 @@ export class InventoryLotsStorages {
         type: "decimal", 
         precision: 10, 
         scale: 3,
-        comment: "Stock of the inventory in the storage committed" 
+        comment: "Stock of the inventory in the storage committed",
+        default: 0
     })
     inv_ls_stock_committed: number;
 
@@ -72,7 +75,8 @@ export class InventoryLotsStorages {
         type: "decimal", 
         precision: 10, 
         scale: 3,
-        comment: "Stock of the inventory in the storage prev" 
+        comment: "Stock of the inventory in the storage prev",
+        default: 0
     })
     inv_ls_stock_prev: number;
 
@@ -80,7 +84,8 @@ export class InventoryLotsStorages {
         type: "decimal", 
         precision: 10, 
         scale: 3,
-        comment: "Stock of the inventory in the storage min" 
+        comment: "Stock of the inventory in the storage min",
+        default: 0
     })
     inv_ls_stock_min: number;
 

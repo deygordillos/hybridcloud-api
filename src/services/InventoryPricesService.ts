@@ -15,8 +15,26 @@ export class InventoryPricesService {
     ) {
         const [data, total] = await InventoryPricesRepository
             .createQueryBuilder("prices")
-            .leftJoinAndSelect("prices.inventoryVariant", "variant")
-            .leftJoinAndSelect("prices.typeOfPrice", "typeOfPrice")
+            .select([
+                "prices.inv_price_id",
+                "prices.is_current",
+                "prices.price_local",
+                "prices.price_ref",
+                "prices.price_base_local",
+                "prices.price_base_ref",
+                "prices.tax_amount_local",
+                "prices.tax_amount_ref",
+                "prices.cost_local",
+                "prices.cost_ref",
+                "prices.cost_avg_local",
+                "prices.cost_avg_ref",
+                "type_of_price.typeprice_id",
+                "type_of_price.typeprice_name",
+                "type_of_price.typeprice_description",
+                "type_of_price.typeprice_status"
+            ])
+            .leftJoin("prices.inventoryVariant", "variant")
+            .leftJoin("prices.typeOfPrice", "type_of_price")
             .where("prices.inv_var_id = :inv_var_id", { inv_var_id })
             .orderBy("prices.valid_from", "DESC")
             .offset(offset)
