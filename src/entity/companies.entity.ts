@@ -3,6 +3,8 @@ import { Entity, Column, Index, PrimaryGeneratedColumn, CreateDateColumn, Update
 import { Groups } from "./groups.entity";
 import { Countries } from "./countries.entity";
 import { Customers } from "./customers.entity";
+import { CurrenciesExchanges } from "./currencies_exchanges.entity";
+import { CurrenciesExchangesHistory } from "./currencies_exchanges_history.entity";
 
 @Index('company_status_name', ['company_status', 'company_name'], {})
 @Index('company_slug', ['company_slug'], {})
@@ -105,4 +107,16 @@ export class Companies {
         onUpdate: "CASCADE",
     })
     customers: Customers[];
+
+    @OneToMany(() => CurrenciesExchanges, (currencyExchange) => currencyExchange.company, {
+        onDelete: "NO ACTION",
+        onUpdate: "NO ACTION",
+    })
+    currency_exchanges: CurrenciesExchanges[];
+
+    @OneToMany(() => CurrenciesExchangesHistory, (currencyExchangeHist) => currencyExchangeHist.company, {
+        onDelete: "NO ACTION",
+        onUpdate: "NO ACTION",
+    })
+    currency_exchanges_history: CurrenciesExchangesHistory[];
 }
