@@ -67,8 +67,9 @@ export class InventoryController {
             if (inventoryExists) return res.status(400).json({ message: messages.Inventory?.inv_exists ?? "Inventory already exists" });
 
             const inventory = await InventoryService.create(data, taxes, variants);
+            const new_inventory = await InventoryService.findInventoryById(inventory.inv_id);
 
-            return res.status(201).json({ message: messages.Inventory?.inv_created ?? "Inventory created", data: inventory });
+            return res.status(201).json({ message: messages.Inventory?.inv_created ?? "Inventory created", data: new_inventory });
         } catch (e) {
             if (e instanceof Error) {
                 console.error('InventoryController.create catch error: ', e.message, e.stack);

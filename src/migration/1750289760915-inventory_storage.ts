@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } from "typeorm";
 
-export class InventoryStorage_1750289760915 implements MigrationInterface {
-    table_name = 'inventory_storage';
+export class InventoryStorages_1750289760915 implements MigrationInterface {
+    table_name = 'inventory_storages';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         const isTest = process.env.NODE_ENV === 'test';

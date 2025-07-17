@@ -21,6 +21,9 @@ export class InventoryPricesController {
             const limit = Number(req.query.limit) || 10;
             if (page < 1 || limit < 1) return errorResponse(res, "Invalid pagination parameters", 400);
 
+            const variant = await InventoryVariantsService.findById(inv_var_id);
+            if (!variant) return errorResponse(res, "Variant not found", 404);
+            
             const offset = (page - 1) * limit;
             const { data, total } = await InventoryPricesService.getPricesByVariantId(inv_var_id, offset, limit);
 

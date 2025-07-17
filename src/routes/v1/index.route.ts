@@ -12,6 +12,9 @@ import inventoryStorageRoutes from './inventory_storage.route'
 import inventoryAttrsRoutes from './inventory_attributes.route'
 import inventoryLotsRoutes from './inventory_lots.route'
 import inventoryPricesRoutes from './inventory_prices.route'
+import inventoryVariantStoragesRoutes from './inventory_variant_storages.route'
+import inventoryLotsStoragesRoutes from './inventory_lots_storages.route'
+import inventoryMovementsRoutes from './inventory_movements.route'
 import typesOfPrices from './types_of_prices.route'
 
 const router = Router();
@@ -30,6 +33,9 @@ router.use('/api/v1/inventory/storage', inventoryStorageRoutes);
 router.use('/api/v1/inventory/attributes', inventoryAttrsRoutes);
 router.use('/api/v1/inventory/lots', inventoryLotsRoutes);
 router.use('/api/v1/inventory/prices', inventoryPricesRoutes);
+router.use('/api/v1/inventory/variant-storages', inventoryVariantStoragesRoutes);
+router.use('/api/v1/inventory/lots-storages', inventoryLotsStoragesRoutes);
+router.use('/api/v1/inventory/movements', inventoryMovementsRoutes);
 router.use('/api/v1/types_of_prices', typesOfPrices);
 
 export default router

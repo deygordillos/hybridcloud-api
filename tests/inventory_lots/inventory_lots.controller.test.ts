@@ -12,6 +12,9 @@ let inventory: any;
 let inventoryVariant: any;
 
 beforeAll(async () => {
+  if (appDataSource.isInitialized) {
+    await appDataSource.destroy();
+  }
   process.env.NODE_ENV = 'test';
   await appDataSource.initialize();
   await appDataSource.runMigrations();

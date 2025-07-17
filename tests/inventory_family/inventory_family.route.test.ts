@@ -8,6 +8,9 @@ let company: Companies;
 let token: string;
 
 beforeAll(async () => {
+  if (appDataSource.isInitialized) {
+    await appDataSource.destroy();
+  }
   process.env.NODE_ENV = 'test';
   await appDataSource.initialize();
   await appDataSource.runMigrations();

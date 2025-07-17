@@ -86,4 +86,28 @@ export default {
         price_exists: 'Sorry, Inventory price exists',
         price_needed: 'You must have send an inventory price id'
     },
+    InventoryVariantStorages: {
+        storage_created: 'Variant storage created',
+        storage_updated: 'Variant storage updated',
+        storage_deleted: 'Variant storage deleted',
+        storage_not_exists: 'Sorry, Variant storage does not exists',
+        storage_exists: 'Sorry, Variant storage exists',
+        storage_needed: 'You must have send a variant storage id'
+    },
+    InventoryLotsStorages: {
+        storage_created: 'Lot storage created',
+        storage_updated: 'Lot storage updated',
+        storage_deleted: 'Lot storage deleted',
+        storage_not_exists: 'Sorry, Lot storage does not exists',
+        storage_exists: 'Sorry, Lot storage exists',
+        storage_needed: 'You must have send a lot storage id'
+    },
+    InventoryMovements: {
+        movement_created: 'Inventory movement created',
+        movement_updated: 'Inventory movement updated',
+        movement_deleted: 'Inventory movement deleted',
+        movement_not_exists: 'Sorry, Inventory movement does not exists',
+        movement_exists: 'Sorry, Inventory movement exists',
+        movement_needed: 'You must have send an inventory movement id'
+    },
 }

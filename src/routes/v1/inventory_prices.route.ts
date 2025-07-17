@@ -47,13 +47,7 @@ router.get('/variant/:variantId',
         companyMiddleware,
         param("variantId")
             .notEmpty().withMessage("variantId is required")
-            .isInt({ min: 1 }).withMessage("You must send a valid variantId")
-            .custom((value) => {
-                if (typeof value === 'string') {
-                    throw new Error("variantId must be a number, not a string");
-                }
-                return true;
-            }),
+            .isInt({ min: 1 }).withMessage("You must send a valid variantId"),
         validatorRequestMiddleware
     ],
     InventoryPricesController.getPricesByVariantId
