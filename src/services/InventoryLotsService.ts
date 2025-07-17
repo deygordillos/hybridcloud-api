@@ -39,10 +39,10 @@ export class InventoryLotsService {
         return result.affected ? result.affected > 0 : false;
     }
 
-    static async validateLotData(lotData: Partial<InventoryLots>): Promise<{ isValid: boolean; errors: string[] }> {
+    static async validateLotData(lotData: Partial<InventoryLots>, isUpdate: boolean = false): Promise<{ isValid: boolean; errors: string[] }> {
         const errors: string[] = [];
 
-        if (!lotData.lot_number || lotData.lot_number.trim() === '') {
+        if (!isUpdate && (!lotData.lot_number || lotData.lot_number.trim() === '')) {
             errors.push('Lot number is required');
         }
 

@@ -73,7 +73,7 @@ export class InventoryLotsController {
             if (!existingLot) return errorResponse(res, "Inventory lot not found", 404);
 
             // Validate update data
-            const validation = await InventoryLotsService.validateLotData(updateData);
+            const validation = await InventoryLotsService.validateLotData(updateData, true);
             if (!validation.isValid) return errorResponse(res, "Validation failed", 400, validation.errors);
 
             // Validate that the inventory variant exists (if being updated)
