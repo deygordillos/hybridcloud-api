@@ -11,8 +11,10 @@ import { InventoryVariants } from "./inventory_variants.entity";
 import { TypesOfPrices } from "./types_of_prices.entity";
 import { Users } from "./users.entity";
 
-@Index('inv_var_id_typeprice_id', ['inv_var_id', 'typeprice_id'])
+@Index('inv_hist_var_id_typeprice_id', ['inv_var_id', 'typeprice_id'])
 @Index('inv_var_id', ['inv_var_id'])
+@Index('inv_hist_currency_id_local', ['currency_id_local'])
+@Index('inv_hist_currency_id_ref', ['currency_id_ref'])
 @Index('typeprice_id', ['typeprice_id'])
 @Index('user_id', ['user_id'])
 @Entity('inventory_prices_history')

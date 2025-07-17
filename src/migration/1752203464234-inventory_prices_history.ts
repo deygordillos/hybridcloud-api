@@ -175,17 +175,17 @@ export class InventoryPricesHistory_1752203464234 implements MigrationInterface 
         }))
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
-            name: 'inv_var_id_typeprice_id',
+            name: 'inv_hist_var_id_typeprice_id',
             columnNames: ['inv_var_id', 'typeprice_id']
         }))
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
-            name: 'currency_id_local',
+            name: 'hist_currency_id_local',
             columnNames: ['currency_id_local']
         }))
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
-            name: 'currency_id_ref',
+            name: 'hist_currency_id_ref',
             columnNames: ['currency_id_ref']
         }))
 
@@ -198,9 +198,9 @@ export class InventoryPricesHistory_1752203464234 implements MigrationInterface 
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropIndex(this.table_name, 'user_id');
-        await queryRunner.dropIndex(this.table_name, 'currency_id_ref');
-        await queryRunner.dropIndex(this.table_name, 'currency_id_local');
-        await queryRunner.dropIndex(this.table_name, 'inv_var_id_typeprice_id');
+        await queryRunner.dropIndex(this.table_name, 'hist_currency_id_ref');
+        await queryRunner.dropIndex(this.table_name, 'hist_currency_id_local');
+        await queryRunner.dropIndex(this.table_name, 'inv_hist_var_id_typeprice_id');
         await queryRunner.dropIndex(this.table_name, 'typeprice_id');
         await queryRunner.dropIndex(this.table_name, 'inv_var_id');
         await queryRunner.dropTable(this.table_name);

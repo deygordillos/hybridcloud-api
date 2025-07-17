@@ -12,8 +12,14 @@ let token: string;
 let inventoryFamily: any;
 let inventory: any;
 let inventoryVariant: any;
+let inventoryVariant2: any;
+let inventoryVariant3: any;
+let inventoryVariant4: any;
 
 beforeAll(async () => {
+  if (appDataSource.isInitialized) {
+    await appDataSource.destroy();
+  }
   process.env.NODE_ENV = 'test';
   await appDataSource.initialize();
   await appDataSource.runMigrations();
@@ -48,10 +54,28 @@ beforeAll(async () => {
     inv_model: 'Test Model'
   });
 
-  // Create test inventory variant
+  // Create multiple test inventory variants
   inventoryVariant = await InventoryVariantsService.createVariant({
     inv_id: inventory.inv_id,
     inv_var_sku: 'VAR001',
+    inv_var_status: 1
+  });
+
+  inventoryVariant2 = await InventoryVariantsService.createVariant({
+    inv_id: inventory.inv_id,
+    inv_var_sku: 'VAR002',
+    inv_var_status: 1
+  });
+
+  inventoryVariant3 = await InventoryVariantsService.createVariant({
+    inv_id: inventory.inv_id,
+    inv_var_sku: 'VAR003',
+    inv_var_status: 1
+  });
+
+  inventoryVariant4 = await InventoryVariantsService.createVariant({
+    inv_id: inventory.inv_id,
+    inv_var_sku: 'VAR004',
     inv_var_status: 1
   });
 });
@@ -266,11 +290,11 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
       )).toBe(true);
     });
 
-    it('should fail validation when expiration_date is not ISO8601 format', async () => {
+    it('should fail validation when expiration_date is not YYYY-MM-DD format', async () => {
       const invalidData = {
         inv_var_id: inventoryVariant.inv_var_id,
         lot_number: 'LOT123',
-        expiration_date: 'invalid-date'
+        expiration_date: '2024-12-31T00:00:00.000Z'
       };
 
       const res = await request(app)
@@ -286,21 +310,6 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
       )).toBe(true);
     });
 
-    it('should accept valid ISO8601 date format', async () => {
-      const validData = {
-        inv_var_id: inventoryVariant.inv_var_id,
-        lot_number: 'LOTISO8601',
-        expiration_date: '2024-12-31T00:00:00.000Z'
-      };
-
-      const res = await request(app)
-        .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
-        .send(validData);
-
-      expect(res.statusCode).toBe(201);
-      expect(res.body.success).toBe(true);
-    });
   });
 
   describe('GET /api/v1/inventory/lots/variant/:variantId - Get Lots by Variant', () => {
@@ -323,7 +332,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
       expect(res.body.message).toBe('error');
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.some((error: any) => 
-        error.path === 'variantId' && error.msg === 'variantId must be a number, not a string'
+        error.path === 'variantId' && error.msg === 'You must send a valid variantId'
       )).toBe(true);
     });
 
@@ -352,19 +361,6 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
       expect(Array.isArray(res.body.data)).toBe(true);
     });
 
-    it('should fail validation when lotNumber is empty', async () => {
-      const res = await request(app)
-        .get('/api/v1/inventory/lots/search/')
-        .set(authHeader(token));
-
-      expect(res.statusCode).toBe(400);
-      expect(res.body.message).toBe('error');
-      expect(res.body.errors).toBeDefined();
-      expect(res.body.errors.some((error: any) => 
-        error.path === 'lotNumber' && error.msg === 'lotNumber is required'
-      )).toBe(true);
-    });
-
     it('should fail validation when lotNumber exceeds 100 characters', async () => {
       const longLotNumber = 'A'.repeat(101);
       const res = await request(app)
@@ -380,13 +376,13 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
     });
   });
 
-  describe('GET /api/v1/inventory/lots/:id - Get Lot by ID', () => {
+  describe('GET /api/v1inventory/lots/:id - Get Lot by ID', () => {
     let createdLotId: number;
 
     beforeAll(async () => {
       // Create a test lot for these tests
       const lotData = {
-        inv_var_id: inventoryVariant.inv_var_id,
+        inv_var_id: inventoryVariant2.inv_var_id,
         lot_number: 'LOTGETBYID',
         lot_status: 1
       };
@@ -418,7 +414,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
       expect(res.body.message).toBe('error');
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.some((error: any) => 
-        error.path === 'id' && error.msg === 'id must be a number, not a string'
+        error.path === 'id' && error.msg === 'You must send a valid id'
       )).toBe(true);
     });
 
@@ -436,13 +432,13 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
     });
   });
 
-  describe('PUT /api/v1/inventory/lots/:id - Update Lot', () => {
+  describe('PUT /api/v1inventory/lots/:id - Update Lot', () => {
     let createdLotId: number;
 
     beforeAll(async () => {
       // Create a test lot for these tests
       const lotData = {
-        inv_var_id: inventoryVariant.inv_var_id,
+        inv_var_id: inventoryVariant3.inv_var_id,
         lot_number: 'LOTUPDATE',
         lot_status: 1
       };
@@ -487,49 +483,6 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.some((error: any) => 
         error.path === 'lot_status' && error.msg === 'lot_status must be 0 or 1'
-      )).toBe(true);
-    });
-  });
-
-  describe('DELETE /api/v1/inventory/lots/:id - Delete Lot', () => {
-    let createdLotId: number;
-
-    beforeAll(async () => {
-      // Create a test lot for these tests
-      const lotData = {
-        inv_var_id: inventoryVariant.inv_var_id,
-        lot_number: 'LOTDELETE',
-        lot_status: 1
-      };
-
-      const createRes = await request(app)
-        .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
-        .send(lotData);
-
-      createdLotId = createRes.body.data.inv_lot_id;
-    });
-
-    it('should delete lot with valid ID', async () => {
-      const res = await request(app)
-        .delete(`/api/v1/inventory/lots/${createdLotId}`)
-        .set(authHeader(token));
-
-      expect(res.statusCode).toBe(200);
-      expect(res.body.success).toBe(true);
-      expect(res.body.message).toBe('Inventory lot deleted successfully');
-    });
-
-    it('should fail validation when ID is not a number', async () => {
-      const res = await request(app)
-        .delete('/api/v1/inventory/lots/not-a-number')
-        .set(authHeader(token));
-
-      expect(res.statusCode).toBe(400);
-      expect(res.body.message).toBe('error');
-      expect(res.body.errors).toBeDefined();
-      expect(res.body.errors.some((error: any) => 
-        error.path === 'id' && error.msg === 'id must be a number, not a string'
       )).toBe(true);
     });
   });

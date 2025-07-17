@@ -40,13 +40,7 @@ router.get('/variant/:variantId',
         companyMiddleware,
         param("variantId")
             .notEmpty().withMessage("variantId is required")
-            .isInt({ min: 1 }).withMessage("You must send a valid variantId")
-            .custom((value) => {
-                if (typeof value === 'string') {
-                    throw new Error("variantId must be a number, not a string");
-                }
-                return true;
-            }),
+            .isInt({ min: 1 }).withMessage("You must send a valid variantId"),
         validatorRequestMiddleware
     ],
     InventoryLotsController.getByVariantId
@@ -131,13 +125,7 @@ router.get('/:id',
         companyMiddleware,
         param("id")
             .notEmpty().withMessage("id is required")
-            .isInt({ min: 1 }).withMessage("You must send a valid id")
-            .custom((value) => {
-                if (typeof value === 'string') {
-                    throw new Error("id must be a number, not a string");
-                }
-                return true;
-            }),
+            .isInt({ min: 1 }).withMessage("You must send a valid id"),
         validatorRequestMiddleware
     ],
     InventoryLotsController.getById
@@ -198,9 +186,45 @@ router.post('/',
         body("lot_status")
             .optional().isInt().isIn([0, 1]).withMessage("lot_status must be 0 or 1"),
         body("expiration_date")
-            .optional().isISO8601().withMessage("expiration_date must be a valid date"),
+            .optional()
+            .custom((value) => {
+                if (!value) return true; // Es opcional
+
+                // Verificar si es una fecha válida
+                const date = new Date(value);
+                if (isNaN(date.getTime())) {
+                    throw new Error("expiration_date must be a valid date");
+                }
+
+                // Verificar formato (solo acepta YYYY-MM-DD)
+                const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+                if (!dateRegex.test(value)) {
+                    throw new Error("expiration_date must be in YYYY-MM-DD format (e.g., 2025-07-16)");
+                }
+
+                return true;
+            })
+            .withMessage("expiration_date must be a valid date"),
         body("manufacture_date")
-            .optional().isISO8601().withMessage("manufacture_date must be a valid date"),
+            .optional()
+            .custom((value) => {
+                if (!value) return true; // Es opcional
+
+                // Validate date
+                const date = new Date(value);
+                if (isNaN(date.getTime())) {
+                    throw new Error("manufacture_date must be a valid date");
+                }
+
+                // Verify format (only accepts YYYY-MM-DD)
+                const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+                if (!dateRegex.test(value)) {
+                    throw new Error("manufacture_date must be in YYYY-MM-DD format (e.g., 2025-07-16)");
+                }
+
+                return true;
+            })
+            .withMessage("manufacture_date must be a valid date"),
         body("lot_notes")
             .optional().isString().withMessage("lot_notes must be a string"),
         body("lot_unit_cost")
@@ -280,13 +304,7 @@ router.put('/:id',
         companyMiddleware,
         param("id")
             .notEmpty().withMessage("id is required")
-            .isInt({ min: 1 }).withMessage("You must send a valid id")
-            .custom((value) => {
-                if (typeof value === 'string') {
-                    throw new Error("id must be a number, not a string");
-                }
-                return true;
-            }),
+            .isInt({ min: 1 }).withMessage("You must send a valid id"),
         body("inv_var_id")
             .optional()
             .isInt({ min: 1 }).withMessage("You must send a valid inv_var_id")
@@ -305,9 +323,45 @@ router.put('/:id',
         body("lot_status")
             .optional().isInt().isIn([0, 1]).withMessage("lot_status must be 0 or 1"),
         body("expiration_date")
-            .optional().isISO8601().withMessage("expiration_date must be a valid date"),
+            .optional()
+            .custom((value) => {
+                if (!value) return true; // Es opcional
+                
+                // Validate date
+                const date = new Date(value);
+                if (isNaN(date.getTime())) {
+                    throw new Error("expiration_date must be a valid date");
+                }
+                
+                // Verify format (only accepts YYYY-MM-DD)
+                const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+                if (!dateRegex.test(value)) {
+                    throw new Error("manufacture_date must be in YYYY-MM-DD format (e.g., 2025-07-16)");
+                }
+                
+                return true;
+            })
+            .withMessage("expiration_date must be a valid date"),
         body("manufacture_date")
-            .optional().isISO8601().withMessage("manufacture_date must be a valid date"),
+            .optional()
+            .custom((value) => {
+                if (!value) return true; // Es opcional
+                
+                // Verificar si es una fecha válida
+                const date = new Date(value);
+                if (isNaN(date.getTime())) {
+                    throw new Error("manufacture_date must be a valid date");
+                }
+                
+                // Verificar formato (acepta YYYY-MM-DD y ISO8601 completo)
+                const isoRegex = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d{3})?Z?)?$/;
+                if (!isoRegex.test(value)) {
+                    throw new Error("manufacture_date must be in YYYY-MM-DD or ISO8601 format");
+                }
+                
+                return true;
+            })
+            .withMessage("manufacture_date must be a valid date"),
         body("lot_notes")
             .optional().isString().withMessage("lot_notes must be a string"),
         body("lot_unit_cost")
@@ -405,9 +459,45 @@ router.patch('/:id',
         body("lot_status")
             .optional().isInt().isIn([0, 1]).withMessage("lot_status must be 0 or 1"),
         body("expiration_date")
-            .optional().isISO8601().withMessage("expiration_date must be a valid date"),
+            .optional()
+            .custom((value) => {
+                if (!value) return true; // Es opcional
+                
+                // Verificar si es una fecha válida
+                const date = new Date(value);
+                if (isNaN(date.getTime())) {
+                    throw new Error("expiration_date must be a valid date");
+                }
+                
+                // Verify format (only accepts YYYY-MM-DD)
+                const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+                if (!dateRegex.test(value)) {
+                    throw new Error("manufacture_date must be in YYYY-MM-DD format (e.g., 2025-07-16)");
+                }
+                
+                return true;
+            })
+            .withMessage("expiration_date must be a valid date"),
         body("manufacture_date")
-            .optional().isISO8601().withMessage("manufacture_date must be a valid date"),
+            .optional()
+            .custom((value) => {
+                if (!value) return true; // Es opcional
+                
+                // Verificar si es una fecha válida
+                const date = new Date(value);
+                if (isNaN(date.getTime())) {
+                    throw new Error("manufacture_date must be a valid date");
+                }
+                
+                // Verificar formato (acepta YYYY-MM-DD y ISO8601 completo)
+                const isoRegex = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d{3})?Z?)?$/;
+                if (!isoRegex.test(value)) {
+                    throw new Error("manufacture_date must be in YYYY-MM-DD or ISO8601 format");
+                }
+                
+                return true;
+            })
+            .withMessage("manufacture_date must be a valid date"),
         body("lot_notes")
             .optional().isString().withMessage("lot_notes must be a string"),
         body("lot_unit_cost")
