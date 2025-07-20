@@ -14,7 +14,7 @@ export class CurrenciesExchangesHistory {
     @Column({ type: 'int', unsigned: true })
     currency_id: number;
 
-    @Column({ type: 'decimal', precision: 10, scale: 8, comment: 'Exchange rate' })
+    @Column({ type: 'decimal', precision: 18, scale: 8, comment: 'Exchange rate' })
     currency_exc_rate: number;
 
     @Column({ type: 'tinyint', width: 1, default: 1, nullable: false, comment: '1: local, 2: stable, 3: ref' })

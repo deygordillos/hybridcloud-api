@@ -32,7 +32,7 @@ export class CurrenciesExchanges_1752726516198 implements MigrationInterface {
                     {
                         name: "currency_exc_rate",
                         type: "decimal",
-                        precision: 10,
+                        precision: 18,
                         scale: 8,
                         comment: "Exchange rate"
                     },
@@ -100,9 +100,13 @@ export class CurrenciesExchanges_1752726516198 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        const table = await queryRunner.getTable(this.table_name);
+        const foreignKeyCompany = table.foreignKeys.find(fk => fk.columnNames.indexOf("company_id") !== -1);
+        const foreignKeyCompany2 = table.foreignKeys.find(fk => fk.columnNames.indexOf("currency_id") !== -1);
+        await queryRunner.dropForeignKey(this.table_name, foreignKeyCompany);
+        await queryRunner.dropForeignKey(this.table_name, foreignKeyCompany2);
+
         await queryRunner.dropIndex(this.table_name, 'currency_exc_company_currency_exc_type_unique');
-        await queryRunner.dropForeignKey(this.table_name, 'currency_exc_company_id_foreign');
-        await queryRunner.dropForeignKey(this.table_name, 'currency_exc_currency_id_foreign');
         await queryRunner.dropTable(this.table_name);
     }
 }
