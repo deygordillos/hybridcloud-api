@@ -16,6 +16,9 @@ export class Currencies {
     @Column({ type: 'varchar', length: 10, comment: 'Symbol of the currency' })
     currency_symbol: string;
 
+    @Column({ type: 'tinyint', width: 1, default: 1, comment: '1: currency, 2: crypto' })
+    currency_type: number;
+
     @Column({ type: 'tinyint', width: 1, default: 1, comment: '1: Active, 0: Inactive' })
     currency_status: number;
 

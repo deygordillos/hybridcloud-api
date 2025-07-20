@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn, Unique } from "typeorm";
 import { Companies } from "./companies.entity";
 import { Currencies } from "./currencies.entity";
 
+@Unique('currency_exc_company_currency_exc_type_unique', ['company_id', 'currency_id', 'currency_exc_type'])
 @Entity('currencies_exchanges')
 export class CurrenciesExchanges {
     @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
@@ -13,11 +14,11 @@ export class CurrenciesExchanges {
     @Column({ type: 'int', unsigned: true })
     currency_id: number;
 
-    @Column({ type: 'decimal', precision: 10, scale: 5, comment: 'Exchange rate' })
+    @Column({ type: 'decimal', precision: 10, scale: 8, comment: 'Exchange rate' })
     currency_exc_rate: number;
 
-    @Column({ type: 'tinyint', width: 1, default: 0, comment: '1: Base currency, 0: Not base currency' })
-    is_base_currency: number;
+    @Column({ type: 'tinyint', width: 1, default: 1, nullable: false, comment: '1: local, 2: stable, 3: ref' })
+    currency_exc_type: number;
 
     @Column({ type: 'enum', enum: ['DIVIDE', 'MULTIPLY'], default: 'MULTIPLY', comment: 'Method to calculate exchange rate' })
     exchange_method: string;
