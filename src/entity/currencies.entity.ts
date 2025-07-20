@@ -23,15 +23,9 @@ export class Currencies {
     created_at: Date;
 
     // Relations
-    @OneToMany(() => CurrenciesExchanges, currencyExchange => currencyExchange.currency_from)
-    currency_exchanges_from: CurrenciesExchanges[];
+    @OneToMany(() => CurrenciesExchanges, currencyExchange => currencyExchange.currency)
+    currency_exchanges: CurrenciesExchanges[];
 
-    @OneToMany(() => CurrenciesExchanges, currencyExchange => currencyExchange.currency_to)
-    currency_exchanges_to: CurrenciesExchanges[];
-
-    @OneToMany(() => CurrenciesExchangesHistory, currencyExchangeHist => currencyExchangeHist.currency_from)
-    currency_exchanges_history_from: CurrenciesExchangesHistory[];
-
-    @OneToMany(() => CurrenciesExchangesHistory, currencyExchangeHist => currencyExchangeHist.currency_to)
-    currency_exchanges_history_to: CurrenciesExchangesHistory[];
+    @OneToMany(() => CurrenciesExchangesHistory, currencyExchangeHist => currencyExchangeHist.currency)
+    currency_exchanges_history: CurrenciesExchangesHistory[];
 } 

@@ -39,6 +39,13 @@ export class Currencies_1752725545670 implements MigrationInterface {
                         comment: "Symbol of the currency"
                     },
                     {
+                        name: "currency_type",
+                        type: "tinyint",
+                        default: 1,
+                        width: 1,
+                        comment: "1: currency, 2: crypto"
+                    },
+                    {
                         name: "currency_status",
                         type: "tinyint",
                         default: 1,
@@ -70,11 +77,12 @@ export class Currencies_1752725545670 implements MigrationInterface {
             ['VES']
             );
             if (!existing) {
-                await queryRunner.query(`INSERT INTO ${this.table_name} (currency_iso_code, currency_name, currency_symbol, currency_status) 
-                    VALUES (?, ?, ?, ?), (?, ?, ?, ?);`, 
+                await queryRunner.query(`INSERT INTO ${this.table_name} (currency_iso_code, currency_name, currency_symbol, currency_type, currency_status) 
+                    VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?), (?, ?, ?, ?, ?);`, 
                     [
-                        'VES', 'Bolívar', 'Bs', 1, 
-                        'USD', 'Dólar', '$', 1
+                        'VES', 'Bolívar', 'Bs', 1, 1, 
+                        'USD', 'Dólar', '$', 1, 1,
+                        'COP', 'Peso colombiano', 'COP', 1, 1
                     ]
                 );
             }

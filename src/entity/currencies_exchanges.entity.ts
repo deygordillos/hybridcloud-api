@@ -11,13 +11,16 @@ export class CurrenciesExchanges {
     company_id: number;
 
     @Column({ type: 'int', unsigned: true })
-    currency_from_id: number;
-
-    @Column({ type: 'int', unsigned: true })
-    currency_to_id: number;
+    currency_id: number;
 
     @Column({ type: 'decimal', precision: 10, scale: 5, comment: 'Exchange rate' })
     currency_exc_rate: number;
+
+    @Column({ type: 'tinyint', width: 1, default: 0, comment: '1: Base currency, 0: Not base currency' })
+    is_base_currency: number;
+
+    @Column({ type: 'enum', enum: ['DIVIDE', 'MULTIPLY'], default: 'MULTIPLY', comment: 'Method to calculate exchange rate' })
+    exchange_method: string;
 
     @Column({ type: 'tinyint', width: 1, default: 1, comment: '1: Active, 0: Inactive' })
     currency_exc_status: number;
@@ -30,11 +33,7 @@ export class CurrenciesExchanges {
     @JoinColumn({ name: 'company_id' })
     company: Companies;
 
-    @ManyToOne(() => Currencies, currency => currency.currency_exchanges_from)
-    @JoinColumn({ name: 'currency_from_id' })
-    currency_from: Currencies;
-
-    @ManyToOne(() => Currencies, currency => currency.currency_exchanges_to)
-    @JoinColumn({ name: 'currency_to_id' })
-    currency_to: Currencies;
+    @ManyToOne(() => Currencies, currency => currency.currency_exchanges)
+    @JoinColumn({ name: 'currency_id' })
+    currency: Currencies;
 } 

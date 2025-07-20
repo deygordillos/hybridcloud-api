@@ -25,12 +25,7 @@ export class CurrenciesExchanges_1752726516198 implements MigrationInterface {
                         unsigned: true
                     },
                     {
-                        name: "currency_from_id",
-                        type: "int",
-                        unsigned: true
-                    },
-                    {
-                        name: "currency_to_id",
+                        name: "currency_id",
                         type: "int",
                         unsigned: true
                     },
@@ -40,6 +35,20 @@ export class CurrenciesExchanges_1752726516198 implements MigrationInterface {
                         precision: 10,
                         scale: 5,
                         comment: "Exchange rate"
+                    },
+                    {
+                        name: "is_base_currency",
+                        type: "tinyint",
+                        default: 0,
+                        width: 1,
+                        comment: "1: Base currency, 0: Not base currency"
+                    },
+                    {
+                        name: "exchange_method",
+                        type: "enum",
+                        enum: ["DIVIDE", "MULTIPLY"],
+                        default: "'MULTIPLY'",
+                        comment: "Method to calculate exchange rate"
                     },
                     {
                         name: "currency_exc_status",
@@ -73,20 +82,8 @@ export class CurrenciesExchanges_1752726516198 implements MigrationInterface {
         await queryRunner.createForeignKey(
             this.table_name,
             new TableForeignKey({
-                name: 'currency_exc_currency_from_id_foreign',
-                columnNames: ['currency_from_id'],
-                referencedColumnNames: ['currency_id'],
-                referencedTableName: 'currencies',
-                onUpdate: 'NO ACTION',
-                onDelete: 'NO ACTION',
-            })
-        )
-
-        await queryRunner.createForeignKey(
-            this.table_name,
-            new TableForeignKey({
-                name: 'currency_exc_currency_to_id_foreign',
-                columnNames: ['currency_to_id'],
+                name: 'currency_exc_currency_id_foreign',
+                columnNames: ['currency_id'],
                 referencedColumnNames: ['currency_id'],
                 referencedTableName: 'currencies',
                 onUpdate: 'NO ACTION',
@@ -97,8 +94,7 @@ export class CurrenciesExchanges_1752726516198 implements MigrationInterface {
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropForeignKey(this.table_name, 'currency_exc_company_id_foreign');
-        await queryRunner.dropForeignKey(this.table_name, 'currency_exc_currency_from_id_foreign');
-        await queryRunner.dropForeignKey(this.table_name, 'currency_exc_currency_to_id_foreign');
+        await queryRunner.dropForeignKey(this.table_name, 'currency_exc_currency_id_foreign');
         await queryRunner.dropTable(this.table_name);
     }
 }
