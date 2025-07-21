@@ -110,4 +110,28 @@ export default {
         movement_exists: 'Sorry, Inventory movement exists',
         movement_needed: 'You must have send an inventory movement id'
     },
+    CurrenciesExchanges: {
+        currency_exchange_created: 'Currency exchange created successfully',
+        currency_exchange_updated: 'Currency exchange updated successfully',
+        currency_exchange_deleted: 'Currency exchange deleted successfully',
+        currency_exchange_not_exists: 'Sorry, currency exchange does not exists',
+        currency_exchange_exists: 'Sorry, currency exchange already exists for this company, currency and type',
+        currency_exchange_needed: 'You must have send a currency exchange id',
+        currency_exchange_retrieved: 'Currency exchange retrieved successfully',
+        currencies_retrieved: 'Currencies retrieved successfully',
+        currency_conversion_completed: 'Currency conversion completed',
+        currency_history_retrieved: 'Currency history retrieved successfully',
+        base_currency_set: 'Base currency set successfully',
+        company_id_required: 'Company ID is required',
+        currency_id_required: 'Currency ID is required',
+        exchange_rate_required: 'Exchange rate is required',
+        currency_type_required: 'Currency type is required',
+        from_currency_id_required: 'From currency ID is required',
+        to_currency_id_required: 'To currency ID is required',
+        amount_required: 'Valid amount is required',
+        invalid_currency_exchange_id: 'Invalid currency exchange ID',
+        invalid_pagination_params: 'Invalid pagination parameters',
+        currencies_not_found: 'One or both currencies not found for this company',
+        currency_not_found: 'Currency not found'
+    },
 }

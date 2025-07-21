@@ -1,10 +1,10 @@
-import { InventoryLotsService } from "../../src/services/InventoryLotsService";
-import { InventoryVariantsService } from "../../src/services/InventoryVariantsService";
-import { InventoryFamilyService } from "../../src/services/InventoryFamilyService";
-import { InventoryService } from "../../src/services/InventoryService";
-import { appDataSource } from '../../src/app-data-source';
-import { createTestCompany } from "../helpers/setupTestData";
-import { Companies } from "../../src/entity/companies.entity";
+import { InventoryLotsService } from "../../../src/services/InventoryLotsService";
+import { InventoryVariantsService } from "../../../src/services/InventoryVariantsService";
+import { InventoryFamilyService } from "../../../src/services/InventoryFamilyService";
+import { InventoryService } from "../../../src/services/InventoryService";
+import { appDataSource } from '../../../src/app-data-source';
+import { createTestCompany } from "../../helpers/setupTestData";
+import { Companies } from "../../../src/entity/companies.entity";
 
 let company: Companies;
 let inventoryFamily: any;

@@ -1,7 +1,7 @@
-import { InventoryFamilyService } from "../../src/services/InventoryFamilyService";
-import { appDataSource } from '../../src/app-data-source';
-import { createTestCompany } from "../helpers/setupTestData";
-import { Companies } from "../../src/entity/companies.entity";
+import { InventoryFamilyService } from "../../../src/services/InventoryFamilyService";
+import { appDataSource } from '../../../src/app-data-source';
+import { createTestCompany } from "../../helpers/setupTestData";
+import { Companies } from "../../../src/entity/companies.entity";
 
 let company: Companies;
 
