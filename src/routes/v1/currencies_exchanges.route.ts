@@ -40,8 +40,9 @@ router.use(companyMiddleware);
  * @example
  * GET /api/v1/currencies-exchanges
  * Response: {
+ *   "success": true,
  *   "message": "Currencies retrieved successfully",
- *   "currencies": [
+ *   "data": [
  *     {
  *       "currency_exc_id": 1,
  *       "company_id": 123,
@@ -64,6 +65,46 @@ router.use(companyMiddleware);
 router.get('/', CurrenciesExchangesController.getCompanyCurrencies);
 
 /**
+ * @route GET /api/v1/currencies-exchanges/history
+ * @desc Get currency exchange rate history
+ * @access Private (requires authentication and company context)
+ * @query {number} [currency_id] - Filter by specific currency ID (optional)
+ * @query {number} [page] - Page number for pagination (optional, default: 1)
+ * @query {number} [limit] - Number of records per page (optional, default: 10)
+ * @returns {Object} Paginated history of exchange rate changes
+ * @example
+ * GET /api/v1/currencies-exchanges/history?currency_id=2&page=1&limit=5
+ * Response: {
+ *   "success": true,
+ *   "message": "Currency exchange rate history retrieved successfully",
+ *   "data": [
+ *     {
+ *       "currency_exc_hist_id": 1,
+ *       "company_id": 123,
+ *       "currency_id": 2,
+ *       "currency_exc_rate": 35.12345678,
+ *       "currency_exc_type": 2,
+ *       "exchange_method": "MULTIPLY",
+ *       "created_at": "2024-01-15T10:30:00.000Z",
+ *       "currency": {
+ *         "currency_id": 2,
+ *         "currency_iso_code": "USD",
+ *         "currency_name": "Dólar",
+ *         "currency_symbol": "$"
+ *       }
+ *     }
+ *   ],
+ *   "pagination": {
+ *     "total": 25,
+ *     "perPage": 5,
+ *     "currentPage": 1,
+ *     "lastPage": 5
+ *   }
+ * }
+ */
+router.get('/history', CurrenciesExchangesController.getCurrencyHistory);
+
+/**
  * @route GET /api/v1/currencies-exchanges/:id
  * @desc Get a specific currency exchange by ID
  * @access Private (requires authentication and company context)
@@ -72,8 +113,9 @@ router.get('/', CurrenciesExchangesController.getCompanyCurrencies);
  * @example
  * GET /api/v1/currencies-exchanges/1
  * Response: {
+ *   "success": true,
  *   "message": "Currency retrieved successfully",
- *   "currency": {
+ *   "data": {
  *     "currency_exc_id": 1,
  *     "company_id": 123,
  *     "currency_id": 1,
@@ -119,8 +161,9 @@ router.get('/:id', [
  *   "currency_exc_status": 1
  * }
  * Response: {
+ *   "success": true,
  *   "message": "Currency exchange created successfully",
- *   "currency": {
+ *   "data": {
  *     "currency_exc_id": 2,
  *     "company_id": 123,
  *     "currency_id": 2,
@@ -169,8 +212,9 @@ router.post('/', [
  *   "exchange_method": 1
  * }
  * Response: {
+ *   "success": true,
  *   "message": "Currency exchange updated successfully",
- *   "currency": {
+ *   "data": {
  *     "currency_exc_id": 2,
  *     "company_id": 123,
  *     "currency_id": 2,
@@ -204,84 +248,6 @@ router.put('/:id', [
     validatorRequestMiddleware
 ], CurrenciesExchangesController.update);
 
-
-/**
- * @route POST /api/v1/currencies-exchanges/convert
- * @desc Convert an amount between two currencies
- * @access Private (requires authentication and company context)
- * @body {Object} conversionData - The conversion data
- * @body {number} conversionData.from_currency_id - The source currency ID (required)
- * @body {number} conversionData.to_currency_id - The target currency ID (required)
- * @body {number} conversionData.amount - The amount to convert (required, positive number)
- * @returns {Object} The conversion result with original and converted amounts
- * @example
- * POST /api/v1/currencies-exchanges/convert
- * Body: {
- *   "from_currency_id": 1,
- *   "to_currency_id": 2,
- *   "amount": 100.00
- * }
- * Response: {
- *   "message": "Currency conversion completed",
- *   "conversion": {
- *     "from_currency_id": 1,
- *     "to_currency_id": 2,
- *     "original_amount": 100.00,
- *     "converted_amount": 3512.35,
- *     "exchange_rate": 35.12345,
- *     "exchange_method": "MULTIPLY"
- *   }
- * }
- */
-router.post('/convert', [
-    body("from_currency_id")
-        .notEmpty().withMessage("from_currency_id is required")
-        .isInt({ min: 1 }).withMessage("from_currency_id must be a valid integer greater than 0"),
-    body("to_currency_id")
-        .notEmpty().withMessage("to_currency_id is required")
-        .isInt({ min: 1 }).withMessage("to_currency_id must be a valid integer greater than 0"),
-    body("amount")
-        .notEmpty().withMessage("amount is required")
-        .isFloat({ min: 0.01 }).withMessage("amount must be a valid positive number greater than 0"),
-    validatorRequestMiddleware
-], CurrenciesExchangesController.convertCurrency);
-
-/**
- * @route GET /api/v1/currencies-exchanges/history
- * @desc Get currency exchange rate history
- * @access Private (requires authentication and company context)
- * @query {number} [currency_id] - Filter by specific currency ID (optional)
- * @query {number} [page] - Page number for pagination (optional, default: 1)
- * @query {number} [limit] - Number of records per page (optional, default: 10)
- * @returns {Object} Paginated history of exchange rate changes
- * @example
- * GET /api/v1/currencies-exchanges/history?currency_id=2&page=1&limit=5
- * Response: {
- *   "totalRecords": 25,
- *   "history": [
- *     {
- *       "currency_exc_hist_id": 1,
- *       "company_id": 123,
- *       "currency_id": 2,
- *       "currency_exc_rate": 35.12345678,
- *       "currency_exc_type": 2,
- *       "exchange_method": "MULTIPLY",
- *       "created_at": "2024-01-15T10:30:00.000Z",
- *       "currency": {
- *         "currency_id": 2,
- *         "currency_iso_code": "USD",
- *         "currency_name": "Dólar",
- *         "currency_symbol": "$"
- *       }
- *     }
- *   ],
- *   "currentPage": 1,
- *   "totalPages": 5,
- *   "perPage": 5
- * }
- */
-router.get('/history', CurrenciesExchangesController.getCurrencyHistory);
-
 /**
  * @route POST /api/v1/currencies-exchanges/set-base
  * @desc Set a currency as the base currency for the company
@@ -295,6 +261,7 @@ router.get('/history', CurrenciesExchangesController.getCurrencyHistory);
  *   "currency_id": 1
  * }
  * Response: {
+ *   "success": true,
  *   "message": "Base currency set successfully"
  * }
  */

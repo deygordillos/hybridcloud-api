@@ -131,55 +131,6 @@ export class CurrenciesExchangesController {
     }
 
     /**
-     * Convert amount between currencies
-     * @param req Request object 
-     * @param res Response object
-     * @returns 
-     */
-    static async convertCurrency(req: Request, res: Response) {
-        try {
-            const company_id = req['company_id'] || false;
-            if (!company_id) return errorResponse(res, messages.CurrenciesExchanges.company_id_required, 400);
-
-            const { 
-                from_currency_id, 
-                to_currency_id, 
-                amount 
-            } = req.body;
-
-            // Validate required fields
-            if (!from_currency_id) return errorResponse(res, messages.CurrenciesExchanges.from_currency_id_required, 400);
-            if (!to_currency_id) return errorResponse(res, messages.CurrenciesExchanges.to_currency_id_required, 400);
-            if (!amount || amount <= 0) return errorResponse(res, messages.CurrenciesExchanges.amount_required, 400);
-
-            const result = await CurrenciesExchangesService.convertCurrency(
-                company_id,
-                parseInt(from_currency_id),
-                parseInt(to_currency_id),
-                parseFloat(amount)
-            );
-
-            const conversionData = {
-                from_currency_id: parseInt(from_currency_id),
-                to_currency_id: parseInt(to_currency_id),
-                original_amount: parseFloat(amount),
-                converted_amount: result.converted_amount,
-                exchange_rate: result.exchange_rate,
-                exchange_method: result.exchange_method
-            };
-
-            return successResponse(res, messages.CurrenciesExchanges.currency_conversion_completed, 200, conversionData);
-        } catch (error) {
-            if (error instanceof Error) {
-                console.error("Error converting currency:", error.message, error.stack);
-                return errorResponse(res, error.message, 400);
-            }
-            console.error("Error converting currency:", error);
-            return errorResponse(res, "Internal server error", 500);
-        }
-    }
-
-    /**
      * Get currency exchange history
      * @param req Request object 
      * @param res Response object
@@ -208,15 +159,7 @@ export class CurrenciesExchangesController {
 
             const totalPages = Math.ceil(total / limit);
 
-            const paginationData = {
-                totalRecords: total,
-                history,
-                currentPage: page,
-                totalPages,
-                perPage: limit,
-            };
-
-            return successResponse(res, messages.CurrenciesExchanges.currency_history_retrieved, 200, paginationData, {
+            return successResponse(res, messages.CurrenciesExchanges.currency_history_retrieved, 200, history, {
                 total,
                 perPage: limit,
                 currentPage: page,
