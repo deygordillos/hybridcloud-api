@@ -1,8 +1,8 @@
 import request from 'supertest';
-import app from '../../src/app';
-import { appDataSource } from '../../src/app-data-source';
-import { authHeader, createTestCompany, createTestUserAndToken } from '../helpers/setupTestData';
-import { Companies } from '../../src/entity/companies.entity';
+import app from '../../../src/app';
+import { appDataSource } from '../../../src/app-data-source';
+import { authHeader, createTestCompany, createTestUserAndToken } from '../../helpers/setupTestData';
+import { Companies } from '../../../src/entity/companies.entity';
 
 let company: Companies;
 let token: string;

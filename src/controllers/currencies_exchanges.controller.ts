@@ -84,7 +84,7 @@ export class CurrenciesExchangesController {
                 currency_id: parseInt(currency_id),
                 currency_exc_rate: parseFloat(currency_exc_rate),
                 currency_exc_type: parseInt(currency_exc_type),
-                exchange_method: exchange_method || 'MULTIPLY',
+                exchange_method: exchange_method || 2, // 2 = MULTIPLY
                 currency_exc_status: currency_exc_status || 1
             };
 

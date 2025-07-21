@@ -46,10 +46,10 @@ export class CurrenciesExchangesHistory_1752726790636 implements MigrationInterf
                     },
                     {
                         name: "exchange_method",
-                        type: "enum",
-                        enum: ["DIVIDE", "MULTIPLY"],
-                        default: "'MULTIPLY'",
-                        comment: "Method to calculate exchange rate"
+                        type: "tinyint",
+                        default: 2,
+                        width: 1,
+                        comment: "1: DIVIDE, 2: MULTIPLY"
                     },
                     {
                         name: "created_at",

@@ -20,8 +20,8 @@ import { companyMiddleware } from "../../middlewares/companyMiddleware";
  * - 3: Reference (reference currencies for calculations)
  * 
  * Exchange Methods:
- * - MULTIPLY: Amount * Exchange Rate = Converted Amount
- * - DIVIDE: Amount / Exchange Rate = Converted Amount
+ * - 1 (DIVIDE): Amount / Exchange Rate = Converted Amount
+ * - 2 (MULTIPLY): Amount * Exchange Rate = Converted Amount
  * 
  * @module currencies_exchanges.route
  */
@@ -106,7 +106,7 @@ router.get('/:id', [
  * @body {number} currencyData.currency_id - The currency ID (required, must exist in currencies table)
  * @body {number} currencyData.currency_exc_rate - The exchange rate (required, positive number, 8 decimal places)
  * @body {number} currencyData.currency_exc_type - The currency type (required, 1=local, 2=stable, 3=ref)
- * @body {string} [currencyData.exchange_method] - The exchange method (optional, 'DIVIDE' or 'MULTIPLY', default: 'MULTIPLY')
+ * @body {number} [currencyData.exchange_method] - The exchange method (optional, 1=DIVIDE, 2=MULTIPLY, default: 2)
  * @body {number} [currencyData.currency_exc_status] - The status (optional, 0=inactive, 1=active, default: 1)
  * @returns {Object} The created currency exchange
  * @example
@@ -115,7 +115,7 @@ router.get('/:id', [
  *   "currency_id": 2,
  *   "currency_exc_rate": 35.12345678,
  *   "currency_exc_type": 2,
- *   "exchange_method": "MULTIPLY",
+ *   "exchange_method": 2,
  *   "currency_exc_status": 1
  * }
  * Response: {
@@ -143,8 +143,7 @@ router.post('/', [
         .notEmpty().withMessage("currency_exc_type is required")
         .isInt({ min: 1, max: 3 }).withMessage("currency_exc_type must be 1 (local), 2 (stable), or 3 (ref)"),
     body("exchange_method")
-        .optional()
-        .isIn(['DIVIDE', 'MULTIPLY']).withMessage("exchange_method must be 'DIVIDE' or 'MULTIPLY'"),
+        .isInt({ min: 1, max: 2 }).withMessage("exchange_method must be 1 (DIVIDE) or 2 (MULTIPLY)"),
     body("currency_exc_status")
         .optional()
         .isInt({ min: 0, max: 1 }).withMessage("currency_exc_status must be 0 or 1"),
@@ -160,14 +159,14 @@ router.post('/', [
  * @body {number} [currencyData.currency_id] - The currency ID (optional, must exist in currencies table)
  * @body {number} [currencyData.currency_exc_rate] - The exchange rate (optional, positive number, 8 decimal places)
  * @body {number} [currencyData.currency_exc_type] - The currency type (optional, 1=local, 2=stable, 3=ref)
- * @body {string} [currencyData.exchange_method] - The exchange method (optional, 'DIVIDE' or 'MULTIPLY')
+ * @body {number} [currencyData.exchange_method] - The exchange method (optional, 1=DIVIDE, 2=MULTIPLY)
  * @body {number} [currencyData.currency_exc_status] - The status (optional, 0=inactive, 1=active)
  * @returns {Object} The updated currency exchange
  * @example
  * PUT /api/v1/currencies-exchanges/2
  * Body: {
  *   "currency_exc_rate": 36.50000000,
- *   "exchange_method": "DIVIDE"
+ *   "exchange_method": 1
  * }
  * Response: {
  *   "message": "Currency exchange updated successfully",
@@ -198,7 +197,7 @@ router.put('/:id', [
         .isInt({ min: 1, max: 3 }).withMessage("currency_exc_type must be 1 (local), 2 (stable), or 3 (ref)"),
     body("exchange_method")
         .optional()
-        .isIn(['DIVIDE', 'MULTIPLY']).withMessage("exchange_method must be 'DIVIDE' or 'MULTIPLY'"),
+        .isInt({ min: 1, max: 2 }).withMessage("exchange_method must be 1 (DIVIDE) or 2 (MULTIPLY)"),
     body("currency_exc_status")
         .optional()
         .isInt({ min: 0, max: 1 }).withMessage("currency_exc_status must be 0 or 1"),

@@ -160,13 +160,13 @@ export class CurrenciesExchangesService {
             exchange_rate = toRate / fromRate;
             
             // Apply exchange method
-            if (toCurrency.exchange_method === 'DIVIDE') {
+            if (toCurrency.exchange_method === 1) { // 1 = DIVIDE
                 converted_amount = amount / exchange_rate;
             } else {
-                converted_amount = amount * exchange_rate;
+                converted_amount = amount * exchange_rate; // 2 = MULTIPLY
             }
             
-            exchange_method = toCurrency.exchange_method;
+            exchange_method = toCurrency.exchange_method === 1 ? 'DIVIDE' : 'MULTIPLY';
         }
 
         return {

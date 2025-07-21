@@ -20,8 +20,8 @@ export class CurrenciesExchanges {
     @Column({ type: 'tinyint', width: 1, default: 1, nullable: false, comment: '1: local, 2: stable, 3: ref' })
     currency_exc_type: number;
 
-    @Column({ type: 'enum', enum: ['DIVIDE', 'MULTIPLY'], default: 'MULTIPLY', comment: 'Method to calculate exchange rate' })
-    exchange_method: string;
+    @Column({ type: 'tinyint', width: 1, default: 2, comment: '1: DIVIDE, 2: MULTIPLY' })
+    exchange_method: number;
 
     @Column({ type: 'tinyint', width: 1, default: 1, comment: '1: Active, 0: Inactive' })
     currency_exc_status: number;

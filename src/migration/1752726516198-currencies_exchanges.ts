@@ -46,10 +46,10 @@ export class CurrenciesExchanges_1752726516198 implements MigrationInterface {
                     },
                     {
                         name: "exchange_method",
-                        type: "enum",
-                        enum: ["DIVIDE", "MULTIPLY"],
-                        default: "'MULTIPLY'",
-                        comment: "Method to calculate exchange rate"
+                        type: "tinyint",
+                        default: 2,
+                        width: 1,
+                        comment: "1: DIVIDE, 2: MULTIPLY"
                     },
                     {
                         name: "currency_exc_status",

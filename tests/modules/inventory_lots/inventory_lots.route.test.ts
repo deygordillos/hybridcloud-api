@@ -1,11 +1,11 @@
 import request from 'supertest';
-import app from '../../src/app';
-import { appDataSource } from '../../src/app-data-source';
-import { authHeader, createTestCompany, createTestUserAndToken } from '../helpers/setupTestData';
-import { InventoryVariantsService } from '../../src/services/InventoryVariantsService';
-import { InventoryFamilyService } from '../../src/services/InventoryFamilyService';
-import { InventoryService } from '../../src/services/InventoryService';
-import { Companies } from '../../src/entity/companies.entity';
+import app from '../../../src/app';
+import { appDataSource } from '../../../src/app-data-source';
+import { authHeader, createTestCompany, createTestUserAndToken } from '../../helpers/setupTestData';
+import { InventoryVariantsService } from '../../../src/services/InventoryVariantsService';
+import { InventoryFamilyService } from '../../../src/services/InventoryFamilyService';
+import { InventoryService } from '../../../src/services/InventoryService';
+import { Companies } from '../../../src/entity/companies.entity';
 
 let company: Companies;
 let token: string;
