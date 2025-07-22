@@ -4,14 +4,30 @@ services:
 
   hybrid-api-ts:
     container_name: hybrid-api-ts
-    build: ./build
+    build:
+      context: .
     ports:
-      - "4005:4005"
-    volumes:
-      - .:/usr/local/apache2/htdocs/hybrid-api-ts/v0.00
-    working_dir: /usr/local/apache2/htdocs/hybrid-api-ts/v0.00
-    expose:
-      - 4005
+      - "3002:3002"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_SSL: ${DB_SSL}
+      DB_SSL_CA: ${DB_SSL_CA}
+      # Otras variables como JWT_ACCESS_TOKEN, JWT_REFRESH_TOKEN, etc.
+      JWT_ACCESS_TOKEN: ${JWT_ACCESS_TOKEN}
+      JWT_REFRESH_TOKEN: ${JWT_REFRESH_TOKEN}
+      JWT_EXPIRES_IN_ACCESS: ${JWT_EXPIRES_IN_ACCESS}
+      JWT_EXPIRES_IN_REFRESH: ${JWT_EXPIRES_IN_REFRESH}
+      BCRYPT_SALT: ${BCRYPT_SALT}
+      PORT: ${PORT} # Asegúrate de que PORT sea 3002, como tu EXPOSE
+      LOGGER: ${LOGGER}
+      isProduction: ${isProduction}
+      DB_DEBUG: ${DB_DEBUG}
+      DB_SYNC: ${DB_SYNC}
+    working_dir: /app
     extra_hosts:
       - "host.docker.internal:host-gateway"
     

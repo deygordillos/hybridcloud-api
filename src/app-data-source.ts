@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm"
 import config from "./config/config";
+import * as fs from "fs";
 
 export const appDataSource = new DataSource({
     type: config.DB_DRIVER as any,
@@ -10,6 +11,10 @@ export const appDataSource = new DataSource({
     database: config.DB_DATABASE,
     logging: config.DB_DEBUG,
     synchronize: config.DB_SYNC,
+    ssl: config.DB_SSL ? {
+        rejectUnauthorized: true,
+        ca: fs.readFileSync(config.DB_SSL_CA).toString()
+    } : false,
     entities: [config.isProduction ? 'dist/entity/**/*.js' : 'src/entity/**/*.ts'],
     migrations: [config.isProduction ? 'dist/migration/**/*.js' : 'src/migration/**/*.ts'],
     subscribers: [config.isProduction ? 'dist/subscriber/**/*.js' : 'src/subscriber/**/*.ts']
