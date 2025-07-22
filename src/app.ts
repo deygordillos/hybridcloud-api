@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import indexRoutes from './routes/v1/index.route';
 import config from "./config/config";
 import { errorHandler } from "./middlewares/error.middleware";
+import { swaggerSpec, swaggerUi } from "./swaggerConfig";
 
 // create and setup express app
 const app = express()
@@ -22,5 +23,7 @@ app.use(express.urlencoded({
 app.use(bodyParser.json());
 app.use(errorHandler);
 app.use(indexRoutes);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 export default app;
