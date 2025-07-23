@@ -45,7 +45,7 @@ export class InventoryPrices {
 
     @Column({ 
         type: "decimal", 
-        precision: 10, 
+        precision: 18, 
         scale: 3, 
         nullable: true,
         comment: "Total price of the inventory in local currency" 
@@ -54,7 +54,16 @@ export class InventoryPrices {
 
     @Column({ 
         type: "decimal", 
-        precision: 10, 
+        precision: 18, 
+        scale: 3, 
+        nullable: true,
+        comment: "Total price of the inventory in stable currency" 
+    })
+    price_stable: number;
+
+    @Column({ 
+        type: "decimal", 
+        precision: 18, 
         scale: 3, 
         nullable: true,
         comment: "Total price of the inventory in reference currency" 
@@ -63,7 +72,7 @@ export class InventoryPrices {
 
     @Column({ 
         type: "decimal", 
-        precision: 10, 
+        precision: 18, 
         scale: 3, 
         nullable: true,
         comment: "Base price of the inventory in local currency" 
@@ -72,7 +81,16 @@ export class InventoryPrices {
 
     @Column({ 
         type: "decimal", 
-        precision: 10, 
+        precision: 18, 
+        scale: 3, 
+        nullable: true,
+        comment: "Base price of the inventory in stable currency" 
+    })
+    price_base_stable: number;
+
+    @Column({ 
+        type: "decimal", 
+        precision: 18, 
         scale: 3, 
         nullable: true,
         comment: "Base price of the inventory in reference currency" 
@@ -81,7 +99,7 @@ export class InventoryPrices {
 
     @Column({ 
         type: "decimal", 
-        precision: 10, 
+        precision: 18, 
         scale: 3, 
         nullable: true,
         comment: "Tax amount of the inventory in local currency" 
@@ -90,7 +108,16 @@ export class InventoryPrices {
 
     @Column({ 
         type: "decimal", 
-        precision: 10, 
+        precision: 18, 
+        scale: 3, 
+        nullable: true,
+        comment: "Tax amount of the inventory in stable currency" 
+    })
+    tax_amount_stable: number;
+
+    @Column({ 
+        type: "decimal", 
+        precision: 18, 
         scale: 3, 
         nullable: true,
         comment: "Tax amount of the inventory in reference currency" 
@@ -99,7 +126,7 @@ export class InventoryPrices {
 
     @Column({ 
         type: "decimal", 
-        precision: 10, 
+        precision: 18, 
         scale: 3, 
         nullable: true,
         comment: "Cost of the inventory in local currency" 
@@ -108,7 +135,16 @@ export class InventoryPrices {
 
     @Column({ 
         type: "decimal", 
-        precision: 10, 
+        precision: 18, 
+        scale: 3, 
+        nullable: true,
+        comment: "Cost of the inventory in stable currency" 
+    })
+    cost_stable: number;
+
+    @Column({ 
+        type: "decimal", 
+        precision: 18, 
         scale: 3, 
         nullable: true,
         comment: "Cost of the inventory in reference currency" 
@@ -117,7 +153,7 @@ export class InventoryPrices {
 
     @Column({ 
         type: "decimal", 
-        precision: 10, 
+        precision: 18, 
         scale: 3, 
         nullable: true,
         comment: "Average cost of the inventory in local currency" 
@@ -126,7 +162,16 @@ export class InventoryPrices {
 
     @Column({ 
         type: "decimal", 
-        precision: 10, 
+        precision: 18, 
+        scale: 3, 
+        nullable: true,
+        comment: "Average cost of the inventory in stable currency" 
+    })
+    cost_avg_stable: number;
+
+    @Column({ 
+        type: "decimal", 
+        precision: 18, 
         scale: 3, 
         nullable: true,
         comment: "Average cost of the inventory in reference currency" 
@@ -135,7 +180,7 @@ export class InventoryPrices {
 
     @Column({ 
         type: "decimal", 
-        precision: 10, 
+        precision: 18, 
         scale: 3, 
         nullable: true,
         comment: "Profit of the inventory in local currency" 
@@ -144,7 +189,16 @@ export class InventoryPrices {
 
     @Column({ 
         type: "decimal", 
-        precision: 10, 
+        precision: 18, 
+        scale: 3, 
+        nullable: true,
+        comment: "Profit of the inventory in stable currency" 
+    })
+    profit_stable: number;
+
+    @Column({ 
+        type: "decimal", 
+        precision: 18, 
         scale: 3, 
         nullable: true,
         comment: "Profit of the inventory in reference currency" 
@@ -152,7 +206,8 @@ export class InventoryPrices {
     profit_ref: number;
 
     @Column({ 
-        type: "int", 
+        type: "int",
+        unsigned: true,
         default: 1,
         comment: "Currency of the inventory in local currency" 
     })
@@ -160,6 +215,14 @@ export class InventoryPrices {
 
     @Column({ 
         type: "int",
+        unsigned: true,
+        comment: "Currency of the inventory in stable currency" 
+    })
+    currency_id_stable: number;
+
+    @Column({ 
+        type: "int",
+        unsigned: true,
         comment: "Reference currency of the inventory in reference currency" 
     })
     currency_id_ref: number;
