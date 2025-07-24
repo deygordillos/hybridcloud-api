@@ -100,6 +100,9 @@ export class InventoryPricesController {
             if (!data.inv_var_id || !data.typeprice_id) {
                 return errorResponse(res, "Variant ID and Type Price ID are required", 400);
             }
+            if (!data.currency_id_stable) {
+                data.currency_id_stable = data.currency_id_ref || (data.currency_id_local || 1)
+            }
 
             // Check if variant exists
             const variant = await InventoryVariantsService.findById(data.inv_var_id);
@@ -192,27 +195,27 @@ export class InventoryPricesController {
      * @param res Response object
      * @returns 
      */
-    static async delete(req: Request, res: Response) {
-        try {
-            const inv_price_id = parseInt(req.params.id, 10);
-            if (!inv_price_id) return errorResponse(res, 
-                messages.InventoryPrices?.price_needed ?? "Inventory price ID is required", 
-                400
-            );
+    // static async delete(req: Request, res: Response) {
+    //     try {
+    //         const inv_price_id = parseInt(req.params.id, 10);
+    //         if (!inv_price_id) return errorResponse(res, 
+    //             messages.InventoryPrices?.price_needed ?? "Inventory price ID is required", 
+    //             400
+    //         );
 
-            const response = await InventoryPricesService.delete(inv_price_id);
+    //         const response = await InventoryPricesService.delete(inv_price_id);
 
-            return successResponse(res, response.message, 200);
-        } catch (e) {
-            if (e instanceof Error) {
-                console.error('InventoryPricesController.delete catch error: ', e.message, e.stack);
-                return errorResponse(res, e.message, 400);
-            } else {
-                console.error('InventoryPricesController.delete catch error: ', e);
-                return errorResponse(res, e?.message || 'Error deleting inventory price', 500);
-            }
-        }
-    }
+    //         return successResponse(res, response.message, 200);
+    //     } catch (e) {
+    //         if (e instanceof Error) {
+    //             console.error('InventoryPricesController.delete catch error: ', e.message, e.stack);
+    //             return errorResponse(res, e.message, 400);
+    //         } else {
+    //             console.error('InventoryPricesController.delete catch error: ', e);
+    //             return errorResponse(res, e?.message || 'Error deleting inventory price', 500);
+    //         }
+    //     }
+    // }
 
     /**
      * Set price as current

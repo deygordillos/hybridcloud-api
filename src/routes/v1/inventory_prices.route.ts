@@ -136,18 +136,25 @@ router.get('/variant/:variantId/type/:typeId',
  * @body {number} priceData.typeprice_id - The price type ID (required)
  * @body {number} [priceData.is_current] - Whether this is the current price (optional, 0 or 1)
  * @body {number} [priceData.price_local] - Total price in local currency (optional, positive number)
+ * @body {number} [priceData.price_stable] - Stable price (optional, positive number)
  * @body {number} [priceData.price_ref] - Total price in reference currency (optional, positive number)
  * @body {number} [priceData.price_base_local] - Base price in local currency (optional, positive number)
+ * @body {number} [priceData.price_base_stable] - Stable base price (optional, positive number)
  * @body {number} [priceData.price_base_ref] - Base price in reference currency (optional, positive number)
  * @body {number} [priceData.tax_amount_local] - Tax amount in local currency (optional, positive number)
+ * @body {number} [priceData.tax_amount_stable] - Stable tax amount (optional, positive number)
  * @body {number} [priceData.tax_amount_ref] - Tax amount in reference currency (optional, positive number)
  * @body {number} [priceData.cost_local] - Cost in local currency (optional, positive number)
+ * @body {number} [priceData.cost_stable] - Stable cost (optional, positive number)
  * @body {number} [priceData.cost_ref] - Cost in reference currency (optional, positive number)
  * @body {number} [priceData.cost_avg_local] - Average cost in local currency (optional, positive number)
+ * @body {number} [priceData.cost_avg_stable] - Stable average cost (optional, positive number)
  * @body {number} [priceData.cost_avg_ref] - Average cost in reference currency (optional, positive number)
  * @body {number} [priceData.profit_local] - Profit in local currency (optional)
+ * @body {number} [priceData.profit_stable] - Stable profit (optional, positive number)
  * @body {number} [priceData.profit_ref] - Profit in reference currency (optional)
  * @body {number} [priceData.currency_id_local] - Local currency ID (optional, default: 1)
+ * @body {number} [priceData.currency_id_stable] - Stable currency ID (optional, default: 1)
  * @body {number} [priceData.currency_id_ref] - Reference currency ID (optional, default: 1)
  * @body {string} [priceData.valid_from] - Date from which this price is valid (optional, ISO8601 format)
  * @returns {Object} The created inventory price
@@ -161,7 +168,14 @@ router.get('/variant/:variantId/type/:typeId',
  *   "price_ref": 95.25,
  *   "currency_id_local": 1,
  *   "currency_id_ref": 2,
- *   "valid_from": "2024-01-01"
+ *   "currency_id_stable": 3,
+ *   "valid_from": "2024-01-01",
+ *   "price_stable": 100.50,
+ *   "price_base_stable": 95.25,
+ *   "tax_amount_stable": 0.00,
+ *   "cost_stable": 0.00,
+ *   "cost_avg_stable": 0.00,
+ *   "profit_stable": 0.00
  * }
  * Response: {
  *   "success": true,
@@ -221,8 +235,22 @@ router.post('/',
             .optional().isInt({ min: 1 }).withMessage("currency_id_local must be a positive integer"),
         body("currency_id_ref")
             .optional().isInt({ min: 1 }).withMessage("currency_id_ref must be a positive integer"),
+        body("currency_id_stable")
+            .optional().isInt({ min: 1 }).withMessage("currency_id_stable must be a positive integer"),
         body("valid_from")
             .optional().isISO8601().withMessage("valid_from must be a valid date"),
+        body("price_stable")
+            .optional().isFloat({ min: 0 }).withMessage("price_stable must be a positive number"),
+        body("price_base_stable")
+            .optional().isFloat({ min: 0 }).withMessage("price_base_stable must be a positive number"),
+        body("tax_amount_stable")
+            .optional().isFloat({ min: 0 }).withMessage("tax_amount_stable must be a positive number"),
+        body("cost_stable")
+            .optional().isFloat({ min: 0 }).withMessage("cost_stable must be a positive number"),
+        body("cost_avg_stable")
+            .optional().isFloat({ min: 0 }).withMessage("cost_avg_stable must be a positive number"),
+        body("profit_stable")
+            .optional().isFloat().withMessage("profit_stable must be a number"),
         validatorRequestMiddleware
     ],
     InventoryPricesController.create
@@ -251,14 +279,27 @@ router.post('/',
  * @body {number} [priceData.profit_ref] - Profit in reference currency (optional)
  * @body {number} [priceData.currency_id_local] - Local currency ID (optional)
  * @body {number} [priceData.currency_id_ref] - Reference currency ID (optional)
+ * @body {number} [priceData.currency_id_stable] - Stable currency ID (optional)
  * @body {string} [priceData.valid_from] - Date from which this price is valid (optional, ISO8601 format)
+ * @body {number} [priceData.price_stable] - Stable price (optional, positive number)
+ * @body {number} [priceData.price_base_stable] - Stable base price (optional, positive number)
+ * @body {number} [priceData.tax_amount_stable] - Stable tax amount (optional, positive number)
+ * @body {number} [priceData.cost_stable] - Stable cost (optional, positive number)
+ * @body {number} [priceData.cost_avg_stable] - Stable average cost (optional, positive number)
+ * @body {number} [priceData.profit_stable] - Stable profit (optional, positive number)
  * @returns {Object} The updated inventory price
  * @example
  * PUT /api/v1/inventory/prices/456
  * Body: {
  *   "price_local": 110.75,
  *   "price_ref": 105.50,
- *   "is_current": 1
+ *   "is_current": 1,
+ *   "price_stable": 100.50,
+ *   "price_base_stable": 95.25,
+ *   "tax_amount_stable": 0.00,
+ *   "cost_stable": 0.00,
+ *   "cost_avg_stable": 0.00,
+ *   "profit_stable": 0.00
  * }
  * Response: {
  *   "success": true,
@@ -316,8 +357,22 @@ router.put('/:id',
             .optional().isInt({ min: 1 }).withMessage("currency_id_local must be a positive integer"),
         body("currency_id_ref")
             .optional().isInt({ min: 1 }).withMessage("currency_id_ref must be a positive integer"),
+        body("currency_id_stable")
+            .optional().isInt({ min: 1 }).withMessage("currency_id_stable must be a positive integer"),
         body("valid_from")
             .optional().isISO8601().withMessage("valid_from must be a valid date"),
+        body("price_stable")
+            .optional().isFloat({ min: 0 }).withMessage("price_stable must be a positive number"),
+        body("price_base_stable")
+            .optional().isFloat({ min: 0 }).withMessage("price_base_stable must be a positive number"),
+        body("tax_amount_stable")
+            .optional().isFloat({ min: 0 }).withMessage("tax_amount_stable must be a positive number"),
+        body("cost_stable")
+            .optional().isFloat({ min: 0 }).withMessage("cost_stable must be a positive number"),
+        body("cost_avg_stable")
+            .optional().isFloat({ min: 0 }).withMessage("cost_avg_stable must be a positive number"),
+        body("profit_stable")
+            .optional().isFloat().withMessage("profit_stable must be a number"),
         validatorRequestMiddleware
     ],
     InventoryPricesController.update
