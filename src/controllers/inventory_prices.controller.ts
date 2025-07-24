@@ -100,6 +100,9 @@ export class InventoryPricesController {
             if (!data.inv_var_id || !data.typeprice_id) {
                 return errorResponse(res, "Variant ID and Type Price ID are required", 400);
             }
+            if (!data.currency_id_stable) {
+                data.currency_id_stable = data.currency_id_ref || (data.currency_id_local || 1)
+            }
 
             // Check if variant exists
             const variant = await InventoryVariantsService.findById(data.inv_var_id);
