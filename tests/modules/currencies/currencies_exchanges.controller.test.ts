@@ -47,14 +47,14 @@ afterAll(async () => {
 describe('CurrenciesExchangesController', () => {
   let createdId: number;
 
-  it('create: debe crear una relación de moneda', async () => {
+  it('create: debe crear una relación de moneda tipo stable', async () => {
     const res = await request(app)
       .post('/api/v1/currencies-exchanges')
       .set(authHeader(token))
       .send({
         currency_id: currency2.currency_id,
         currency_exc_rate: 100.12345678,
-        currency_exc_type: 2,
+        currency_exc_type: 2, // stable
         exchange_method: 2,
         currency_exc_status: 1
       });
@@ -62,6 +62,13 @@ describe('CurrenciesExchangesController', () => {
     expect(res.body.success).toBe(true);
     expect(res.body.data.currency_id).toBe(currency2.currency_id);
     createdId = res.body.data.currency_exc_id;
+    expect(res.body.data.currency_exc_type).toBe(2);
+    // Verifica que el campo stable esté presente
+    expect(res.body.data).toHaveProperty('currency_exc_type');
+    // Si hay un campo currency_id_stable, verificarlo
+    if ('currency_id_stable' in res.body.data) {
+      expect(res.body.data.currency_id_stable).toBeDefined();
+    }
   });
 
   it('getCompanyCurrencies: debe listar monedas de la empresa', async () => {
@@ -82,15 +89,19 @@ describe('CurrenciesExchangesController', () => {
     expect(res.body.data.currency_exc_id).toBe(createdId);
   });
 
-  it('update: debe actualizar una relación', async () => {
+  it('update: debe actualizar una relación a tipo stable', async () => {
     const res = await request(app)
       .put(`/api/v1/currencies-exchanges/${createdId}`)
       .set(authHeader(token))
-      .send({ currency_exc_rate: 200.12345678, exchange_method: 1 });
+      .send({ currency_exc_rate: 200.12345678, exchange_method: 1, currency_exc_type: 2 });
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.data.currency_exc_rate).toBe(200.12345678);
     expect(res.body.data.exchange_method).toBe(1);
+    expect(res.body.data.currency_exc_type).toBe(2);
+    if ('currency_id_stable' in res.body.data) {
+      expect(res.body.data.currency_id_stable).toBeDefined();
+    }
   });
 
   it('getCurrencyHistory: debe devolver el historial', async () => {

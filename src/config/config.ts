@@ -13,6 +13,8 @@ export default {
     DB_DATABASE: process.env.NODE_ENV === 'test' ? ':memory:' : (process.env.DB_DATABASE || ''),
     DB_DEBUG: process.env.DB_DEBUG === 'true' || false,
     DB_SYNC: process.env.DB_SYNC === 'true' || false,
+    DB_SSL: process.env.DB_SSL === 'true' || false,
+    DB_SSL_CA: process.env.DB_SSL_CA || '',
 
     JWT_ACCESS_TOKEN: process.env.JWT_ACCESS_TOKEN || '',
     JWT_REFRESH_TOKEN: process.env.JWT_REFRESH_TOKEN || '',
