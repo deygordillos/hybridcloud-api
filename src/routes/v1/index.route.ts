@@ -19,8 +19,6 @@ import typesOfPrices from './types_of_prices.route'
 import currenciesExchangesRoutes from './currencies_exchanges.route'
 
 const router = Router();
-
-router.use('/api/v1/', authRoutes);
 router.use('/api/v1/auth', authRoutes);
 router.use('/api/v1/users', usersRoutes);
 router.use('/api/v1/groups', groupsRoutes);
