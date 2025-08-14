@@ -37,11 +37,10 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install --omit=dev
 
-# Copia el certificado CA que descargaste de OVHcloud
+# Copia el certificado CA
 COPY ca.pem /app/ca.pem
 
 # Copia solo la carpeta 'dist' (los archivos JavaScript compilados) desde la etapa 'builder'
-# ¡Esto ahora debería funcionar porque 'dist' se generará en la etapa 'builder'!
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3002

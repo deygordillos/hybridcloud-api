@@ -8,10 +8,13 @@
     "dev": "tsc-watch --onSuccess \"ts-node ./src/index.ts\" ",
     "build": "tsc",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "typeorm:prod": "node ./node_modules/typeorm/cli.js -d ./dist/app-data-source.js",
     "migration:create": "npx typeorm migration:create ./src/migration/migration",
     "migration:generate": "npm run typeorm -- migration:generate -d ./src/app-data-source.ts ./src/migration/migration",
     "migration:run": "npm run typeorm -- migration:run -d ./src/app-data-source.ts",
+    "migration:run:prod": "npm run typeorm:prod -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert -d ./src/app-data-source.ts",
+    "migration:revert:prod": "npm run typeorm:prod -- migration:revert",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage"

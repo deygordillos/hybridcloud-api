@@ -14,6 +14,42 @@ spec:
       labels:
         app: hybrid-auth-service
     spec:
+      # --- INIT CONTAINER PARA MIGRACIONES ---
+      initContainers:
+      - name: db-migration
+        image: 286325yk.c1.bhs5.container-registry.ovh.net/hybrid/hybrid-api-ts:1.3.5
+        envFrom:
+          - configMapRef:
+              name: hybrid-api-config
+          - secretRef:
+              name: hybrid-api-secret
+        # Usar bash para manejar errores de migración
+        command: ["/bin/sh"]
+        args: 
+          - "-c"
+          - |
+            echo "🚀 Iniciando migraciones de base de datos..."
+            if npm run migration:run:prod; then
+              echo "✅ Migraciones completadas exitosamente"
+              exit 0
+            else
+              echo "⚠️ Error en migraciones - verificando si es duplicado..."
+              if npm run migration:run:prod 2>&1 | grep -q "Duplicate key"; then
+                echo "⚠️ Error de duplicado detectado - continuando"
+                exit 0
+              else
+                echo "❌ Error crítico en migraciones"
+                exit 1
+              fi
+            fi
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "300m"
+            memory: "256Mi"
+
       containers:
         - name: hybrid-auth-service
           image: 286325yk.c1.bhs5.container-registry.ovh.net/hybrid/hybrid-api-ts:1.3.5
