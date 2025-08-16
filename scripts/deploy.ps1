@@ -1,9 +1,9 @@
-# Script de despliegue simplificado para Hybrid API General
+# Script de despliegue simplificado para Hybrid API Auth Service
 param(
     [string]$Namespace = "hybrid"
 )
 
-Write-Host "Iniciando despliegue de Hybrid API General..." -ForegroundColor Green
+Write-Host "Iniciando despliegue de Hybrid API Auth Service..." -ForegroundColor Green
 
 # Verificar kubectl
 try {
@@ -25,15 +25,15 @@ try {
 
 # Construir imagen Docker
 Write-Host "Construyendo imagen Docker..." -ForegroundColor Yellow
-docker build -t hybrid-api-ts:1.3.5 .
+docker build -t hybrid-api-ts:latest .
 
 # Etiquetar imagen para OVH
 Write-Host "Etiquetando imagen para registro OVH..." -ForegroundColor Yellow
-docker tag hybrid-api-ts:1.3.5 286325yk.c1.bhs5.container-registry.ovh.net/hybrid/hybrid-api-ts:1.3.5
+docker tag hybrid-api-ts:latest wz76yl02.c1.bhs5.container-registry.ovh.net/hybrid/hybrid-api-ts:latest
 
 # Subir imagen
 Write-Host "Subiendo imagen al registro..." -ForegroundColor Yellow
-docker push 286325yk.c1.bhs5.container-registry.ovh.net/hybrid/hybrid-api-ts:1.3.5
+docker push wz76yl02.c1.bhs5.container-registry.ovh.net/hybrid/hybrid-api-ts:latest
 
 # Aplicar configuraciones
 # Write-Host "Verificando CRD ServiceMonitor..." -ForegroundColor Yellow

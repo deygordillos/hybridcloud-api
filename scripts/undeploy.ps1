@@ -1,9 +1,9 @@
-# Script de eliminacion simplificado para Hybrid API Gateway
+# Script de eliminacion simplificado para Hybrid API Auth Service
 param(
     [string]$Namespace = "hybrid"
 )
 
-Write-Host "Eliminando Hybrid API Gateway..." -ForegroundColor Red
+Write-Host "Eliminando Hybrid API Auth Service..." -ForegroundColor Red
 
 # Verificar kubectl
 try {

@@ -17,7 +17,7 @@ spec:
       # --- INIT CONTAINER PARA MIGRACIONES ---
       initContainers:
       - name: db-migration
-        image: 286325yk.c1.bhs5.container-registry.ovh.net/hybrid/hybrid-api-ts:1.3.5
+        image: wz76yl02.c1.bhs5.container-registry.ovh.net/hybrid/hybrid-api-ts:latest
         envFrom:
           - configMapRef:
               name: hybrid-api-config
@@ -52,7 +52,7 @@ spec:
 
       containers:
         - name: hybrid-auth-service
-          image: 286325yk.c1.bhs5.container-registry.ovh.net/hybrid/hybrid-api-ts:1.3.5
+          image: wz76yl02.c1.bhs5.container-registry.ovh.net/hybrid/hybrid-api-ts:latest
           ports:
             - containerPort: 3001
           resources:

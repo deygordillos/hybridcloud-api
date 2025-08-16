@@ -32,7 +32,7 @@ Scripts automatizados para desplegar, gestionar y monitorear el API Gateway en O
 
 ### Parámetros disponibles
 - `-Namespace`: Namespace de Kubernetes (default: "hybrid")
-- `-Registry`: Registro de contenedores OVH (default: "286325yk.c1.bhs5.container-registry.ovh.net")
+- `-Registry`: Registro de contenedores OVH (default: "wz76yl02.c1.bhs5.container-registry.ovh.net")
 - `-ImageName`: Nombre de la imagen (default: "hybrid/hybrid-gateway")
 - `-Tag`: Tag de la imagen (default: "latest")
 - `-SkipBuild`: Omitir construcción de imagen Docker
@@ -140,7 +140,7 @@ kubectl config current-context
 docker version
 
 # Login al registro OVH (si es necesario)
-docker login 286325yk.c1.bhs5.container-registry.ovh.net
+docker login wz76yl02.c1.bhs5.container-registry.ovh.net
 ```
 
 ## 🔧 Solución de Problemas
@@ -161,7 +161,7 @@ $env:KUBECONFIG = "ruta\al\kubeconfig"
 ### Error: Imagen no encontrada
 ```powershell
 # Verificar que la imagen existe en el registro
-docker pull 286325yk.c1.bhs5.container-registry.ovh.net/hybrid/hybrid-gateway:latest
+docker pull wz76yl02.c1.bhs5.container-registry.ovh.net/hybrid/hybrid-gateway:latest
 ```
 
 ### Error: Namespace no existe

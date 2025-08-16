@@ -7,7 +7,7 @@ metadata:
 data:
   NODE_ENV: "production"
   PORT: "3001"
-  DB_HOST: "mysql-7c16608e-o5747ad43.database.cloud.ovh.net"
+  DB_HOST: "mysql-4207de0f-o5747ad43.database.cloud.ovh.net"
   DB_PORT: "20184"
   DB_DATABASE: "IV_HYBRID"
   DB_SSL: "true"
