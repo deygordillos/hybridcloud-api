@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: hybrid-auth-service-monitor
+  labels:
+    app: hybrid-auth-service
+spec:
+  selector:
+    matchLabels:
+      app: hybrid-auth-service
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
+  namespaceSelector:
+    any: true

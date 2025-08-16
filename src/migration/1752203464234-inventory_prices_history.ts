@@ -39,15 +39,23 @@ export class InventoryPricesHistory_1752203464234 implements MigrationInterface 
                     {
                         name: "price_local",
                         type: "decimal",
-                        precision: 10,
+                        precision: 18,
                         scale: 3,
                         comment: "Total price of the inventory in local currency",
                         isNullable: true,
                     },
                     {
+                        name: "price_stable",
+                        type: "decimal",
+                        precision: 18,
+                        scale: 3,
+                        comment: "Total price of the inventory in stable currency",
+                        isNullable: true,
+                    },
+                    {
                         name: "price_ref",
                         type: "decimal",
-                        precision: 10,
+                        precision: 18,
                         scale: 3,
                         comment: "Total price of the inventory in reference currency",
                         isNullable: true,
@@ -55,15 +63,23 @@ export class InventoryPricesHistory_1752203464234 implements MigrationInterface 
                     {
                         name: "price_base_local",
                         type: "decimal",
-                        precision: 10,
+                        precision: 18,
                         scale: 3,
                         comment: "Base price of the inventory in local currency",
                         isNullable: true,
                     },
                     {
+                        name: "price_base_stable",
+                        type: "decimal",
+                        precision: 18,
+                        scale: 3,
+                        comment: "Base price of the inventory in stable currency",
+                        isNullable: true,
+                    },
+                    {
                         name: "price_base_ref",
                         type: "decimal",
-                        precision: 10,
+                        precision: 18,
                         scale: 3,
                         comment: "Base price of the inventory in reference currency",
                         isNullable: true,
@@ -71,15 +87,23 @@ export class InventoryPricesHistory_1752203464234 implements MigrationInterface 
                     {
                         name: "tax_amount_local",
                         type: "decimal",
-                        precision: 10,
+                        precision: 18,
                         scale: 3,
                         comment: "Tax amount of the inventory in local currency",
                         isNullable: true,
                     },
                     {
+                        name: "tax_amount_stable",
+                        type: "decimal",
+                        precision: 18,
+                        scale: 3,
+                        comment: "Tax amount of the inventory in stable currency",
+                        isNullable: true,
+                    },
+                    {
                         name: "tax_amount_ref",
                         type: "decimal",
-                        precision: 10,
+                        precision: 18,
                         scale: 3,
                         comment: "Tax amount of the inventory in reference currency",
                         isNullable: true,
@@ -87,15 +111,23 @@ export class InventoryPricesHistory_1752203464234 implements MigrationInterface 
                     {
                         name: "cost_local",
                         type: "decimal",
-                        precision: 10,
+                        precision: 18,
                         scale: 3,
                         comment: "Cost of the inventory in local currency",
                         isNullable: true,
                     },
                     {
+                        name: "cost_stable",
+                        type: "decimal",
+                        precision: 18,
+                        scale: 3,
+                        comment: "Cost of the inventory in stable currency",
+                        isNullable: true,
+                    },
+                    {
                         name: "cost_ref",
                         type: "decimal",
-                        precision: 10,
+                        precision: 18,
                         scale: 3,
                         comment: "Cost of the inventory in reference currency",
                         isNullable: true,
@@ -103,15 +135,23 @@ export class InventoryPricesHistory_1752203464234 implements MigrationInterface 
                     {
                         name: "cost_avg_local",
                         type: "decimal",
-                        precision: 10,
+                        precision: 18,
                         scale: 3,
                         comment: "Average cost of the inventory in local currency",
                         isNullable: true,
                     },
                     {
+                        name: "cost_avg_stable",
+                        type: "decimal",
+                        precision: 18,
+                        scale: 3,
+                        comment: "Average cost of the inventory in stable currency",
+                        isNullable: true,
+                    },
+                    {
                         name: "cost_avg_ref",
                         type: "decimal",
-                        precision: 10,
+                        precision: 18,
                         scale: 3,
                         comment: "Average cost of the inventory in reference currency",
                         isNullable: true,
@@ -119,15 +159,23 @@ export class InventoryPricesHistory_1752203464234 implements MigrationInterface 
                     {
                         name: "profit_local",
                         type: "decimal",
-                        precision: 10,
+                        precision: 18,
                         scale: 3,
                         comment: "Profit of the inventory in local currency",
                         isNullable: true,
                     },
                     {
+                        name: "profit_stable",
+                        type: "decimal",
+                        precision: 18,
+                        scale: 3,
+                        comment: "Profit of the inventory in stable currency",
+                        isNullable: true,
+                    },
+                    {
                         name: "profit_ref",
                         type: "decimal",
-                        precision: 10,
+                        precision: 18,
                         scale: 3,
                         comment: "Profit of the inventory in reference currency",
                         isNullable: true,
@@ -136,12 +184,20 @@ export class InventoryPricesHistory_1752203464234 implements MigrationInterface 
                         name: "currency_id_local",
                         type: "int",
                         default: 1,
+                        unsigned: true,
                         comment: "Currency of the inventory in local currency",
                     },
                     {
                         name: "currency_id_ref",
                         type: "int",
+                        unsigned: true,
                         comment: "Reference currency of the inventory in reference currency",
+                    },
+                    {
+                        name: "currency_id_stable",
+                        type: "int",
+                        unsigned: true,
+                        comment: "Stable currency of the inventory in stable currency",
                     },
                     {
                         name: "valid_from",
@@ -185,6 +241,11 @@ export class InventoryPricesHistory_1752203464234 implements MigrationInterface 
         }))
 
         await queryRunner.createIndex(this.table_name, new TableIndex({
+            name: 'hist_currency_id_stable',
+            columnNames: ['currency_id_stable']
+        }))
+
+        await queryRunner.createIndex(this.table_name, new TableIndex({
             name: 'hist_currency_id_ref',
             columnNames: ['currency_id_ref']
         }))
@@ -198,6 +259,7 @@ export class InventoryPricesHistory_1752203464234 implements MigrationInterface 
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropIndex(this.table_name, 'user_id');
+        await queryRunner.dropIndex(this.table_name, 'hist_currency_id_stable');
         await queryRunner.dropIndex(this.table_name, 'hist_currency_id_ref');
         await queryRunner.dropIndex(this.table_name, 'hist_currency_id_local');
         await queryRunner.dropIndex(this.table_name, 'inv_hist_var_id_typeprice_id');

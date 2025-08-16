@@ -22,6 +22,15 @@ app.use(express.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use(errorHandler);
+
+app.use('/api/v1/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    service: 'hybrid-auth-service'
+  });
+});
+
 app.use(indexRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
