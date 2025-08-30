@@ -74,7 +74,7 @@ export class TypesOfPrices_1751237417321 implements MigrationInterface {
             new TableForeignKey({
                 columnNames: ["company_id"],
                 referencedColumnNames: ["company_id"],
-                referencedTableName: "Companies",
+                referencedTableName: "companies",
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
             }),

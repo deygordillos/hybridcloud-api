@@ -4,7 +4,7 @@ import { Rel_Coins_Companies } from "./rel_coins_companies.entity"
 @Index('idx_coin_status', ['coin_status'], {})
 @Index('idx_coin_status_name', ['coin_status', 'coin_name'], {})
 
-@Entity('Coins')
+@Entity('coins')
 export class Coins {
     @PrimaryGeneratedColumn({ comment: "id incremental de la moneda" })
     coin_id: number

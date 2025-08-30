@@ -68,7 +68,7 @@ export class UsersCompanies_1742965181453 implements MigrationInterface {
             new TableForeignKey({
                 columnNames: ["user_id"],
                 referencedColumnNames: ["user_id"],
-                referencedTableName: "Users",
+                referencedTableName: "users",
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
             }),
@@ -79,7 +79,7 @@ export class UsersCompanies_1742965181453 implements MigrationInterface {
             new TableForeignKey({
                 columnNames: ["company_id"],
                 referencedColumnNames: ["company_id"],
-                referencedTableName: "Companies",
+                referencedTableName: "companies",
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
             }),

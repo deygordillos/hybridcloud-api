@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs"
 import config from "../config/config";
 
 export class Users_1742525063674 implements MigrationInterface {
-    table_name = 'Users';
+    table_name = 'users';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         const isTest = process.env.NODE_ENV === 'test';

@@ -7,7 +7,7 @@ import { Groups } from "./groups.entity";
 @Index('user_status_username', ['user_status', 'username'], {})
 @Index('name', ['first_name', 'last_name'], {})
 
-@Entity('Users')
+@Entity('users')
 export class Users {
     @PrimaryGeneratedColumn({ unsigned: true })
     user_id: number
