@@ -202,7 +202,7 @@ export class InventoryPrices_1752105600781 implements MigrationInterface {
                     {
                         name: "valid_from",
                         type: "date",
-                        default: "CURRENT_TIMESTAMP",
+                        isNullable: true
                     },
                     {
                         name: "created_at",

@@ -238,10 +238,7 @@ export class InventoryPrices {
     @JoinColumn({ name: 'user_id' })
     usersInventoryPrices: Users;
 
-    @Column({ 
-        type: "date", 
-        default: () => "CURRENT_TIMESTAMP" 
-    })
+    @Column({ type: "date", nullable: true })
     valid_from: Date;
 
     @CreateDateColumn({ 
