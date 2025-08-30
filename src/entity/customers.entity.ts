@@ -14,7 +14,7 @@ import { Companies } from "./companies.entity";
 @Index("cust_description", ["cust_description"])
 @Index("cust_status", ["cust_status"])
 
-@Entity("Customers")
+@Entity("customers")
 export class Customers {
     @PrimaryGeneratedColumn({ unsigned: true })
     cust_id: number;

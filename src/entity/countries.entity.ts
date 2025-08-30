@@ -7,7 +7,7 @@ import { Companies } from "./companies.entity"
 @Index('continent_name', ['continent_name'], {})
 @Index('subcontinent_name', ['subcontinent_name'], {})
 
-@Entity('Countries')
+@Entity('countries')
 export class Countries {
     @PrimaryGeneratedColumn({ type: 'int', unsigned: true, comment: "id incremental del pais" })
     country_id: number

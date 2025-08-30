@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } f
 
 export class Groups_1742752459924 implements MigrationInterface {
 
-    table_name = 'Groups';
+    table_name = 'groups';
     
     public async up(queryRunner: QueryRunner): Promise<void> {
         const isTest = process.env.NODE_ENV === 'test';
@@ -71,7 +71,7 @@ export class Groups_1742752459924 implements MigrationInterface {
             new TableForeignKey({
                 columnNames: ["user_id"],
                 referencedColumnNames: ["user_id"],
-                referencedTableName: "Users",
+                referencedTableName: "users",
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
             }),
