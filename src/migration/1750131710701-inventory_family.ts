@@ -99,7 +99,7 @@ export class InventoryFamily_1750131710701 implements MigrationInterface {
             new TableForeignKey({
                 columnNames: ["company_id"],
                 referencedColumnNames: ["company_id"],
-                referencedTableName: "Companies",
+                referencedTableName: "companies",
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
             }),

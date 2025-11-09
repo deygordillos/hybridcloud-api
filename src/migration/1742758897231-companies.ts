@@ -213,7 +213,7 @@ export class Companies_1742758897231 implements MigrationInterface {
             new TableForeignKey({
                 columnNames: ["group_id"],
                 referencedColumnNames: ["group_id"],
-                referencedTableName: "Groups",
+                referencedTableName: "groups",
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
             }),
@@ -224,7 +224,7 @@ export class Companies_1742758897231 implements MigrationInterface {
             new TableForeignKey({
                 columnNames: ["country_id"],
                 referencedColumnNames: ["country_id"],
-                referencedTableName: "Countries",
+                referencedTableName: "countries",
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
             }),

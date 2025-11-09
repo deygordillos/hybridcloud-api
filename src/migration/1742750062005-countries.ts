@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, Table, TableIndex } from "typeorm";
 
 export class Countries_1742750062005 implements MigrationInterface {
-    table_name = 'Countries';
+    table_name = 'countries';
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         const isTest = process.env.NODE_ENV === 'test';

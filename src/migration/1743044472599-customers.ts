@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner, Table, TableForeignKey, TableIndex } f
 
 export class Customers_1743044472599 implements MigrationInterface {
 
-    table_name = 'Customers';
+    table_name = 'customers';
             
     public async up(queryRunner: QueryRunner): Promise<void> {
         const isTest = process.env.NODE_ENV === 'test';
@@ -147,7 +147,7 @@ export class Customers_1743044472599 implements MigrationInterface {
             new TableForeignKey({
                 columnNames: ["company_id"],
                 referencedColumnNames: ["company_id"],
-                referencedTableName: "Companies",
+                referencedTableName: "companies",
                 onUpdate: "CASCADE",
                 onDelete: "CASCADE",
             }),
