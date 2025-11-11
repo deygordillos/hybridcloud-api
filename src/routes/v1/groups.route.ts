@@ -6,6 +6,24 @@ import { GroupController } from '../../controllers/groups.controller';
 import { adminMiddleware } from '../../middlewares/adminMiddleware';
 
 const router = Router();
+
+/**
+ * @swagger
+ * /api/v1/groups:
+ *   get:
+ *     summary: Get all groups
+ *     description: Retrieves all groups (Admin only)
+ *     tags: [Groups]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Groups retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin access required
+ */
 router.get('/',
     [
         authMiddleware,
@@ -13,6 +31,38 @@ router.get('/',
     ],
     GroupController.list);
 
+/**
+ * @swagger
+ * /api/v1/groups:
+ *   post:
+ *     summary: Create a new group
+ *     description: Creates a new group (Admin only)
+ *     tags: [Groups]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - group_name
+ *             properties:
+ *               group_name:
+ *                 type: string
+ *                 description: Group name
+ *                 example: Enterprise Group
+ *     responses:
+ *       201:
+ *         description: Group created successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin access required
+ */
 router.post('/',
     [
         authMiddleware,
@@ -22,6 +72,46 @@ router.post('/',
     ],
     GroupController.create);
 
+/**
+ * @swagger
+ * /api/v1/groups/{id}:
+ *   put:
+ *     summary: Update a group (full update)
+ *     description: Updates all fields of an existing group (Admin only)
+ *     tags: [Groups]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - group_name
+ *             properties:
+ *               group_name:
+ *                 type: string
+ *                 description: Group name
+ *     responses:
+ *       200:
+ *         description: Group updated successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin access required
+ *       404:
+ *         description: Group not found
+ */
 router.put('/:id', 
     [
         authMiddleware,
@@ -31,6 +121,46 @@ router.put('/:id',
     ],
     GroupController.update);
 
+/**
+ * @swagger
+ * /api/v1/groups/{id}:
+ *   patch:
+ *     summary: Update a group (partial update)
+ *     description: Partially updates an existing group (Admin only)
+ *     tags: [Groups]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the group
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - group_name
+ *             properties:
+ *               group_name:
+ *                 type: string
+ *                 description: Group name
+ *     responses:
+ *       200:
+ *         description: Group updated successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin access required
+ *       404:
+ *         description: Group not found
+ */
 router.patch('/:id', 
     [
         authMiddleware,

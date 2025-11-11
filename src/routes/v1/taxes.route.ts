@@ -14,6 +14,21 @@ export enum TaxTypeEnum {
 
 const router = Router();
 
+/**
+ * @swagger
+ * /api/v1/taxes:
+ *   get:
+ *     summary: Get all taxes for the company
+ *     description: Retrieves all tax configurations for the authenticated company
+ *     tags: [Taxes]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Taxes retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ */
 router.get('/',
     [
         authMiddleware,
@@ -21,6 +36,58 @@ router.get('/',
     ],
     TaxesController.getTaxesByCompany);
 
+/**
+ * @swagger
+ * /api/v1/taxes:
+ *   post:
+ *     summary: Create a new tax
+ *     description: Creates a new tax configuration for the company
+ *     tags: [Taxes]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tax_code
+ *               - tax_name
+ *               - tax_type
+ *               - tax_value
+ *             properties:
+ *               tax_code:
+ *                 type: string
+ *                 description: Tax code
+ *                 example: IVA
+ *               tax_name:
+ *                 type: string
+ *                 description: Tax name
+ *                 example: Value Added Tax
+ *               tax_description:
+ *                 type: string
+ *                 description: Tax description
+ *                 example: Standard VAT rate
+ *               tax_type:
+ *                 type: integer
+ *                 enum: [1, 2, 3]
+ *                 description: Tax type (1=exempt, 2=percent, 3=fixed)
+ *                 example: 2
+ *               tax_value:
+ *                 type: number
+ *                 format: float
+ *                 minimum: 0
+ *                 description: Tax value
+ *                 example: 16.0
+ *     responses:
+ *       201:
+ *         description: Tax created successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ */
 router.post('/',
     [
         authMiddleware,
@@ -46,6 +113,54 @@ router.post('/',
     ],
     TaxesController.create);
 
+/**
+ * @swagger
+ * /api/v1/taxes/{id}:
+ *   put:
+ *     summary: Update a tax (full update)
+ *     tags: [Taxes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the tax
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tax_name
+ *               - tax_type
+ *               - tax_value
+ *             properties:
+ *               tax_name:
+ *                 type: string
+ *               tax_description:
+ *                 type: string
+ *               tax_type:
+ *                 type: integer
+ *                 enum: [1, 2, 3]
+ *                 description: Tax type (1=exempt, 2=percent, 3=fixed)
+ *               tax_value:
+ *                 type: number
+ *                 format: float
+ *                 minimum: 0
+ *     responses:
+ *       200:
+ *         description: Tax updated successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Tax not found
+ */
 router.put('/:id',
     [
         authMiddleware,
@@ -69,6 +184,50 @@ router.put('/:id',
     ],
     TaxesController.update);
 
+/**
+ * @swagger
+ * /api/v1/taxes/{id}:
+ *   patch:
+ *     summary: Update a tax (partial update)
+ *     tags: [Taxes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the tax
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tax_name:
+ *                 type: string
+ *               tax_description:
+ *                 type: string
+ *               tax_type:
+ *                 type: integer
+ *                 enum: [1, 2, 3]
+ *                 description: Tax type (1=exempt, 2=percent, 3=fixed)
+ *               tax_value:
+ *                 type: number
+ *                 format: float
+ *                 minimum: 0
+ *     responses:
+ *       200:
+ *         description: Tax updated successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Tax not found
+ */
 router.patch('/:id',
     [
         authMiddleware,

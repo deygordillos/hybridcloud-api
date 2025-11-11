@@ -7,6 +7,21 @@ import { InventoryAttributesController } from '../../controllers/inventory.attri
 
 const router = Router();
 
+/**
+ * @swagger
+ * /api/v1/inventory/attributes:
+ *   get:
+ *     summary: Get all inventory attributes for the company
+ *     description: Retrieves all inventory attributes with their values for the authenticated company
+ *     tags: [Inventory Attributes]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Attributes retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ */
 router.get('/',
     [
         authMiddleware,
@@ -15,6 +30,54 @@ router.get('/',
     InventoryAttributesController.getAllByCompany
 );
 
+/**
+ * @swagger
+ * /api/v1/inventory/attributes:
+ *   post:
+ *     summary: Create a new inventory attribute
+ *     description: Creates a new inventory attribute with optional predefined values
+ *     tags: [Inventory Attributes]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - attr_name
+ *             properties:
+ *               attr_name:
+ *                 type: string
+ *                 maxLength: 50
+ *                 description: Attribute name
+ *                 example: Color
+ *               attr_description:
+ *                 type: string
+ *                 maxLength: 150
+ *                 description: Attribute description
+ *                 example: Product color variations
+ *               attr_status:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Status (0=inactive, 1=active)
+ *                 example: 1
+ *               attr_values:
+ *                 type: array
+ *                 minItems: 1
+ *                 description: Array of attribute values
+ *                 items:
+ *                   type: string
+ *                 example: ["Red", "Blue", "Green"]
+ *     responses:
+ *       201:
+ *         description: Attribute created successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ */
 router.post('/',
     [
         authMiddleware,
@@ -42,6 +105,56 @@ router.post('/',
     InventoryAttributesController.create
 );
 
+/**
+ * @swagger
+ * /api/v1/inventory/attributes/{id}:
+ *   put:
+ *     summary: Update an inventory attribute (full update)
+ *     tags: [Inventory Attributes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the attribute
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               attr_name:
+ *                 type: string
+ *                 maxLength: 50
+ *                 description: Attribute name
+ *               attr_description:
+ *                 type: string
+ *                 maxLength: 150
+ *                 description: Attribute description
+ *               attr_status:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Status (0=inactive, 1=active)
+ *               attr_values:
+ *                 type: array
+ *                 minItems: 1
+ *                 items:
+ *                   type: string
+ *                 description: Array of attribute values
+ *     responses:
+ *       200:
+ *         description: Attribute updated successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Attribute not found
+ */
 router.put('/:id',
     [
         authMiddleware,
@@ -69,6 +182,56 @@ router.put('/:id',
     InventoryAttributesController.update
 );
 
+/**
+ * @swagger
+ * /api/v1/inventory/attributes/{id}:
+ *   patch:
+ *     summary: Update an inventory attribute (partial update)
+ *     tags: [Inventory Attributes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the attribute
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               attr_name:
+ *                 type: string
+ *                 maxLength: 50
+ *                 description: Attribute name
+ *               attr_description:
+ *                 type: string
+ *                 maxLength: 150
+ *                 description: Attribute description
+ *               attr_status:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Status (0=inactive, 1=active)
+ *               attr_values:
+ *                 type: array
+ *                 minItems: 1
+ *                 items:
+ *                   type: string
+ *                 description: Array of attribute values
+ *     responses:
+ *       200:
+ *         description: Attribute updated successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Attribute not found
+ */
 router.patch('/:id',
     [
         authMiddleware,

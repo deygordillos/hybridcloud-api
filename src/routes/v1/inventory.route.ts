@@ -7,6 +7,38 @@ import { InventoryController } from '../../controllers/inventory.controller';
 
 const router = Router();
 
+/**
+ * @swagger
+ * /api/v1/inventory:
+ *   get:
+ *     summary: Get all inventories for the company
+ *     description: Retrieves all inventory items for the authenticated user's company
+ *     tags: [Inventory]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Inventories retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                 message:
+ *                   type: string
+ *                   example: Inventories retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
+ */
 router.get('/',
     [
         authMiddleware,
@@ -15,6 +47,135 @@ router.get('/',
     InventoryController.getInventoriesByCompany
 );
 
+/**
+ * @swagger
+ * /api/v1/inventory:
+ *   post:
+ *     summary: Create a new inventory item
+ *     description: Creates a new inventory item with optional variants, taxes, and attributes
+ *     tags: [Inventory]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - inv_code
+ *               - id_inv_family
+ *             properties:
+ *               inv_code:
+ *                 type: string
+ *                 description: Inventory code (unique identifier)
+ *                 example: INV-001
+ *               id_inv_family:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Inventory family ID
+ *                 example: 1
+ *               inv_description:
+ *                 type: string
+ *                 description: Inventory description
+ *                 example: Product description
+ *               inv_description_detail:
+ *                 type: string
+ *                 description: Detailed description
+ *               inv_status:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Status (0=inactive, 1=active)
+ *                 example: 1
+ *               inv_type:
+ *                 type: integer
+ *                 enum: [1, 2]
+ *                 description: Type (1=product, 2=service)
+ *                 example: 1
+ *               inv_has_variants:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Has variants (0=no, 1=yes)
+ *                 example: 1
+ *               inv_is_exempt:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Is tax exempt (0=no, 1=yes)
+ *                 example: 0
+ *               inv_is_stockable:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Is stockable (0=no, 1=yes)
+ *                 example: 1
+ *               inv_is_lot_managed:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Is lot managed (0=no, 1=yes)
+ *                 example: 0
+ *               inv_brand:
+ *                 type: string
+ *                 description: Brand name
+ *                 example: Brand A
+ *               inv_model:
+ *                 type: string
+ *                 description: Model name
+ *                 example: Model X
+ *               inv_url_image:
+ *                 type: string
+ *                 description: URL to product image
+ *               taxes:
+ *                 type: array
+ *                 description: Array of tax IDs
+ *                 items:
+ *                   type: integer
+ *                 example: [1, 2]
+ *               variants:
+ *                 type: array
+ *                 description: Array of product variants
+ *                 items:
+ *                   type: object
+ *                   required:
+ *                     - inv_var_sku
+ *                   properties:
+ *                     inv_var_sku:
+ *                       type: string
+ *                       description: Variant SKU
+ *                       example: SKU-001
+ *                     inv_var_status:
+ *                       type: integer
+ *                       enum: [0, 1]
+ *                       description: Variant status (0=inactive, 1=active)
+ *                       example: 1
+ *                     attr_values:
+ *                       type: array
+ *                       description: Array of attribute value IDs
+ *                       items:
+ *                         type: integer
+ *                         minimum: 1
+ *                       example: [1, 2, 3]
+ *     responses:
+ *       201:
+ *         description: Inventory created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Inventory created successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
+ */
 router.post('/',
     [
         authMiddleware,
@@ -108,6 +269,116 @@ router.post('/',
     InventoryController.create
 );
 
+/**
+ * @swagger
+ * /api/v1/inventory/{id}:
+ *   put:
+ *     summary: Update an inventory item (full update)
+ *     description: Updates an existing inventory item with all fields
+ *     tags: [Inventory]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Inventory ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               inv_description:
+ *                 type: string
+ *                 description: Inventory description
+ *               inv_status:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Status (0=inactive, 1=active)
+ *               inv_type:
+ *                 type: integer
+ *                 enum: [1, 2]
+ *                 description: Type (1=product, 2=service)
+ *               inv_has_variants:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Has variants (0=no, 1=yes)
+ *               inv_is_exempt:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Is tax exempt (0=no, 1=yes)
+ *               inv_is_stockable:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Is stockable (0=no, 1=yes)
+ *               inv_is_lot_managed:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Is lot managed (0=no, 1=yes)
+ *               inv_brand:
+ *                 type: string
+ *                 description: Brand name
+ *               inv_model:
+ *                 type: string
+ *                 description: Model name
+ *               inv_url_image:
+ *                 type: string
+ *                 description: URL to product image
+ *               taxes:
+ *                 type: array
+ *                 description: Array of tax IDs
+ *                 items:
+ *                   type: integer
+ *               variants:
+ *                 type: array
+ *                 description: Array of product variants
+ *                 items:
+ *                   type: object
+ *                   required:
+ *                     - inv_var_sku
+ *                   properties:
+ *                     inv_var_sku:
+ *                       type: string
+ *                       description: Variant SKU
+ *                     inv_var_status:
+ *                       type: integer
+ *                       enum: [0, 1]
+ *                       description: Variant status (0=inactive, 1=active)
+ *                     attr_values:
+ *                       type: array
+ *                       description: Array of attribute value IDs
+ *                       items:
+ *                         type: integer
+ *                         minimum: 1
+ *     responses:
+ *       200:
+ *         description: Inventory updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Inventory updated successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
+ *       404:
+ *         description: Inventory not found
+ */
 router.put('/:id',
     [
         authMiddleware,
@@ -188,6 +459,116 @@ router.put('/:id',
     InventoryController.update
 );
 
+/**
+ * @swagger
+ * /api/v1/inventory/{id}:
+ *   patch:
+ *     summary: Update an inventory item (partial update)
+ *     description: Partially updates an existing inventory item
+ *     tags: [Inventory]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Inventory ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               inv_description:
+ *                 type: string
+ *                 description: Inventory description
+ *               inv_status:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Status (0=inactive, 1=active)
+ *               inv_type:
+ *                 type: integer
+ *                 enum: [1, 2]
+ *                 description: Type (1=product, 2=service)
+ *               inv_has_variants:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Has variants (0=no, 1=yes)
+ *               inv_is_exempt:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Is tax exempt (0=no, 1=yes)
+ *               inv_is_stockable:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Is stockable (0=no, 1=yes)
+ *               inv_is_lot_managed:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Is lot managed (0=no, 1=yes)
+ *               inv_brand:
+ *                 type: string
+ *                 description: Brand name
+ *               inv_model:
+ *                 type: string
+ *                 description: Model name
+ *               inv_url_image:
+ *                 type: string
+ *                 description: URL to product image
+ *               taxes:
+ *                 type: array
+ *                 description: Array of tax IDs
+ *                 items:
+ *                   type: integer
+ *               variants:
+ *                 type: array
+ *                 description: Array of product variants
+ *                 items:
+ *                   type: object
+ *                   required:
+ *                     - inv_var_sku
+ *                   properties:
+ *                     inv_var_sku:
+ *                       type: string
+ *                       description: Variant SKU
+ *                     inv_var_status:
+ *                       type: integer
+ *                       enum: [0, 1]
+ *                       description: Variant status (0=inactive, 1=active)
+ *                     attr_values:
+ *                       type: array
+ *                       description: Array of attribute value IDs
+ *                       items:
+ *                         type: integer
+ *                         minimum: 1
+ *     responses:
+ *       200:
+ *         description: Inventory updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Inventory updated successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
+ *       404:
+ *         description: Inventory not found
+ */
 router.patch('/:id',
     [
         authMiddleware,

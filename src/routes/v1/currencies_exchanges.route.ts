@@ -33,105 +33,82 @@ router.use(authMiddleware);
 router.use(companyMiddleware);
 
 /**
- * @route GET /api/v1/currencies-exchanges
- * @desc Get all currencies configured for the company
- * @access Private (requires authentication and company context)
- * @returns {Object} Array of currency exchanges with currency details
- * @example
- * GET /api/v1/currencies-exchanges
- * Response: {
- *   "success": true,
- *   "message": "Currencies retrieved successfully",
- *   "data": [
- *     {
- *       "currency_exc_id": 1,
- *       "company_id": 123,
- *       "currency_id": 1,
- *       "currency_exc_rate": 1.00000000,
- *       "currency_exc_type": 1,
- *       "exchange_method": "MULTIPLY",
- *       "currency_exc_status": 1,
- *       "created_at": "2024-01-15T10:30:00.000Z",
- *       "currency": {
- *         "currency_id": 1,
- *         "currency_iso_code": "VES",
- *         "currency_name": "Bolívar",
- *         "currency_symbol": "Bs"
- *       }
- *     }
- *   ]
- * }
+ * @swagger
+ * /api/v1/currencies-exchanges:
+ *   get:
+ *     summary: Get all currencies configured for the company
+ *     description: Retrieves all currency exchange configurations for the authenticated company
+ *     tags: [Currencies Exchanges]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Currencies retrieved successfully
+ *       401:
+ *         description: Unauthorized
  */
 router.get('/', CurrenciesExchangesController.getCompanyCurrencies);
 
 /**
- * @route GET /api/v1/currencies-exchanges/history
- * @desc Get currency exchange rate history
- * @access Private (requires authentication and company context)
- * @query {number} [currency_id] - Filter by specific currency ID (optional)
- * @query {number} [page] - Page number for pagination (optional, default: 1)
- * @query {number} [limit] - Number of records per page (optional, default: 10)
- * @returns {Object} Paginated history of exchange rate changes
- * @example
- * GET /api/v1/currencies-exchanges/history?currency_id=2&page=1&limit=5
- * Response: {
- *   "success": true,
- *   "message": "Currency exchange rate history retrieved successfully",
- *   "data": [
- *     {
- *       "currency_exc_hist_id": 1,
- *       "company_id": 123,
- *       "currency_id": 2,
- *       "currency_exc_rate": 35.12345678,
- *       "currency_exc_type": 2,
- *       "exchange_method": "MULTIPLY",
- *       "created_at": "2024-01-15T10:30:00.000Z",
- *       "currency": {
- *         "currency_id": 2,
- *         "currency_iso_code": "USD",
- *         "currency_name": "Dólar",
- *         "currency_symbol": "$"
- *       }
- *     }
- *   ],
- *   "pagination": {
- *     "total": 25,
- *     "perPage": 5,
- *     "currentPage": 1,
- *     "lastPage": 5
- *   }
- * }
+ * @swagger
+ * /api/v1/currencies-exchanges/history:
+ *   get:
+ *     summary: Get currency exchange rate history
+ *     description: Retrieves historical records of exchange rate changes with optional filtering
+ *     tags: [Currencies Exchanges]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: currency_id
+ *         schema:
+ *           type: integer
+ *         description: Filter by specific currency ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of records per page
+ *     responses:
+ *       200:
+ *         description: History retrieved successfully
+ *       401:
+ *         description: Unauthorized
  */
 router.get('/history', CurrenciesExchangesController.getCurrencyHistory);
 
 /**
- * @route GET /api/v1/currencies-exchanges/:id
- * @desc Get a specific currency exchange by ID
- * @access Private (requires authentication and company context)
- * @param {number} id - The ID of the currency exchange
- * @returns {Object} The currency exchange details with currency information
- * @example
- * GET /api/v1/currencies-exchanges/1
- * Response: {
- *   "success": true,
- *   "message": "Currency retrieved successfully",
- *   "data": {
- *     "currency_exc_id": 1,
- *     "company_id": 123,
- *     "currency_id": 1,
- *     "currency_exc_rate": 1.00000000,
- *     "currency_exc_type": 1,
- *     "exchange_method": "MULTIPLY",
- *     "currency_exc_status": 1,
- *     "created_at": "2024-01-15T10:30:00.000Z",
- *     "currency": {
- *       "currency_id": 1,
- *       "currency_iso_code": "VES",
- *       "currency_name": "Bolívar",
- *       "currency_symbol": "Bs"
- *     }
- *   }
- * }
+ * @swagger
+ * /api/v1/currencies-exchanges/{id}:
+ *   get:
+ *     summary: Get a specific currency exchange by ID
+ *     tags: [Currencies Exchanges]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The ID of the currency exchange
+ *     responses:
+ *       200:
+ *         description: Currency retrieved successfully
+ *       400:
+ *         description: Invalid ID
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Currency exchange not found
  */
 router.get('/:id', [
     param("id")
@@ -141,39 +118,58 @@ router.get('/:id', [
 ], CurrenciesExchangesController.getCurrencyById);
 
 /**
- * @route POST /api/v1/currencies-exchanges
- * @desc Create a new currency exchange configuration for the company
- * @access Private (requires authentication and company context)
- * @body {Object} currencyData - The currency exchange data
- * @body {number} currencyData.currency_id - The currency ID (required, must exist in currencies table)
- * @body {number} currencyData.currency_exc_rate - The exchange rate (required, positive number, 8 decimal places)
- * @body {number} currencyData.currency_exc_type - The currency type (required, 1=local, 2=stable, 3=ref)
- * @body {number} [currencyData.exchange_method] - The exchange method (optional, 1=DIVIDE, 2=MULTIPLY, default: 2)
- * @body {number} [currencyData.currency_exc_status] - The status (optional, 0=inactive, 1=active, default: 1)
- * @returns {Object} The created currency exchange
- * @example
- * POST /api/v1/currencies-exchanges
- * Body: {
- *   "currency_id": 2,
- *   "currency_exc_rate": 35.12345678,
- *   "currency_exc_type": 2,
- *   "exchange_method": 2,
- *   "currency_exc_status": 1
- * }
- * Response: {
- *   "success": true,
- *   "message": "Currency exchange created successfully",
- *   "data": {
- *     "currency_exc_id": 2,
- *     "company_id": 123,
- *     "currency_id": 2,
- *     "currency_exc_rate": 35.12345678,
- *     "currency_exc_type": 2,
- *     "exchange_method": "MULTIPLY",
- *     "currency_exc_status": 1,
- *     "created_at": "2024-01-15T10:30:00.000Z"
- *   }
- * }
+ * @swagger
+ * /api/v1/currencies-exchanges:
+ *   post:
+ *     summary: Create a new currency exchange configuration
+ *     description: Creates a new currency exchange rate configuration for the company
+ *     tags: [Currencies Exchanges]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currency_id
+ *               - currency_exc_rate
+ *               - currency_exc_type
+ *             properties:
+ *               currency_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: The currency ID
+ *                 example: 2
+ *               currency_exc_rate:
+ *                 type: number
+ *                 format: double
+ *                 minimum: 0.00000001
+ *                 description: Exchange rate (8 decimal places)
+ *                 example: 35.12345678
+ *               currency_exc_type:
+ *                 type: integer
+ *                 enum: [1, 2, 3]
+ *                 description: Currency type (1=local, 2=stable, 3=reference)
+ *                 example: 2
+ *               exchange_method:
+ *                 type: integer
+ *                 enum: [1, 2]
+ *                 description: Exchange method (1=DIVIDE, 2=MULTIPLY)
+ *                 example: 2
+ *               currency_exc_status:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Status (0=inactive, 1=active)
+ *                 example: 1
+ *     responses:
+ *       201:
+ *         description: Currency exchange created successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
  */
 router.post('/', [
     body("currency_id")
@@ -194,37 +190,59 @@ router.post('/', [
 ], CurrenciesExchangesController.create);
 
 /**
- * @route PUT /api/v1/currencies-exchanges/:id
- * @desc Update an existing currency exchange configuration
- * @access Private (requires authentication and company context)
- * @param {number} id - The ID of the currency exchange to update
- * @body {Object} currencyData - The currency exchange data to update
- * @body {number} [currencyData.currency_id] - The currency ID (optional, must exist in currencies table)
- * @body {number} [currencyData.currency_exc_rate] - The exchange rate (optional, positive number, 8 decimal places)
- * @body {number} [currencyData.currency_exc_type] - The currency type (optional, 1=local, 2=stable, 3=ref)
- * @body {number} [currencyData.exchange_method] - The exchange method (optional, 1=DIVIDE, 2=MULTIPLY)
- * @body {number} [currencyData.currency_exc_status] - The status (optional, 0=inactive, 1=active)
- * @returns {Object} The updated currency exchange
- * @example
- * PUT /api/v1/currencies-exchanges/2
- * Body: {
- *   "currency_exc_rate": 36.50000000,
- *   "exchange_method": 1
- * }
- * Response: {
- *   "success": true,
- *   "message": "Currency exchange updated successfully",
- *   "data": {
- *     "currency_exc_id": 2,
- *     "company_id": 123,
- *     "currency_id": 2,
- *     "currency_exc_rate": 36.50000000,
- *     "currency_exc_type": 2,
- *     "exchange_method": "DIVIDE",
- *     "currency_exc_status": 1,
- *     "created_at": "2024-01-15T10:30:00.000Z"
- *   }
- * }
+ * @swagger
+ * /api/v1/currencies-exchanges/{id}:
+ *   put:
+ *     summary: Update an existing currency exchange configuration
+ *     tags: [Currencies Exchanges]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The ID of the currency exchange
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               currency_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: The currency ID
+ *               currency_exc_rate:
+ *                 type: number
+ *                 format: double
+ *                 minimum: 0.00000001
+ *                 description: Exchange rate
+ *                 example: 36.50000000
+ *               currency_exc_type:
+ *                 type: integer
+ *                 enum: [1, 2, 3]
+ *                 description: Currency type (1=local, 2=stable, 3=reference)
+ *               exchange_method:
+ *                 type: integer
+ *                 enum: [1, 2]
+ *                 description: Exchange method (1=DIVIDE, 2=MULTIPLY)
+ *               currency_exc_status:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Status (0=inactive, 1=active)
+ *     responses:
+ *       200:
+ *         description: Currency exchange updated successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Currency exchange not found
  */
 router.put('/:id', [
     param("id")
@@ -249,21 +267,35 @@ router.put('/:id', [
 ], CurrenciesExchangesController.update);
 
 /**
- * @route POST /api/v1/currencies-exchanges/set-base
- * @desc Set a currency as the base currency for the company
- * @access Private (requires authentication and company context)
- * @body {Object} baseCurrencyData - The base currency data
- * @body {number} baseCurrencyData.currency_id - The currency ID to set as base (required)
- * @returns {Object} Success message
- * @example
- * POST /api/v1/currencies-exchanges/set-base
- * Body: {
- *   "currency_id": 1
- * }
- * Response: {
- *   "success": true,
- *   "message": "Base currency set successfully"
- * }
+ * @swagger
+ * /api/v1/currencies-exchanges/set-base:
+ *   post:
+ *     summary: Set a currency as the base currency for the company
+ *     description: Configures the base currency used for all currency conversions
+ *     tags: [Currencies Exchanges]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currency_id
+ *             properties:
+ *               currency_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: The currency ID to set as base
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: Base currency set successfully
+ *       400:
+ *         description: Invalid currency ID
+ *       401:
+ *         description: Unauthorized
  */
 router.post('/set-base', [
     body("currency_id")

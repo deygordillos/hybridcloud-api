@@ -1,5 +1,6 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import path from 'path';
 
 const options = {
   definition: {
@@ -11,12 +12,25 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3002',
+        url: 'http://localhost:3001',
         description: 'Servidor local',
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
   },
-  apis: ['./routes/*.js', './routes/*.ts'],
+  apis: [
+    //'./routes/**/*.js', './routes/**/*.ts'
+    path.join(process.cwd(), 'src/routes/**/*.ts'),
+    path.join(process.cwd(), 'dist/routes/**/*.js'),
+  ],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

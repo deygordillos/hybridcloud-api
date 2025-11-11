@@ -7,6 +7,87 @@ import { authMiddleware } from '../../middlewares/AuthMiddleware';
 import { AuthController } from '../../controllers/auth.controller';
 
 const router = Router();
+
+/**
+ * @swagger
+ * /api/v1/companies:
+ *   post:
+ *     summary: Create a new company
+ *     description: Creates a new company with all required information (Admin only)
+ *     tags: [Companies]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - group_id
+ *               - company_is_principal
+ *               - company_name
+ *               - company_razon_social
+ *               - company_id_fiscal
+ *               - company_email
+ *               - company_phone1
+ *               - company_start
+ *               - company_end
+ *               - country_id
+ *             properties:
+ *               group_id:
+ *                 type: integer
+ *                 description: ID of the group this company belongs to
+ *                 example: 1
+ *               company_is_principal:
+ *                 type: boolean
+ *                 description: Whether this is a principal company
+ *                 example: true
+ *               company_name:
+ *                 type: string
+ *                 description: Company name
+ *                 example: Acme Corporation
+ *               company_razon_social:
+ *                 type: string
+ *                 description: Business/legal name
+ *                 example: Acme Corporation S.A.
+ *               company_id_fiscal:
+ *                 type: string
+ *                 description: Fiscal/Tax ID
+ *                 example: J-123456789
+ *               company_email:
+ *                 type: string
+ *                 format: email
+ *                 description: Company email
+ *                 example: info@acme.com
+ *               company_phone1:
+ *                 type: string
+ *                 description: Primary phone number
+ *                 example: +1234567890
+ *               company_start:
+ *                 type: string
+ *                 format: date-time
+ *                 description: License start date (ISO8601)
+ *                 example: 2025-01-01T00:00:00.000Z
+ *               company_end:
+ *                 type: string
+ *                 format: date-time
+ *                 description: License end date (must be after start date)
+ *                 example: 2026-01-01T00:00:00.000Z
+ *               country_id:
+ *                 type: integer
+ *                 description: Country ID
+ *                 example: 1
+ *     responses:
+ *       201:
+ *         description: Company created successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin access required
+ */
 router.post('/',
     [
         authMiddleware,
@@ -48,6 +129,64 @@ router.post('/',
     ],
     CompaniesController.create);
 
+/**
+ * @swagger
+ * /api/v1/companies/{id}:
+ *   put:
+ *     summary: Update a company (full update)
+ *     description: Updates all fields of an existing company (Admin only)
+ *     tags: [Companies]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the company
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               group_id:
+ *                 type: integer
+ *               company_is_principal:
+ *                 type: boolean
+ *               company_name:
+ *                 type: string
+ *               company_razon_social:
+ *                 type: string
+ *               company_id_fiscal:
+ *                 type: string
+ *               company_email:
+ *                 type: string
+ *                 format: email
+ *               company_phone1:
+ *                 type: string
+ *               company_start:
+ *                 type: string
+ *                 format: date-time
+ *               company_end:
+ *                 type: string
+ *                 format: date-time
+ *               country_id:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Company updated successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin access required
+ *       404:
+ *         description: Company not found
+ */
 router.put('/:id', 
     [
         authMiddleware, 
@@ -55,6 +194,64 @@ router.put('/:id',
     ],
     CompaniesController.update);
 
+/**
+ * @swagger
+ * /api/v1/companies/{id}:
+ *   patch:
+ *     summary: Update a company (partial update)
+ *     description: Partially updates specific fields of an existing company (Admin only)
+ *     tags: [Companies]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the company
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               group_id:
+ *                 type: integer
+ *               company_is_principal:
+ *                 type: boolean
+ *               company_name:
+ *                 type: string
+ *               company_razon_social:
+ *                 type: string
+ *               company_id_fiscal:
+ *                 type: string
+ *               company_email:
+ *                 type: string
+ *                 format: email
+ *               company_phone1:
+ *                 type: string
+ *               company_start:
+ *                 type: string
+ *                 format: date-time
+ *               company_end:
+ *                 type: string
+ *                 format: date-time
+ *               country_id:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Company updated successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin access required
+ *       404:
+ *         description: Company not found
+ */
 router.patch('/:id', 
     [
         authMiddleware,
@@ -62,6 +259,64 @@ router.patch('/:id',
     ],
     CompaniesController.update);
 
+/**
+ * @swagger
+ * /api/v1/companies/register_admin/{company_id}:
+ *   post:
+ *     summary: Register an admin for a company
+ *     description: Creates a new admin user for a specific company (Admin only)
+ *     tags: [Companies]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: company_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the company
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - password
+ *               - first_name
+ *               - email
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: Username for the admin
+ *                 example: companyadmin
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: Password (min 8 chars, must contain uppercase, lowercase, and number)
+ *                 example: Admin123
+ *               first_name:
+ *                 type: string
+ *                 description: First name of the admin
+ *                 example: John
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Email address
+ *                 example: admin@company.com
+ *     responses:
+ *       201:
+ *         description: Admin registered successfully
+ *       400:
+ *         description: Invalid input data or password does not meet requirements
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Admin access required
+ *       404:
+ *         description: Company not found
+ */
 router.post('/register_admin/:company_id',
     [
         authMiddleware,

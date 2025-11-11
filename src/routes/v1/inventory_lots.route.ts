@@ -21,18 +21,46 @@ const router = Router();
 
 
 /**
- * @route GET /api/v1/inventory/lots/variant/:variantId
- * @desc Get all inventory lots for a specific inventory variant
- * @access Private (requires authentication and company context)
- * @param {number} variantId - The ID of the inventory variant
- * @returns {Object} Array of inventory lots associated with the variant
- * @example
- * GET /api/v1/inventory/lots/variant/123
- * Response: {
- *   "success": true,
- *   "data": [...],
- *   "message": "Inventory lots retrieved successfully"
- * }
+ * @swagger
+ * /api/v1/inventory/lots/variant/{variantId}:
+ *   get:
+ *     summary: Get all inventory lots for a specific variant
+ *     description: Retrieves all inventory lots associated with a specific inventory variant
+ *     tags: [Inventory Lots]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: variantId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory variant ID
+ *     responses:
+ *       200:
+ *         description: Inventory lots retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                 message:
+ *                   type: string
+ *                   example: Inventory lots retrieved successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
  */
 router.get('/variant/:variantId',
     [
@@ -47,18 +75,47 @@ router.get('/variant/:variantId',
 );
 
 /**
- * @route GET /api/v1/inventory/lots/search/:lotNumber
- * @desc Search inventory lots by lot number
- * @access Private (requires authentication and company context)
- * @param {string} lotNumber - The lot number to search for
- * @returns {Object} Array of inventory lots matching the lot number
- * @example
- * GET /api/v1/inventory/lots/search/LOT123
- * Response: {
- *   "success": true,
- *   "data": [...],
- *   "message": "Inventory lots retrieved successfully"
- * }
+ * @swagger
+ * /api/v1/inventory/lots/search/{lotNumber}:
+ *   get:
+ *     summary: Search inventory lots by lot number
+ *     description: Searches for inventory lots matching the specified lot number
+ *     tags: [Inventory Lots]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: lotNumber
+ *         required: true
+ *         schema:
+ *           type: string
+ *           maxLength: 100
+ *         description: Lot number to search for
+ *         example: LOT123
+ *     responses:
+ *       200:
+ *         description: Inventory lots retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                 message:
+ *                   type: string
+ *                   example: Inventory lots retrieved successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
  */
 router.get('/search/:lotNumber',
     [
@@ -73,23 +130,50 @@ router.get('/search/:lotNumber',
 );
 
 /**
- * @route GET /api/v1/inventory/lots/summary/stats
- * @desc Get summary statistics for inventory lots
- * @access Private (requires authentication and company context)
- * @returns {Object} Summary statistics including total, active, inactive, expiring soon, and expired lots
- * @example
- * GET /api/v1/inventory/lots/summary/stats
- * Response: {
- *   "success": true,
- *   "data": {
- *     "totalLots": 150,
- *     "activeLots": 120,
- *     "inactiveLots": 30,
- *     "expiringSoon": 5,
- *     "expiredLots": 2
- *   },
- *   "message": "Lots summary retrieved successfully"
- * }
+ * @swagger
+ * /api/v1/inventory/lots/summary/stats:
+ *   get:
+ *     summary: Get inventory lots summary statistics
+ *     description: Retrieves summary statistics including total, active, inactive, expiring soon, and expired lots
+ *     tags: [Inventory Lots]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lots summary retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     totalLots:
+ *                       type: integer
+ *                       example: 150
+ *                     activeLots:
+ *                       type: integer
+ *                       example: 120
+ *                     inactiveLots:
+ *                       type: integer
+ *                       example: 30
+ *                     expiringSoon:
+ *                       type: integer
+ *                       example: 5
+ *                     expiredLots:
+ *                       type: integer
+ *                       example: 2
+ *                 message:
+ *                   type: string
+ *                   example: Lots summary retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
  */
 router.get('/summary/stats',
     [
@@ -100,24 +184,59 @@ router.get('/summary/stats',
 );
 
 /**
- * @route GET /api/v1/inventory/lots/:id
- * @desc Get a specific inventory lot by ID
- * @access Private (requires authentication and company context)
- * @param {number} id - The ID of the inventory lot
- * @returns {Object} The inventory lot details
- * @example
- * GET /api/v1/inventory/lots/456
- * Response: {
- *   "success": true,
- *   "data": {
- *     "inv_lot_id": 456,
- *     "lot_number": "LOT123",
- *     "lot_status": 1,
- *     "expiration_date": "2024-12-31",
- *     ...
- *   },
- *   "message": "Inventory lot retrieved successfully"
- * }
+ * @swagger
+ * /api/v1/inventory/lots/{id}:
+ *   get:
+ *     summary: Get a specific inventory lot by ID
+ *     description: Retrieves details of a specific inventory lot
+ *     tags: [Inventory Lots]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory lot ID
+ *     responses:
+ *       200:
+ *         description: Inventory lot retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_lot_id:
+ *                       type: integer
+ *                       example: 456
+ *                     lot_number:
+ *                       type: string
+ *                       example: LOT123
+ *                     lot_status:
+ *                       type: integer
+ *                       example: 1
+ *                     expiration_date:
+ *                       type: string
+ *                       example: 2024-12-31
+ *                 message:
+ *                   type: string
+ *                   example: Inventory lot retrieved successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
+ *       404:
+ *         description: Lot not found
  */
 router.get('/:id',
     [
@@ -132,37 +251,97 @@ router.get('/:id',
 );
 
 /**
- * @route POST /api/v1/inventory/lots
- * @desc Create a new inventory lot
- * @access Private (requires authentication and company context)
- * @body {Object} lotData - The inventory lot data
- * @body {number} lotData.inv_var_id - The inventory variant ID (required)
- * @body {string} lotData.lot_number - The lot number (required, max 100 chars)
- * @body {string} [lotData.lot_origin] - The lot origin (optional, max 100 chars)
- * @body {number} [lotData.lot_status] - The lot status (optional, 0 or 1, default: 1)
- * @body {string} [lotData.expiration_date] - The expiration date (optional, ISO8601 format)
- * @body {string} [lotData.manufacture_date] - The manufacture date (optional, ISO8601 format)
- * @body {string} [lotData.lot_notes] - Notes about the lot (optional)
- * @body {number} [lotData.lot_unit_cost] - The unit cost (optional, positive number)
- * @body {number} [lotData.lot_unit_currency_id] - The currency ID for unit cost (optional, default: 1)
- * @body {number} [lotData.lot_unit_cost_ref] - The reference unit cost (optional, positive number)
- * @body {number} [lotData.lot_unit_currency_id_ref] - The currency ID for reference cost (optional, default: 1)
- * @returns {Object} The created inventory lot
- * @example
- * POST /api/v1/inventory/lots
- * Body: {
- *   "inv_var_id": 123,
- *   "lot_number": "LOT123",
- *   "lot_origin": "Supplier A",
- *   "expiration_date": "2024-12-31",
- *   "lot_unit_cost": 25.50,
- *   "lot_unit_currency_id": 1
- * }
- * Response: {
- *   "success": true,
- *   "data": {...},
- *   "message": "Inventory lot created successfully"
- * }
+ * @swagger
+ * /api/v1/inventory/lots:
+ *   post:
+ *     summary: Create a new inventory lot
+ *     description: Creates a new inventory lot with optional expiration dates, costs, and notes
+ *     tags: [Inventory Lots]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - inv_var_id
+ *               - lot_number
+ *             properties:
+ *               inv_var_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Inventory variant ID
+ *                 example: 123
+ *               lot_number:
+ *                 type: string
+ *                 maxLength: 100
+ *                 description: Lot number
+ *                 example: LOT123
+ *               lot_origin:
+ *                 type: string
+ *                 maxLength: 100
+ *                 description: Lot origin
+ *                 example: Supplier A
+ *               lot_status:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Lot status (0=inactive, 1=active)
+ *                 example: 1
+ *               expiration_date:
+ *                 type: string
+ *                 format: date
+ *                 description: Expiration date (ISO8601 format)
+ *                 example: 2024-12-31
+ *               manufacture_date:
+ *                 type: string
+ *                 format: date
+ *                 description: Manufacture date (ISO8601 format)
+ *                 example: 2024-01-01
+ *               lot_notes:
+ *                 type: string
+ *                 description: Notes about the lot
+ *               lot_unit_cost:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Unit cost
+ *                 example: 25.50
+ *               lot_unit_currency_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Currency ID for unit cost
+ *                 example: 1
+ *               lot_unit_cost_ref:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Reference unit cost
+ *               lot_unit_currency_id_ref:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Currency ID for reference cost
+ *     responses:
+ *       201:
+ *         description: Inventory lot created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Inventory lot created successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
  */
 router.post('/',
     [
@@ -269,34 +448,96 @@ router.post('/',
 );
 
 /**
- * @route PUT /api/v1/inventory/lots/:id
- * @desc Update an existing inventory lot (full update)
- * @access Private (requires authentication and company context)
- * @param {number} id - The ID of the inventory lot to update
- * @body {Object} lotData - The inventory lot data to update
- * @body {number} [lotData.inv_var_id] - The inventory variant ID (optional)
- * @body {string} [lotData.lot_number] - The lot number (optional, max 100 chars)
- * @body {string} [lotData.lot_origin] - The lot origin (optional, max 100 chars)
- * @body {number} [lotData.lot_status] - The lot status (optional, 0 or 1)
- * @body {string} [lotData.expiration_date] - The expiration date (optional, ISO8601 format)
- * @body {string} [lotData.manufacture_date] - The manufacture date (optional, ISO8601 format)
- * @body {string} [lotData.lot_notes] - Notes about the lot (optional)
- * @body {number} [lotData.lot_unit_cost] - The unit cost (optional, positive number)
- * @body {number} [lotData.lot_unit_currency_id] - The currency ID for unit cost (optional)
- * @body {number} [lotData.lot_unit_cost_ref] - The reference unit cost (optional, positive number)
- * @body {number} [lotData.lot_unit_currency_id_ref] - The currency ID for reference cost (optional)
- * @returns {Object} The updated inventory lot
- * @example
- * PUT /api/v1/inventory/lots/456
- * Body: {
- *   "lot_status": 0,
- *   "lot_notes": "Updated notes"
- * }
- * Response: {
- *   "success": true,
- *   "data": {...},
- *   "message": "Inventory lot updated successfully"
- * }
+ * @swagger
+ * /api/v1/inventory/lots/{id}:
+ *   put:
+ *     summary: Update an inventory lot (full update)
+ *     description: Updates an existing inventory lot with all fields
+ *     tags: [Inventory Lots]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory lot ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               inv_var_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Inventory variant ID
+ *               lot_number:
+ *                 type: string
+ *                 maxLength: 100
+ *                 description: Lot number
+ *               lot_origin:
+ *                 type: string
+ *                 maxLength: 100
+ *                 description: Lot origin
+ *               lot_status:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Lot status (0=inactive, 1=active)
+ *               expiration_date:
+ *                 type: string
+ *                 format: date
+ *                 description: Expiration date (ISO8601 format)
+ *               manufacture_date:
+ *                 type: string
+ *                 format: date
+ *                 description: Manufacture date (ISO8601 format)
+ *               lot_notes:
+ *                 type: string
+ *                 description: Notes about the lot
+ *               lot_unit_cost:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Unit cost
+ *               lot_unit_currency_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Currency ID for unit cost
+ *               lot_unit_cost_ref:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Reference unit cost
+ *               lot_unit_currency_id_ref:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Currency ID for reference cost
+ *     responses:
+ *       200:
+ *         description: Inventory lot updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Inventory lot updated successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
+ *       404:
+ *         description: Lot not found
  */
 router.put('/:id',
     [
@@ -406,33 +647,96 @@ router.put('/:id',
 );
 
 /**
- * @route PATCH /api/v1/inventory/lots/:id
- * @desc Update an existing inventory lot (partial update)
- * @access Private (requires authentication and company context)
- * @param {number} id - The ID of the inventory lot to update
- * @body {Object} lotData - The inventory lot data to update (partial)
- * @body {number} [lotData.inv_var_id] - The inventory variant ID (optional)
- * @body {string} [lotData.lot_number] - The lot number (optional, max 100 chars)
- * @body {string} [lotData.lot_origin] - The lot origin (optional, max 100 chars)
- * @body {number} [lotData.lot_status] - The lot status (optional, 0 or 1)
- * @body {string} [lotData.expiration_date] - The expiration date (optional, ISO8601 format)
- * @body {string} [lotData.manufacture_date] - The manufacture date (optional, ISO8601 format)
- * @body {string} [lotData.lot_notes] - Notes about the lot (optional)
- * @body {number} [lotData.lot_unit_cost] - The unit cost (optional, positive number)
- * @body {number} [lotData.lot_unit_currency_id] - The currency ID for unit cost (optional)
- * @body {number} [lotData.lot_unit_cost_ref] - The reference unit cost (optional, positive number)
- * @body {number} [lotData.lot_unit_currency_id_ref] - The currency ID for reference cost (optional)
- * @returns {Object} The updated inventory lot
- * @example
- * PATCH /api/v1/inventory/lots/456
- * Body: {
- *   "lot_status": 0
- * }
- * Response: {
- *   "success": true,
- *   "data": {...},
- *   "message": "Inventory lot updated successfully"
- * }
+ * @swagger
+ * /api/v1/inventory/lots/{id}:
+ *   patch:
+ *     summary: Update an inventory lot (partial update)
+ *     description: Partially updates an existing inventory lot
+ *     tags: [Inventory Lots]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory lot ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               inv_var_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Inventory variant ID
+ *               lot_number:
+ *                 type: string
+ *                 maxLength: 100
+ *                 description: Lot number
+ *               lot_origin:
+ *                 type: string
+ *                 maxLength: 100
+ *                 description: Lot origin
+ *               lot_status:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Lot status (0=inactive, 1=active)
+ *               expiration_date:
+ *                 type: string
+ *                 format: date
+ *                 description: Expiration date (ISO8601 format)
+ *               manufacture_date:
+ *                 type: string
+ *                 format: date
+ *                 description: Manufacture date (ISO8601 format)
+ *               lot_notes:
+ *                 type: string
+ *                 description: Notes about the lot
+ *               lot_unit_cost:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Unit cost
+ *               lot_unit_currency_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Currency ID for unit cost
+ *               lot_unit_cost_ref:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Reference unit cost
+ *               lot_unit_currency_id_ref:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Currency ID for reference cost
+ *     responses:
+ *       200:
+ *         description: Inventory lot updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Inventory lot updated successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
+ *       404:
+ *         description: Lot not found
  */
 router.patch('/:id',
     [
