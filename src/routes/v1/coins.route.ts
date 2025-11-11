@@ -11,10 +11,32 @@ const router = Router();
  * /api/v1/coins:
  *   get:
  *     summary: Get all coins
- *     description: Retrieves a list of all available currencies/coins
- *     tags: [Coins]
+ *     description: Retrieves a list of all available currencies/coins with optional pagination and company filter
+ *     tags: [coins]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: offset
+ *         schema:
+ *           type: integer
+ *           minimum: 0
+ *           default: 0
+ *         description: Number of records to skip for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Maximum number of records to return
+ *       - in: query
+ *         name: company_id
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Filter coins by company ID
  *     responses:
  *       200:
  *         description: List of coins retrieved successfully
@@ -73,7 +95,7 @@ router.get('/',
  *   put:
  *     summary: Assign coins to a company
  *     description: Assigns multiple coins with their conversion factors to a specific company
- *     tags: [Coins]
+ *     tags: [coins]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -204,7 +226,7 @@ router.put('/assign_to_company/:company_id', checkJwtMiddleware,
  *   put:
  *     summary: Assign coin to company branches
  *     description: Assigns a specific coin to multiple branches (sucursales) of a company
- *     tags: [Coins]
+ *     tags: [coins]
  *     security:
  *       - bearerAuth: []
  *     parameters:

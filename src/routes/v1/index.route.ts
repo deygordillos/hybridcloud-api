@@ -35,7 +35,7 @@ router.use('/api/v1/inventory/prices', inventoryPricesRoutes);
 router.use('/api/v1/inventory/variant-storages', inventoryVariantStoragesRoutes);
 router.use('/api/v1/inventory/lots-storages', inventoryLotsStoragesRoutes);
 router.use('/api/v1/inventory/movements', inventoryMovementsRoutes);
-router.use('/api/v1/types_of_prices', typesOfPrices);
+router.use('/api/v1/types-of-prices', typesOfPrices);
 router.use('/api/v1/currencies-exchanges', currenciesExchangesRoutes);
 
 export default router

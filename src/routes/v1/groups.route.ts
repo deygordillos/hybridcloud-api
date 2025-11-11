@@ -13,7 +13,7 @@ const router = Router();
  *   get:
  *     summary: Get all groups
  *     description: Retrieves all groups (Admin only)
- *     tags: [Groups]
+ *     tags: [groups]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -84,7 +84,7 @@ router.get('/',
  *   post:
  *     summary: Create a new group
  *     description: Creates a new group (Admin only)
- *     tags: [Groups]
+ *     tags: [groups]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -189,7 +189,7 @@ router.post('/',
  *   put:
  *     summary: Update a group (full update)
  *     description: Updates all fields of an existing group (Admin only)
- *     tags: [Groups]
+ *     tags: [groups]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -238,7 +238,7 @@ router.put('/:id',
  *   patch:
  *     summary: Update a group (partial update)
  *     description: Partially updates an existing group (Admin only)
- *     tags: [Groups]
+ *     tags: [groups]
  *     security:
  *       - bearerAuth: []
  *     parameters:

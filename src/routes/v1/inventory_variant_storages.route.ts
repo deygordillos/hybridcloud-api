@@ -25,7 +25,7 @@ const router = Router();
  *   get:
  *     summary: Get all variant storages for a specific variant
  *     description: Retrieves all storage locations for a specific inventory variant with pagination
- *     tags: [Inventory Variant Storages]
+ *     tags: [inventory-variant-storages]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -179,7 +179,7 @@ router.get(
  *   get:
  *     summary: Get a specific variant storage
  *     description: Retrieves a specific variant storage by variant ID and storage ID
- *     tags: [Inventory Variant Storages]
+ *     tags: [inventory-variant-storages]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -240,7 +240,7 @@ router.get(
  *   get:
  *     summary: Get stock summary for a variant
  *     description: Retrieves stock summary statistics across all storage locations for a variant
- *     tags: [Inventory Variant Storages]
+ *     tags: [inventory-variant-storages]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -310,7 +310,7 @@ router.get(
  *   get:
  *     summary: Get all variant storages for a location
  *     description: Retrieves all inventory variants at a specific storage location with pagination
- *     tags: [Inventory Variant Storages]
+ *     tags: [inventory-variant-storages]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -382,7 +382,7 @@ router.get(
  *   post:
  *     summary: Create a new variant storage
  *     description: Creates a new variant storage entry for a specific variant and storage location
- *     tags: [Inventory Variant Storages]
+ *     tags: [inventory-variant-storages]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -470,7 +470,7 @@ router.post(
  *   put:
  *     summary: Update a variant storage
  *     description: Updates an existing variant storage entry
- *     tags: [Inventory Variant Storages]
+ *     tags: [inventory-variant-storages]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -584,7 +584,7 @@ router.put(
  *   patch:
  *     summary: Update stock levels for a variant storage
  *     description: Updates stock levels for a specific variant at a specific storage location
- *     tags: [Inventory Variant Storages]
+ *     tags: [inventory-variant-storages]
  *     security:
  *       - bearerAuth: []
  *     parameters:

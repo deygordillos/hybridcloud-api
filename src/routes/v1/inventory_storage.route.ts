@@ -13,7 +13,7 @@ const router = Router();
  *   get:
  *     summary: Get all inventory storage locations for the company
  *     description: Retrieves all storage locations configured for the authenticated company
- *     tags: [Inventory Storage]
+ *     tags: [inventory-storage]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -75,7 +75,7 @@ router.get('/',
  *   post:
  *     summary: Create a new inventory storage location
  *     description: Creates a new storage location for inventory management
- *     tags: [Inventory Storage]
+ *     tags: [inventory-storage]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -178,7 +178,7 @@ router.post('/',
  * /api/v1/inventory/storage/{id}:
  *   put:
  *     summary: Update a storage location (full update)
- *     tags: [Inventory Storage]
+ *     tags: [inventory-storage]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -223,7 +223,7 @@ router.put('/:id',
  * /api/v1/inventory/storage/{id}:
  *   patch:
  *     summary: Update a storage location (partial update)
- *     tags: [Inventory Storage]
+ *     tags: [inventory-storage]
  *     security:
  *       - bearerAuth: []
  *     parameters:

@@ -11,7 +11,7 @@ const router = Router();
  *   post:
  *     summary: User login
  *     description: Authenticates a user and returns access and refresh tokens
- *     tags: [Authentication]
+ *     tags: [auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -103,7 +103,7 @@ router.post('/login',
  *   post:
  *     summary: Refresh access token
  *     description: Generates a new access token using a valid refresh token
- *     tags: [Authentication]
+ *     tags: [auth]
  *     requestBody:
  *       required: true
  *       content:

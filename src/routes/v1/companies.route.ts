@@ -14,7 +14,7 @@ const router = Router();
  *   post:
  *     summary: Create a new company
  *     description: Creates a new company with all required information (Admin only)
- *     tags: [Companies]
+ *     tags: [companies]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -223,7 +223,7 @@ router.post('/',
  *   put:
  *     summary: Update a company (full update)
  *     description: Updates all fields of an existing company (Admin only)
- *     tags: [Companies]
+ *     tags: [companies]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -288,7 +288,7 @@ router.put('/:id',
  *   patch:
  *     summary: Update a company (partial update)
  *     description: Partially updates specific fields of an existing company (Admin only)
- *     tags: [Companies]
+ *     tags: [companies]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -353,7 +353,7 @@ router.patch('/:id',
  *   post:
  *     summary: Register an admin for a company
  *     description: Creates a new admin user for a specific company (Admin only)
- *     tags: [Companies]
+ *     tags: [companies]
  *     security:
  *       - bearerAuth: []
  *     parameters:

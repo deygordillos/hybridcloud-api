@@ -13,7 +13,7 @@ const router = Router();
  *   get:
  *     summary: Get all inventory families for the company
  *     description: Retrieves all inventory family configurations for the authenticated company
- *     tags: [Inventory Family]
+ *     tags: [inventory-family]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -83,7 +83,7 @@ router.get('/',
  *   post:
  *     summary: Create a new inventory family
  *     description: Creates a new inventory family with product configuration settings
- *     tags: [Inventory Family]
+ *     tags: [inventory-family]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -227,7 +227,7 @@ router.post('/',
  * /api/v1/inventory/family/{id}:
  *   put:
  *     summary: Update an inventory family (full update)
- *     tags: [Inventory Family]
+ *     tags: [inventory-family]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -282,7 +282,7 @@ router.put('/:id',
  * /api/v1/inventory/family/{id}:
  *   patch:
  *     summary: Update an inventory family (partial update)
- *     tags: [Inventory Family]
+ *     tags: [inventory-family]
  *     security:
  *       - bearerAuth: []
  *     parameters:

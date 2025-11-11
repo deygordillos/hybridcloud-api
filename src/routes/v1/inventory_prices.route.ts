@@ -25,7 +25,7 @@ const router = Router();
  *   get:
  *     summary: Get all prices for a specific variant
  *     description: Retrieves all inventory prices for a specific variant with pagination
- *     tags: [Inventory Prices]
+ *     tags: [inventory-prices]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -171,7 +171,7 @@ router.get('/variant/:variantId',
  *   get:
  *     summary: Get current prices for a specific variant
  *     description: Retrieves current (active) inventory prices for a specific variant
- *     tags: [Inventory Prices]
+ *     tags: [inventory-prices]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -233,7 +233,7 @@ router.get('/variant/:variantId/current',
  *   get:
  *     summary: Get prices for a variant by price type
  *     description: Retrieves inventory prices for a specific variant and price type
- *     tags: [Inventory Prices]
+ *     tags: [inventory-prices]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -311,7 +311,7 @@ router.get('/variant/:variantId/type/:typeId',
  *   post:
  *     summary: Create a new inventory price
  *     description: Creates a new inventory price with local, stable, and reference currency support
- *     tags: [Inventory Prices]
+ *     tags: [inventory-prices]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -534,7 +534,7 @@ router.post('/',
  *   put:
  *     summary: Update an inventory price
  *     description: Updates an existing inventory price
- *     tags: [Inventory Prices]
+ *     tags: [inventory-prices]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -713,7 +713,7 @@ router.put('/:id',
  *   patch:
  *     summary: Set a price as current
  *     description: Sets an inventory price as the current price for its variant and type
- *     tags: [Inventory Prices]
+ *     tags: [inventory-prices]
  *     security:
  *       - bearerAuth: []
  *     parameters:

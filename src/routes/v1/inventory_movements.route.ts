@@ -26,7 +26,7 @@ const router = Router();
  *   get:
  *     summary: Get all movements for a specific variant
  *     description: Retrieves all movements for a specific inventory variant with pagination
- *     tags: [Inventory Movements]
+ *     tags: [inventory-movements]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -184,7 +184,7 @@ router.get(
  *   get:
  *     summary: Get all movements for a specific lot
  *     description: Retrieves all movements for a specific inventory lot with pagination
- *     tags: [Inventory Movements]
+ *     tags: [inventory-movements]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -494,7 +494,7 @@ router.get(
  *   post:
  *     summary: Create a new inventory movement
  *     description: Creates a new inventory movement (in, out, or transfer)
- *     tags: [Inventory Movements]
+ *     tags: [inventory-movements]
  *     security:
  *       - bearerAuth: []
  *     requestBody:

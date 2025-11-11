@@ -13,7 +13,7 @@ const router = Router();
  *   get:
  *     summary: Get all inventory attributes for the company
  *     description: Retrieves all inventory attributes with their values for the authenticated company
- *     tags: [Inventory Attributes]
+ *     tags: [inventory-attributes]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -86,7 +86,7 @@ router.get('/',
  *   post:
  *     summary: Create a new inventory attribute
  *     description: Creates a new inventory attribute with optional predefined values
- *     tags: [Inventory Attributes]
+ *     tags: [inventory-attributes]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -227,7 +227,7 @@ router.post('/',
  * /api/v1/inventory/attributes/{id}:
  *   put:
  *     summary: Update an inventory attribute (full update)
- *     tags: [Inventory Attributes]
+ *     tags: [inventory-attributes]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -304,7 +304,7 @@ router.put('/:id',
  * /api/v1/inventory/attributes/{id}:
  *   patch:
  *     summary: Update an inventory attribute (partial update)
- *     tags: [Inventory Attributes]
+ *     tags: [inventory-attributes]
  *     security:
  *       - bearerAuth: []
  *     parameters:

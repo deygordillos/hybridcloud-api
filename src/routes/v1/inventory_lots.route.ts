@@ -26,7 +26,7 @@ const router = Router();
  *   get:
  *     summary: Get all inventory lots for a specific variant
  *     description: Retrieves all inventory lots associated with a specific inventory variant
- *     tags: [Inventory Lots]
+ *     tags: [inventory-lots]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -138,7 +138,7 @@ router.get('/variant/:variantId',
  *   get:
  *     summary: Search inventory lots by lot number
  *     description: Searches for inventory lots matching the specified lot number
- *     tags: [Inventory Lots]
+ *     tags: [inventory-lots]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -193,7 +193,7 @@ router.get('/search/:lotNumber',
  *   get:
  *     summary: Get inventory lots summary statistics
  *     description: Retrieves summary statistics including total, active, inactive, expiring soon, and expired lots
- *     tags: [Inventory Lots]
+ *     tags: [inventory-lots]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -247,7 +247,7 @@ router.get('/summary/stats',
  *   get:
  *     summary: Get a specific inventory lot by ID
  *     description: Retrieves details of a specific inventory lot
- *     tags: [Inventory Lots]
+ *     tags: [inventory-lots]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -314,7 +314,7 @@ router.get('/:id',
  *   post:
  *     summary: Create a new inventory lot
  *     description: Creates a new inventory lot with optional expiration dates, costs, and notes
- *     tags: [Inventory Lots]
+ *     tags: [inventory-lots]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -511,7 +511,7 @@ router.post('/',
  *   put:
  *     summary: Update an inventory lot (full update)
  *     description: Updates an existing inventory lot with all fields
- *     tags: [Inventory Lots]
+ *     tags: [inventory-lots]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -710,7 +710,7 @@ router.put('/:id',
  *   patch:
  *     summary: Update an inventory lot (partial update)
  *     description: Partially updates an existing inventory lot
- *     tags: [Inventory Lots]
+ *     tags: [inventory-lots]
  *     security:
  *       - bearerAuth: []
  *     parameters:

@@ -24,7 +24,7 @@ const router = Router();
  * /api/v1/inventory/lots-storages/variant/{variantId}:
  *   get:
  *     summary: Get all lot storages for a specific inventory variant
- *     tags: [Inventory Lots Storages]
+ *     tags: [inventory-lots-storages]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -139,7 +139,7 @@ router.get(
  * /api/v1/inventory/lots-storages/lot/{lotId}:
  *   get:
  *     summary: Get all lot storages for a specific inventory lot
- *     tags: [Inventory Lots Storages]
+ *     tags: [inventory-lots-storages]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -276,7 +276,7 @@ router.get(
  * /api/v1/inventory/lots-storages/lot/{lotId}/storage/{storageId}:
  *   get:
  *     summary: Get a specific lot storage by lot ID and storage ID
- *     tags: [Inventory Lots Storages]
+ *     tags: [inventory-lots-storages]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -383,7 +383,7 @@ router.get(
  *   get:
  *     summary: Get stock summary for a specific inventory lot
  *     description: Returns aggregated stock statistics across all storage locations for the specified lot
- *     tags: [Inventory Lots Storages]
+ *     tags: [inventory-lots-storages]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -472,7 +472,7 @@ router.get(
  * /api/v1/inventory/lots-storages/location/{storageId}:
  *   get:
  *     summary: Get all lot storages for a specific storage location
- *     tags: [Inventory Lots Storages]
+ *     tags: [inventory-lots-storages]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -606,7 +606,7 @@ router.get(
  * /api/v1/inventory/lots-storages/variant/{variantId}/lot/{lotId}:
  *   get:
  *     summary: Get all lot storages for a specific variant and lot combination
- *     tags: [Inventory Lots Storages]
+ *     tags: [inventory-lots-storages]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -752,7 +752,7 @@ router.get(
  *   post:
  *     summary: Create a new lot storage
  *     description: Creates a new inventory lot storage record tracking stock levels at a specific location
- *     tags: [Inventory Lots Storages]
+ *     tags: [inventory-lots-storages]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -904,7 +904,7 @@ router.post(
  * /api/v1/inventory/lots-storages/{id}:
  *   put:
  *     summary: Update an existing lot storage
- *     tags: [Inventory Lots Storages]
+ *     tags: [inventory-lots-storages]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -1087,7 +1087,7 @@ router.put(
  *   patch:
  *     summary: Update stock levels for a specific lot storage
  *     description: Partially updates the stock levels for a specific lot at a storage location
- *     tags: [Inventory Lots Storages]
+ *     tags: [inventory-lots-storages]
  *     security:
  *       - bearerAuth: []
  *     parameters:

@@ -13,7 +13,7 @@ const router = Router();
  *   get:
  *     summary: Get all inventories for the company
  *     description: Retrieves all inventory items for the authenticated user's company
- *     tags: [Inventory]
+ *     tags: [inventory]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -97,7 +97,7 @@ router.get('/',
  *   post:
  *     summary: Create a new inventory item
  *     description: Creates a new inventory item with optional variants, taxes, and attributes
- *     tags: [Inventory]
+ *     tags: [inventory]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -380,7 +380,7 @@ router.post('/',
  *   put:
  *     summary: Update an inventory item (full update)
  *     description: Updates an existing inventory item with all fields
- *     tags: [Inventory]
+ *     tags: [inventory]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -648,7 +648,7 @@ router.put('/:id',
  *   patch:
  *     summary: Update an inventory item (partial update)
  *     description: Partially updates an existing inventory item
- *     tags: [Inventory]
+ *     tags: [inventory]
  *     security:
  *       - bearerAuth: []
  *     parameters:

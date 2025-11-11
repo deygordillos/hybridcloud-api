@@ -13,7 +13,7 @@ const router = Router();
  *   get:
  *     summary: Get all customers for the company
  *     description: Retrieves all customers associated with the authenticated company
- *     tags: [Customers]
+ *     tags: [customers]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -83,7 +83,7 @@ router.get('/',
  *   post:
  *     summary: Create a new customer
  *     description: Creates a new customer for the authenticated company
- *     tags: [Customers]
+ *     tags: [customers]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -214,7 +214,7 @@ router.post('/',
  * /api/v1/customers/{id}:
  *   put:
  *     summary: Update a customer (full update)
- *     tags: [Customers]
+ *     tags: [customers]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -267,7 +267,7 @@ router.put('/:id',
  * /api/v1/customers/{id}:
  *   patch:
  *     summary: Update a customer (partial update)
- *     tags: [Customers]
+ *     tags: [customers]
  *     security:
  *       - bearerAuth: []
  *     parameters:

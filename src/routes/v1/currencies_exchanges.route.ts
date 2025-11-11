@@ -38,7 +38,7 @@ router.use(companyMiddleware);
  *   get:
  *     summary: Get all currencies configured for the company
  *     description: Retrieves all currency exchange configurations for the authenticated company
- *     tags: [Currencies Exchanges]
+ *     tags: [currencies-exchanges]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -109,7 +109,7 @@ router.get('/', CurrenciesExchangesController.getCompanyCurrencies);
  *   get:
  *     summary: Get currency exchange rate history
  *     description: Retrieves historical records of exchange rate changes with optional filtering
- *     tags: [Currencies Exchanges]
+ *     tags: [currencies-exchanges]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -204,7 +204,7 @@ router.get('/history', CurrenciesExchangesController.getCurrencyHistory);
  * /api/v1/currencies-exchanges/{id}:
  *   get:
  *     summary: Get a specific currency exchange by ID
- *     tags: [Currencies Exchanges]
+ *     tags: [currencies-exchanges]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -238,7 +238,7 @@ router.get('/:id', [
  *   post:
  *     summary: Create a new currency exchange configuration
  *     description: Creates a new currency exchange rate configuration for the company
- *     tags: [Currencies Exchanges]
+ *     tags: [currencies-exchanges]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -309,7 +309,7 @@ router.post('/', [
  * /api/v1/currencies-exchanges/{id}:
  *   put:
  *     summary: Update an existing currency exchange configuration
- *     tags: [Currencies Exchanges]
+ *     tags: [currencies-exchanges]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -387,7 +387,7 @@ router.put('/:id', [
  *   post:
  *     summary: Set a currency as the base currency for the company
  *     description: Configures the base currency used for all currency conversions
- *     tags: [Currencies Exchanges]
+ *     tags: [currencies-exchanges]
  *     security:
  *       - bearerAuth: []
  *     requestBody:

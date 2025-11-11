@@ -20,7 +20,7 @@ const router = Router();
  *   get:
  *     summary: Get all taxes for the company
  *     description: Retrieves all tax configurations for the authenticated company
- *     tags: [Taxes]
+ *     tags: [taxes]
  *     security:
  *       - bearerAuth: []
  *     responses:
@@ -90,7 +90,7 @@ router.get('/',
  *   post:
  *     summary: Create a new tax
  *     description: Creates a new tax configuration for the company
- *     tags: [Taxes]
+ *     tags: [taxes]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -231,7 +231,7 @@ router.post('/',
  * /api/v1/taxes/{id}:
  *   put:
  *     summary: Update a tax (full update)
- *     tags: [Taxes]
+ *     tags: [taxes]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -302,7 +302,7 @@ router.put('/:id',
  * /api/v1/taxes/{id}:
  *   patch:
  *     summary: Update a tax (partial update)
- *     tags: [Taxes]
+ *     tags: [taxes]
  *     security:
  *       - bearerAuth: []
  *     parameters:
