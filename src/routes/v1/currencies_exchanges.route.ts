@@ -44,8 +44,62 @@ router.use(companyMiddleware);
  *     responses:
  *       200:
  *         description: Currencies retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       curr_exch_id:
+ *                         type: integer
+ *                         example: 1
+ *                       currency_id:
+ *                         type: integer
+ *                         example: 1
+ *                       currency_code:
+ *                         type: string
+ *                         example: USD
+ *                       currency_name:
+ *                         type: string
+ *                         example: US Dollar
+ *                       coin_id:
+ *                         type: integer
+ *                         example: 1
+ *                       curr_exch_type:
+ *                         type: integer
+ *                         example: 2
+ *                       curr_exch_rate:
+ *                         type: number
+ *                         example: 1.25
+ *                       curr_exch_method:
+ *                         type: integer
+ *                         example: 1
+ *                       curr_exch_status:
+ *                         type: integer
+ *                         example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Currencies retrieved successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.get('/', CurrenciesExchangesController.getCompanyCurrencies);
 
@@ -79,8 +133,69 @@ router.get('/', CurrenciesExchangesController.getCompanyCurrencies);
  *     responses:
  *       200:
  *         description: History retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       curr_exch_hist_id:
+ *                         type: integer
+ *                         example: 1
+ *                       curr_exch_id:
+ *                         type: integer
+ *                         example: 1
+ *                       curr_exch_rate_old:
+ *                         type: number
+ *                         example: 1.20
+ *                       curr_exch_rate_new:
+ *                         type: number
+ *                         example: 1.25
+ *                       change_date:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-11-11T10:00:00Z"
+ *                       changed_by:
+ *                         type: integer
+ *                         example: 1
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 50
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 5
+ *                 message:
+ *                   type: string
+ *                   example: History retrieved successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.get('/history', CurrenciesExchangesController.getCurrencyHistory);
 

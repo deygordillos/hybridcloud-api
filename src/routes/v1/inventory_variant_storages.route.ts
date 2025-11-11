@@ -66,17 +66,99 @@ const router = Router();
  *                   type: array
  *                   items:
  *                     type: object
+ *                     properties:
+ *                       inv_var_sto_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 10
+ *                       inv_sto_id:
+ *                         type: integer
+ *                         example: 2
+ *                       var_sto_current_stock:
+ *                         type: number
+ *                         example: 500
+ *                       var_sto_reserved_stock:
+ *                         type: number
+ *                         example: 50
+ *                       var_sto_committed_stock:
+ *                         type: number
+ *                         example: 100
+ *                       var_sto_previous_stock:
+ *                         type: number
+ *                         example: 450
+ *                       var_sto_minimum_stock:
+ *                         type: number
+ *                         example: 100
+ *                       storage_name:
+ *                         type: string
+ *                         example: "Main Warehouse"
  *                 pagination:
  *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 15
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 2
  *                 message:
  *                   type: string
  *                   example: Variant storages found
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: variantId
+ *                       message:
+ *                         type: string
+ *                         example: Variant ID must be a positive integer
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       403:
  *         description: Forbidden - Company context required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Company context is required
  */
 router.get(
     "/variant/:variantId",

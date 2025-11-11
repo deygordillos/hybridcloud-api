@@ -19,10 +19,57 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Groups retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       group_id:
+ *                         type: integer
+ *                         example: 1
+ *                       group_name:
+ *                         type: string
+ *                         example: Enterprise Group
+ *                       group_status:
+ *                         type: integer
+ *                         example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Groups retrieved successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       403:
  *         description: Forbidden - Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Admin access required
  */
 router.get('/',
     [
@@ -56,12 +103,76 @@ router.get('/',
  *     responses:
  *       201:
  *         description: Group created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     group_id:
+ *                       type: integer
+ *                       example: 1
+ *                     group_name:
+ *                       type: string
+ *                       example: Enterprise Group
+ *                     group_status:
+ *                       type: integer
+ *                       example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Group created successfully
  *       400:
  *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: group_name
+ *                       message:
+ *                         type: string
+ *                         example: You must send a group name
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       403:
  *         description: Forbidden - Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Admin access required
  */
 router.post('/',
     [

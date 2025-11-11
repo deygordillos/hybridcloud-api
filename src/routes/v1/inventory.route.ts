@@ -31,13 +31,57 @@ const router = Router();
  *                   type: array
  *                   items:
  *                     type: object
+ *                     properties:
+ *                       inv_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_code:
+ *                         type: string
+ *                         example: INV-001
+ *                       inv_description:
+ *                         type: string
+ *                         example: Product description
+ *                       inv_status:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_type:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_has_variants:
+ *                         type: integer
+ *                         example: 1
+ *                       id_inv_family:
+ *                         type: integer
+ *                         example: 1
  *                 message:
  *                   type: string
  *                   example: Inventories retrieved successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       403:
  *         description: Forbidden - Company context required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Company context is required
  */
 router.get('/',
     [
@@ -166,15 +210,76 @@ router.get('/',
  *                   example: true
  *                 data:
  *                   type: object
+ *                   properties:
+ *                     inv_id:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_code:
+ *                       type: string
+ *                       example: INV-001
+ *                     inv_description:
+ *                       type: string
+ *                       example: Product description
+ *                     inv_status:
+ *                       type: integer
+ *                       example: 1
+ *                     id_inv_family:
+ *                       type: integer
+ *                       example: 1
+ *                     variants:
+ *                       type: array
+ *                       items:
+ *                         type: object
  *                 message:
  *                   type: string
  *                   example: Inventory created successfully
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: inv_code
+ *                       message:
+ *                         type: string
+ *                         example: inv_code is required
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       403:
  *         description: Forbidden - Company context required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Company context is required
  */
 router.post('/',
     [
@@ -367,17 +472,95 @@ router.post('/',
  *                   example: true
  *                 data:
  *                   type: object
+ *                   properties:
+ *                     inv_id:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_code:
+ *                       type: string
+ *                       example: INV-001
+ *                     inv_description:
+ *                       type: string
+ *                       example: Updated product description
+ *                     inv_status:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_type:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_has_variants:
+ *                       type: integer
+ *                       example: 1
+ *                     id_inv_family:
+ *                       type: integer
+ *                       example: 1
+ *                     variants:
+ *                       type: array
+ *                       items:
+ *                         type: object
  *                 message:
  *                   type: string
  *                   example: Inventory updated successfully
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: inv_status
+ *                       message:
+ *                         type: string
+ *                         example: inv_status must be 0 or 1
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       403:
  *         description: Forbidden - Company context required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Company context is required
  *       404:
  *         description: Inventory not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Inventory not found
  */
 router.put('/:id',
     [
@@ -557,17 +740,88 @@ router.put('/:id',
  *                   example: true
  *                 data:
  *                   type: object
+ *                   properties:
+ *                     inv_id:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_code:
+ *                       type: string
+ *                       example: INV-001
+ *                     inv_description:
+ *                       type: string
+ *                       example: Partially updated description
+ *                     inv_status:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_type:
+ *                       type: integer
+ *                       example: 1
+ *                     id_inv_family:
+ *                       type: integer
+ *                       example: 1
  *                 message:
  *                   type: string
  *                   example: Inventory updated successfully
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: inv_type
+ *                       message:
+ *                         type: string
+ *                         example: inv_type must be 1 (product) or 2 (service)
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       403:
  *         description: Forbidden - Company context required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Company context is required
  *       404:
  *         description: Inventory not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Inventory not found
  */
 router.patch('/:id',
     [

@@ -81,12 +81,100 @@ const router = Router();
  *     responses:
  *       201:
  *         description: Company created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     company_id:
+ *                       type: integer
+ *                       example: 1
+ *                     group_id:
+ *                       type: integer
+ *                       example: 1
+ *                     company_is_principal:
+ *                       type: boolean
+ *                       example: true
+ *                     company_name:
+ *                       type: string
+ *                       example: Acme Corporation
+ *                     company_razon_social:
+ *                       type: string
+ *                       example: Acme Corporation S.A.
+ *                     company_id_fiscal:
+ *                       type: string
+ *                       example: J-123456789
+ *                     company_email:
+ *                       type: string
+ *                       example: info@acme.com
+ *                     company_phone1:
+ *                       type: string
+ *                       example: +1234567890
+ *                     company_start:
+ *                       type: string
+ *                       example: "2025-01-01T00:00:00.000Z"
+ *                     company_end:
+ *                       type: string
+ *                       example: "2026-01-01T00:00:00.000Z"
+ *                     country_id:
+ *                       type: integer
+ *                       example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Company created successfully
  *       400:
  *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: company_email
+ *                       message:
+ *                         type: string
+ *                         example: You must send a company email
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       403:
  *         description: Forbidden - Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Admin access required
  */
 router.post('/',
     [

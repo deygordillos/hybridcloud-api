@@ -26,8 +26,56 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Taxes retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       tax_id:
+ *                         type: integer
+ *                         example: 1
+ *                       tax_code:
+ *                         type: string
+ *                         example: IVA
+ *                       tax_name:
+ *                         type: string
+ *                         example: Value Added Tax
+ *                       tax_description:
+ *                         type: string
+ *                         example: Standard VAT rate
+ *                       tax_type:
+ *                         type: integer
+ *                         example: 2
+ *                       tax_value:
+ *                         type: number
+ *                         example: 16.0
+ *                       tax_status:
+ *                         type: integer
+ *                         example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Taxes retrieved successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.get('/',
     [
@@ -83,10 +131,75 @@ router.get('/',
  *     responses:
  *       201:
  *         description: Tax created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     tax_id:
+ *                       type: integer
+ *                       example: 1
+ *                     tax_code:
+ *                       type: string
+ *                       example: IVA
+ *                     tax_name:
+ *                       type: string
+ *                       example: Value Added Tax
+ *                     tax_description:
+ *                       type: string
+ *                       example: Standard VAT rate
+ *                     tax_type:
+ *                       type: integer
+ *                       example: 2
+ *                     tax_value:
+ *                       type: number
+ *                       example: 16.0
+ *                     tax_status:
+ *                       type: integer
+ *                       example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Tax created successfully
  *       400:
  *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: tax_type
+ *                       message:
+ *                         type: string
+ *                         example: tax_type must be 1 (exempt), 2 (percent) or 3 (fixed)
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.post('/',
     [

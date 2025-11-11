@@ -19,8 +19,58 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Attributes retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       attr_id:
+ *                         type: integer
+ *                         example: 1
+ *                       attr_name:
+ *                         type: string
+ *                         example: Color
+ *                       attr_description:
+ *                         type: string
+ *                         example: Product color variations
+ *                       attr_status:
+ *                         type: integer
+ *                         example: 1
+ *                       attr_values:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             inv_attrval_id:
+ *                               type: integer
+ *                               example: 1
+ *                             inv_attrval_value:
+ *                               type: string
+ *                               example: Red
+ *                 message:
+ *                   type: string
+ *                   example: Attributes retrieved successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.get('/',
     [
@@ -73,10 +123,77 @@ router.get('/',
  *     responses:
  *       201:
  *         description: Attribute created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     attr_id:
+ *                       type: integer
+ *                       example: 1
+ *                     attr_name:
+ *                       type: string
+ *                       example: Color
+ *                     attr_description:
+ *                       type: string
+ *                       example: Product color variations
+ *                     attr_status:
+ *                       type: integer
+ *                       example: 1
+ *                     attr_values:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           inv_attrval_id:
+ *                             type: integer
+ *                             example: 1
+ *                           inv_attrval_value:
+ *                             type: string
+ *                             example: Red
+ *                 message:
+ *                   type: string
+ *                   example: Attribute created successfully
  *       400:
  *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: attr_name
+ *                       message:
+ *                         type: string
+ *                         example: attr_name is required
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.post('/',
     [

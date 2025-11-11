@@ -19,8 +19,47 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Storage locations retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       inv_sto_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_storage_code:
+ *                         type: string
+ *                         example: WH001
+ *                       inv_storage_name:
+ *                         type: string
+ *                         example: Main Warehouse
+ *                       inv_storage_status:
+ *                         type: integer
+ *                         example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Storage locations retrieved successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.get('/',
     [
@@ -61,10 +100,66 @@ router.get('/',
  *     responses:
  *       201:
  *         description: Storage location created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_sto_id:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_storage_code:
+ *                       type: string
+ *                       example: WH001
+ *                     inv_storage_name:
+ *                       type: string
+ *                       example: Main Warehouse
+ *                     inv_storage_status:
+ *                       type: integer
+ *                       example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Storage location created successfully
  *       400:
  *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: inv_storage_code
+ *                       message:
+ *                         type: string
+ *                         example: inv_storage_code is required
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.post('/',
     [

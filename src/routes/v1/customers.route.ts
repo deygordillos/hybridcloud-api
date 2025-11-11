@@ -19,8 +19,56 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Customers retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       cust_id:
+ *                         type: integer
+ *                         example: 1
+ *                       cust_code:
+ *                         type: string
+ *                         example: CUST001
+ *                       cust_id_fiscal:
+ *                         type: string
+ *                         example: J-123456789
+ *                       cust_description:
+ *                         type: string
+ *                         example: Customer Name Corp
+ *                       cust_email:
+ *                         type: string
+ *                         example: customer@example.com
+ *                       cust_telephone1:
+ *                         type: string
+ *                         example: +1234567890
+ *                       cust_status:
+ *                         type: integer
+ *                         example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Customers retrieved successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.get('/',
     [
@@ -76,10 +124,75 @@ router.get('/',
  *     responses:
  *       201:
  *         description: Customer created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     cust_id:
+ *                       type: integer
+ *                       example: 1
+ *                     cust_code:
+ *                       type: string
+ *                       example: CUST001
+ *                     cust_id_fiscal:
+ *                       type: string
+ *                       example: J-123456789
+ *                     cust_description:
+ *                       type: string
+ *                       example: Customer Name Corp
+ *                     cust_email:
+ *                       type: string
+ *                       example: customer@example.com
+ *                     cust_telephone1:
+ *                       type: string
+ *                       example: +1234567890
+ *                     cust_status:
+ *                       type: integer
+ *                       example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Customer created successfully
  *       400:
  *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: cust_code
+ *                       message:
+ *                         type: string
+ *                         example: cust_code is required
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.post('/',
     [

@@ -18,8 +18,50 @@ const router = Router();
  *     responses:
  *       200:
  *         description: List of coins retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       coin_id:
+ *                         type: integer
+ *                         example: 1
+ *                       coin_code:
+ *                         type: string
+ *                         example: "USD"
+ *                       coin_name:
+ *                         type: string
+ *                         example: "US Dollar"
+ *                       coin_symbol:
+ *                         type: string
+ *                         example: "$"
+ *                       coin_status:
+ *                         type: integer
+ *                         example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Coins retrieved successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.get('/',
     checkJwtMiddleware,
@@ -72,10 +114,68 @@ router.get('/',
  *     responses:
  *       200:
  *         description: Coins assigned successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     company_id:
+ *                       type: integer
+ *                       example: 1
+ *                     assigned_coins:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           coin_id:
+ *                             type: integer
+ *                             example: 1
+ *                           factor:
+ *                             type: number
+ *                             example: 1.25
+ *                 message:
+ *                   type: string
+ *                   example: Coins assigned to company successfully
  *       400:
  *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: coins
+ *                       message:
+ *                         type: string
+ *                         example: El campo "coins" debe ser un array de números con al menos un elemento
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.put('/assign_to_company/:company_id', checkJwtMiddleware,
     [

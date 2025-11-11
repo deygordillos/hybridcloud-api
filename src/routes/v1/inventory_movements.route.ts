@@ -67,6 +67,38 @@ const router = Router();
  *                   type: array
  *                   items:
  *                     type: object
+ *                     properties:
+ *                       inv_mov_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 10
+ *                       inv_lot_id:
+ *                         type: integer
+ *                         example: 5
+ *                       inv_sto_id:
+ *                         type: integer
+ *                         example: 2
+ *                       mov_type:
+ *                         type: string
+ *                         example: "IN"
+ *                       mov_quantity:
+ *                         type: number
+ *                         example: 100
+ *                       mov_reason:
+ *                         type: string
+ *                         example: "Purchase order #123"
+ *                       mov_document_ref:
+ *                         type: string
+ *                         example: "PO-123"
+ *                       mov_date:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-11-11T10:30:00Z"
+ *                       created_by:
+ *                         type: integer
+ *                         example: 1
  *                 pagination:
  *                   type: object
  *                   properties:
@@ -87,10 +119,51 @@ const router = Router();
  *                   example: Variant movements found
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: variantId
+ *                       message:
+ *                         type: string
+ *                         example: Variant ID must be a positive integer
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       403:
  *         description: Forbidden - Company context required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Company context is required
  */
 router.get(
     "/variant/:variantId",

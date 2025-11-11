@@ -49,8 +49,77 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       inv_ls_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 10
+ *                       inv_lot_id:
+ *                         type: integer
+ *                         example: 5
+ *                       id_inv_storage:
+ *                         type: integer
+ *                         example: 2
+ *                       inv_ls_stock:
+ *                         type: number
+ *                         example: 100.5
+ *                       inv_ls_stock_reserved:
+ *                         type: number
+ *                         example: 10.0
+ *                       inv_ls_stock_committed:
+ *                         type: number
+ *                         example: 5.0
+ *                       inv_ls_stock_prev:
+ *                         type: number
+ *                         example: 95.0
+ *                       inv_ls_stock_min:
+ *                         type: number
+ *                         example: 20.0
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 15
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 2
+ *                 message:
+ *                   type: string
+ *                   example: Lot storages retrieved successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.get(
     "/variant/:variantId",
@@ -99,10 +168,95 @@ router.get(
  *     responses:
  *       200:
  *         description: Lot storages found successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       inv_ls_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 10
+ *                       inv_lot_id:
+ *                         type: integer
+ *                         example: 5
+ *                       id_inv_storage:
+ *                         type: integer
+ *                         example: 2
+ *                       inv_ls_stock:
+ *                         type: number
+ *                         example: 100.5
+ *                       inv_ls_stock_reserved:
+ *                         type: number
+ *                         example: 10.0
+ *                       inv_ls_stock_committed:
+ *                         type: number
+ *                         example: 5.0
+ *                       storage_name:
+ *                         type: string
+ *                         example: Main Warehouse
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 8
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Lot storages found successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       400:
  *         description: Invalid parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: lotId
+ *                       message:
+ *                         type: string
+ *                         example: Lot ID must be a positive integer
  */
 router.get(
     "/lot/:lotId",
@@ -143,10 +297,73 @@ router.get(
  *     responses:
  *       200:
  *         description: Lot storage found successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_ls_id:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_var_id:
+ *                       type: integer
+ *                       example: 10
+ *                     inv_lot_id:
+ *                       type: integer
+ *                       example: 5
+ *                     id_inv_storage:
+ *                       type: integer
+ *                       example: 2
+ *                     inv_ls_stock:
+ *                       type: number
+ *                       example: 100.5
+ *                     inv_ls_stock_reserved:
+ *                       type: number
+ *                       example: 10.0
+ *                     inv_ls_stock_committed:
+ *                       type: number
+ *                       example: 5.0
+ *                     inv_ls_stock_prev:
+ *                       type: number
+ *                       example: 95.0
+ *                     inv_ls_stock_min:
+ *                       type: number
+ *                       example: 20.0
+ *                 message:
+ *                   type: string
+ *                   example: Lot storage found successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       404:
  *         description: Lot storage not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Lot storage not found
  */
 router.get(
     "/lot/:lotId/storage/:storageId",
@@ -180,10 +397,64 @@ router.get(
  *     responses:
  *       200:
  *         description: Stock summary retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_lot_id:
+ *                       type: integer
+ *                       example: 5
+ *                     total_stock:
+ *                       type: number
+ *                       example: 500.5
+ *                     total_reserved:
+ *                       type: number
+ *                       example: 50.0
+ *                     total_committed:
+ *                       type: number
+ *                       example: 25.0
+ *                     available_stock:
+ *                       type: number
+ *                       example: 425.5
+ *                     storage_locations:
+ *                       type: integer
+ *                       example: 3
+ *                 message:
+ *                   type: string
+ *                   example: Stock summary retrieved successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       404:
  *         description: Lot not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Lot not found
  */
 router.get(
     "/lot/:lotId/stock-summary",
@@ -230,10 +501,92 @@ router.get(
  *     responses:
  *       200:
  *         description: Location storages found successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       inv_ls_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 10
+ *                       inv_lot_id:
+ *                         type: integer
+ *                         example: 5
+ *                       lot_number:
+ *                         type: string
+ *                         example: LOT-2025-001
+ *                       inv_ls_stock:
+ *                         type: number
+ *                         example: 100.5
+ *                       inv_ls_stock_reserved:
+ *                         type: number
+ *                         example: 10.0
+ *                       inv_ls_stock_committed:
+ *                         type: number
+ *                         example: 5.0
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 25
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 3
+ *                 message:
+ *                   type: string
+ *                   example: Location storages found successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       400:
  *         description: Invalid parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: storageId
+ *                       message:
+ *                         type: string
+ *                         example: Storage ID must be a positive integer
  */
 router.get(
     "/location/:storageId",
@@ -289,10 +642,95 @@ router.get(
  *     responses:
  *       200:
  *         description: Variant lot storages found successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       inv_ls_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 10
+ *                       inv_lot_id:
+ *                         type: integer
+ *                         example: 5
+ *                       id_inv_storage:
+ *                         type: integer
+ *                         example: 2
+ *                       storage_name:
+ *                         type: string
+ *                         example: Main Warehouse
+ *                       inv_ls_stock:
+ *                         type: number
+ *                         example: 100.5
+ *                       inv_ls_stock_reserved:
+ *                         type: number
+ *                         example: 10.0
+ *                       inv_ls_stock_committed:
+ *                         type: number
+ *                         example: 5.0
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 5
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Variant lot storages found successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       400:
  *         description: Invalid parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: variantId
+ *                       message:
+ *                         type: string
+ *                         example: Variant ID must be a positive integer
  */
 router.get(
     "/variant/:variantId/lot/:lotId",
@@ -367,10 +805,81 @@ router.get(
  *     responses:
  *       201:
  *         description: Lot storage created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_ls_id:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_var_id:
+ *                       type: integer
+ *                       example: 123
+ *                     inv_lot_id:
+ *                       type: integer
+ *                       example: 456
+ *                     id_inv_storage:
+ *                       type: integer
+ *                       example: 789
+ *                     inv_ls_stock:
+ *                       type: number
+ *                       example: 50.5
+ *                     inv_ls_stock_reserved:
+ *                       type: number
+ *                       example: 5.0
+ *                     inv_ls_stock_committed:
+ *                       type: number
+ *                       example: 0
+ *                     inv_ls_stock_prev:
+ *                       type: number
+ *                       example: 45.0
+ *                     inv_ls_stock_min:
+ *                       type: number
+ *                       example: 10.0
+ *                 message:
+ *                   type: string
+ *                   example: Lot storage created successfully
  *       400:
  *         description: Invalid input
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: inv_var_id
+ *                       message:
+ *                         type: string
+ *                         example: Variant ID must be a positive integer
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.post(
     "/",
@@ -446,12 +955,88 @@ router.post(
  *     responses:
  *       200:
  *         description: Lot storage updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_ls_id:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_var_id:
+ *                       type: integer
+ *                       example: 10
+ *                     inv_lot_id:
+ *                       type: integer
+ *                       example: 5
+ *                     id_inv_storage:
+ *                       type: integer
+ *                       example: 2
+ *                     inv_ls_stock:
+ *                       type: number
+ *                       example: 75.0
+ *                     inv_ls_stock_reserved:
+ *                       type: number
+ *                       example: 7.5
+ *                     inv_ls_stock_min:
+ *                       type: number
+ *                       example: 15.0
+ *                 message:
+ *                   type: string
+ *                   example: Lot storage updated successfully
  *       400:
  *         description: Invalid input
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: inv_ls_stock
+ *                       message:
+ *                         type: string
+ *                         example: Stock must be a number
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       404:
  *         description: Lot storage not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Lot storage not found
  */
 router.put(
     "/:id",
@@ -548,12 +1133,85 @@ router.put(
  *     responses:
  *       200:
  *         description: Stock updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_ls_id:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_lot_id:
+ *                       type: integer
+ *                       example: 5
+ *                     id_inv_storage:
+ *                       type: integer
+ *                       example: 2
+ *                     inv_ls_stock:
+ *                       type: number
+ *                       example: 100.0
+ *                     inv_ls_stock_reserved:
+ *                       type: number
+ *                       example: 10.0
+ *                     inv_ls_stock_min:
+ *                       type: number
+ *                       example: 20.0
+ *                 message:
+ *                   type: string
+ *                   example: Stock updated successfully
  *       400:
  *         description: Invalid input
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: inv_ls_stock
+ *                       message:
+ *                         type: string
+ *                         example: Stock must be a number
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       404:
  *         description: Lot storage not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Lot storage not found
  */
 router.patch(
     "/lot/:lotId/storage/:storageId/stock",

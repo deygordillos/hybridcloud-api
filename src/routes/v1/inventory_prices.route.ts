@@ -65,17 +65,93 @@ const router = Router();
  *                   type: array
  *                   items:
  *                     type: object
+ *                     properties:
+ *                       inv_price_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 123
+ *                       typeprice_id:
+ *                         type: integer
+ *                         example: 1
+ *                       is_current:
+ *                         type: integer
+ *                         example: 1
+ *                       price_local:
+ *                         type: number
+ *                         example: 100.50
+ *                       price_ref:
+ *                         type: number
+ *                         example: 95.25
+ *                       price_stable:
+ *                         type: number
+ *                         example: 100.50
+ *                       currency_id_local:
+ *                         type: integer
+ *                         example: 1
+ *                       valid_from:
+ *                         type: string
+ *                         format: date
+ *                         example: 2024-01-01
  *                 pagination:
  *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 25
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 3
  *                 message:
  *                   type: string
  *                   example: Inventory prices found
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       403:
  *         description: Forbidden - Company context required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Company context is required
  */
 router.get('/variant/:variantId',
     [

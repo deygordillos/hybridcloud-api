@@ -19,8 +19,56 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Inventory families retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       inv_family_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_family_code:
+ *                         type: string
+ *                         example: FAM001
+ *                       inv_family_name:
+ *                         type: string
+ *                         example: Electronics
+ *                       inv_family_status:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_is_stockable:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_is_lot_managed:
+ *                         type: integer
+ *                         example: 0
+ *                       tax_id:
+ *                         type: integer
+ *                         example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Inventory families retrieved successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.get('/',
     [
@@ -79,10 +127,75 @@ router.get('/',
  *     responses:
  *       201:
  *         description: Inventory family created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_family_id:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_family_code:
+ *                       type: string
+ *                       example: FAM001
+ *                     inv_family_name:
+ *                       type: string
+ *                       example: Electronics
+ *                     inv_family_status:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_is_stockable:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_is_lot_managed:
+ *                       type: integer
+ *                       example: 0
+ *                     tax_id:
+ *                       type: integer
+ *                       example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Inventory family created successfully
  *       400:
  *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: inv_family_code
+ *                       message:
+ *                         type: string
+ *                         example: inv_family_code is required
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.post('/',
     [

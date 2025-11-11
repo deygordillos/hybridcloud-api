@@ -52,15 +52,73 @@ const router = Router();
  *                   type: array
  *                   items:
  *                     type: object
+ *                     properties:
+ *                       inv_lot_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 123
+ *                       lot_number:
+ *                         type: string
+ *                         example: LOT-2024-001
+ *                       lot_status:
+ *                         type: integer
+ *                         example: 1
+ *                       expiration_date:
+ *                         type: string
+ *                         format: date
+ *                         example: 2024-12-31
+ *                       manufacture_date:
+ *                         type: string
+ *                         format: date
+ *                         example: 2024-01-15
+ *                       lot_unit_cost:
+ *                         type: number
+ *                         example: 25.50
  *                 message:
  *                   type: string
  *                   example: Inventory lots retrieved successfully
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       403:
  *         description: Forbidden - Company context required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Company context is required
  */
 router.get('/variant/:variantId',
     [

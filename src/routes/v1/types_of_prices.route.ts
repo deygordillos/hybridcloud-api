@@ -19,8 +19,47 @@ const router = Router();
  *     responses:
  *       200:
  *         description: Price types retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       typeprice_id:
+ *                         type: integer
+ *                         example: 1
+ *                       typeprice_name:
+ *                         type: string
+ *                         example: Retail
+ *                       typeprice_description:
+ *                         type: string
+ *                         example: Standard retail price
+ *                       typeprice_status:
+ *                         type: integer
+ *                         example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Price types retrieved successfully
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.get('/',
     [
@@ -67,10 +106,66 @@ router.get('/',
  *     responses:
  *       201:
  *         description: Price type created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     typeprice_id:
+ *                       type: integer
+ *                       example: 1
+ *                     typeprice_name:
+ *                       type: string
+ *                       example: Retail
+ *                     typeprice_description:
+ *                       type: string
+ *                       example: Standard retail price
+ *                     typeprice_status:
+ *                       type: integer
+ *                       example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Price type created successfully
  *       400:
  *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: typeprice_name
+ *                       message:
+ *                         type: string
+ *                         example: You must send a typeprice_name
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.post('/',
     [
