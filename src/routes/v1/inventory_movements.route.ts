@@ -21,26 +21,149 @@ import { body, param, query } from "express-validator";
 const router = Router();
 
 /**
- * @route GET /api/v1/inventory/movements/variant/:variantId
- * @desc Get all movements for a specific inventory variant
- * @access Private (requires authentication and company context)
- * @param {number} variantId - The ID of the inventory variant
- * @query {number} [page=1] - Page number for pagination
- * @query {number} [limit=10] - Number of items per page (max 100)
- * @returns {Object} Array of movements with pagination info
- * @example
- * GET /api/v1/inventory/movements/variant/123?page=1&limit=10
- * Response: {
- *   "success": true,
- *   "data": [...],
- *   "pagination": {
- *     "total": 25,
- *     "perPage": 10,
- *     "currentPage": 1,
- *     "lastPage": 3
- *   },
- *   "message": "Variant movements found"
- * }
+ * @swagger
+ * /v1/inventory/movements/variant/{variantId}:
+ *   get:
+ *     summary: Get all movements for a specific variant
+ *     description: Retrieves all movements for a specific inventory variant with pagination
+ *     tags: [inventory-movements]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: variantId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory variant ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: Variant movements found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       inv_mov_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 10
+ *                       inv_lot_id:
+ *                         type: integer
+ *                         example: 5
+ *                       inv_sto_id:
+ *                         type: integer
+ *                         example: 2
+ *                       mov_type:
+ *                         type: string
+ *                         example: "IN"
+ *                       mov_quantity:
+ *                         type: number
+ *                         example: 100
+ *                       mov_reason:
+ *                         type: string
+ *                         example: "Purchase order #123"
+ *                       mov_document_ref:
+ *                         type: string
+ *                         example: "PO-123"
+ *                       mov_date:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-11-11T10:30:00Z"
+ *                       created_by:
+ *                         type: integer
+ *                         example: 1
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 25
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 3
+ *                 message:
+ *                   type: string
+ *                   example: Variant movements found
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: variantId
+ *                       message:
+ *                         type: string
+ *                         example: Variant ID must be a positive integer
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ *       403:
+ *         description: Forbidden - Company context required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Company context is required
  */
 router.get(
     "/variant/:variantId",
@@ -56,26 +179,63 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/lot/:lotId
- * @desc Get all movements for a specific inventory lot
- * @access Private (requires authentication and company context)
- * @param {number} lotId - The ID of the inventory lot
- * @query {number} [page=1] - Page number for pagination
- * @query {number} [limit=10] - Number of items per page (max 100)
- * @returns {Object} Array of movements with pagination info
- * @example
- * GET /api/v1/inventory/movements/lot/456?page=1&limit=10
- * Response: {
- *   "success": true,
- *   "data": [...],
- *   "pagination": {
- *     "total": 15,
- *     "perPage": 10,
- *     "currentPage": 1,
- *     "lastPage": 2
- *   },
- *   "message": "Lot movements found"
- * }
+ * @swagger
+ * /v1/inventory/movements/lot/{lotId}:
+ *   get:
+ *     summary: Get all movements for a specific lot
+ *     description: Retrieves all movements for a specific inventory lot with pagination
+ *     tags: [inventory-movements]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: lotId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory lot ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: Lot movements found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                 pagination:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Lot movements found
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
  */
 router.get(
     "/lot/:lotId",
@@ -91,7 +251,7 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/storage/:storageId
+ * @route GET /v1/inventory/movements/storage/:storageId
  * @desc Get all movements for a specific storage location
  * @access Private (requires authentication and company context)
  * @param {number} storageId - The ID of the storage location
@@ -99,7 +259,7 @@ router.get(
  * @query {number} [limit=10] - Number of items per page (max 100)
  * @returns {Object} Array of movements with pagination info
  * @example
- * GET /api/v1/inventory/movements/storage/789?page=1&limit=10
+ * GET /v1/inventory/movements/storage/789?page=1&limit=10
  * Response: {
  *   "success": true,
  *   "data": [...],
@@ -126,7 +286,7 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/type/:type
+ * @route GET /v1/inventory/movements/type/:type
  * @desc Get all movements by movement type
  * @access Private (requires authentication and company context)
  * @param {number} type - The movement type (1: In, 2: Out, 3: Transfer)
@@ -134,7 +294,7 @@ router.get(
  * @query {number} [limit=10] - Number of items per page (max 100)
  * @returns {Object} Array of movements with pagination info
  * @example
- * GET /api/v1/inventory/movements/type/1?page=1&limit=10
+ * GET /v1/inventory/movements/type/1?page=1&limit=10
  * Response: {
  *   "success": true,
  *   "data": [...],
@@ -161,7 +321,7 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/user/:userId
+ * @route GET /v1/inventory/movements/user/:userId
  * @desc Get all movements by user ID
  * @access Private (requires authentication and company context)
  * @param {number} userId - The ID of the user
@@ -169,7 +329,7 @@ router.get(
  * @query {number} [limit=10] - Number of items per page (max 100)
  * @returns {Object} Array of movements with pagination info
  * @example
- * GET /api/v1/inventory/movements/user/101?page=1&limit=10
+ * GET /v1/inventory/movements/user/101?page=1&limit=10
  * Response: {
  *   "success": true,
  *   "data": [...],
@@ -196,7 +356,7 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/statistics
+ * @route GET /v1/inventory/movements/statistics
  * @desc Get movement statistics
  * @access Private (requires authentication and company context)
  * @query {string} [startDate] - Start date for filtering (ISO format)
@@ -204,7 +364,7 @@ router.get(
  * @query {number} [movement_type] - Movement type filter (1, 2, or 3)
  * @returns {Object} Movement statistics
  * @example
- * GET /api/v1/inventory/movements/statistics?startDate=2024-01-01&endDate=2024-12-31
+ * GET /v1/inventory/movements/statistics?startDate=2024-01-01&endDate=2024-12-31
  * Response: {
  *   "success": true,
  *   "data": {
@@ -232,7 +392,7 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/date-range/:startDate/:endDate
+ * @route GET /v1/inventory/movements/date-range/:startDate/:endDate
  * @desc Get movements by date range
  * @access Private (requires authentication and company context)
  * @param {string} startDate - Start date (YYYY-MM-DD format)
@@ -241,7 +401,7 @@ router.get(
  * @query {number} [limit=10] - Number of items per page (max 100)
  * @returns {Object} Array of movements with pagination info
  * @example
- * GET /api/v1/inventory/movements/date-range/2024-01-01/2024-12-31?page=1&limit=10
+ * GET /v1/inventory/movements/date-range/2024-01-01/2024-12-31?page=1&limit=10
  * Response: {
  *   "success": true,
  *   "data": [...],
@@ -269,7 +429,7 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/related-doc/:relatedDoc
+ * @route GET /v1/inventory/movements/related-doc/:relatedDoc
  * @desc Get movements by related document
  * @access Private (requires authentication and company context)
  * @param {string} relatedDoc - The related document identifier
@@ -277,7 +437,7 @@ router.get(
  * @query {number} [limit=10] - Number of items per page (max 100)
  * @returns {Object} Array of movements with pagination info
  * @example
- * GET /api/v1/inventory/movements/related-doc/INV-2024-001?page=1&limit=10
+ * GET /v1/inventory/movements/related-doc/INV-2024-001?page=1&limit=10
  * Response: {
  *   "success": true,
  *   "data": [...],
@@ -304,13 +464,13 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/latest
+ * @route GET /v1/inventory/movements/latest
  * @desc Get latest movements
  * @access Private (requires authentication and company context)
  * @query {number} [limit=10] - Number of latest movements to retrieve (max 100)
  * @returns {Object} Array of latest movements
  * @example
- * GET /api/v1/inventory/movements/latest?limit=5
+ * GET /v1/inventory/movements/latest?limit=5
  * Response: {
  *   "success": true,
  *   "data": [...],
@@ -329,34 +489,81 @@ router.get(
 );
 
 /**
- * @route POST /api/v1/inventory/movements
- * @desc Create a new inventory movement
- * @access Private (requires authentication and company context)
- * @body {Object} movementData - The movement data
- * @body {number} movementData.id_inv_storage - The storage location ID (required)
- * @body {number} movementData.inv_var_id - The inventory variant ID (required)
- * @body {number} [movementData.inv_lot_id] - The inventory lot ID (optional)
- * @body {number} movementData.movement_type - The movement type (required, 1: In, 2: Out, 3: Transfer)
- * @body {number} movementData.quantity - The quantity of the movement (required)
- * @body {string} [movementData.movement_reason] - The reason for the movement (optional)
- * @body {string} [movementData.related_doc] - The related document (optional, max 100 chars)
- * @returns {Object} The created movement
- * @example
- * POST /api/v1/inventory/movements
- * Body: {
- *   "id_inv_storage": 789,
- *   "inv_var_id": 123,
- *   "inv_lot_id": 456,
- *   "movement_type": 1,
- *   "quantity": 50.5,
- *   "movement_reason": "Stock replenishment",
- *   "related_doc": "INV-2024-001"
- * }
- * Response: {
- *   "success": true,
- *   "data": {...},
- *   "message": "Inventory movement created"
- * }
+ * @swagger
+ * /v1/inventory/movements:
+ *   post:
+ *     summary: Create a new inventory movement
+ *     description: Creates a new inventory movement (in, out, or transfer)
+ *     tags: [inventory-movements]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - id_inv_storage
+ *               - inv_var_id
+ *               - movement_type
+ *               - quantity
+ *             properties:
+ *               id_inv_storage:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Storage location ID
+ *                 example: 789
+ *               inv_var_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Inventory variant ID
+ *                 example: 123
+ *               inv_lot_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Inventory lot ID (optional)
+ *                 example: 456
+ *               movement_type:
+ *                 type: integer
+ *                 enum: [1, 2, 3]
+ *                 description: Movement type (1=In, 2=Out, 3=Transfer)
+ *                 example: 1
+ *               quantity:
+ *                 type: number
+ *                 description: Quantity of the movement
+ *                 example: 50.5
+ *               movement_reason:
+ *                 type: string
+ *                 description: Reason for the movement
+ *                 example: Stock replenishment
+ *               related_doc:
+ *                 type: string
+ *                 maxLength: 100
+ *                 description: Related document reference
+ *                 example: INV-2024-001
+ *     responses:
+ *       201:
+ *         description: Inventory movement created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Inventory movement created
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
  */
 router.post(
     "/",
@@ -376,7 +583,7 @@ router.post(
 );
 
 /**
- * @route PUT /api/v1/inventory/movements/:id
+ * @route PUT /v1/inventory/movements/:id
  * @desc Update an existing inventory movement
  * @access Private (requires authentication and company context)
  * @param {number} id - The ID of the movement
@@ -390,7 +597,7 @@ router.post(
  * @body {string} [movementData.related_doc] - The related document (optional, max 100 chars)
  * @returns {Object} The updated movement
  * @example
- * PUT /api/v1/inventory/movements/101
+ * PUT /v1/inventory/movements/101
  * Body: {
  *   "quantity": 75.0,
  *   "movement_reason": "Updated reason",
@@ -421,13 +628,13 @@ router.put(
 );
 
 /**
- * @route DELETE /api/v1/inventory/movements/:id
+ * @route DELETE /v1/inventory/movements/:id
  * @desc Delete an existing inventory movement
  * @access Private (requires authentication and company context)
  * @param {number} id - The ID of the movement
  * @returns {Object} Success message
  * @example
- * DELETE /api/v1/inventory/movements/101
+ * DELETE /v1/inventory/movements/101
  * Response: {
  *   "success": true,
  *   "message": "Inventory movement deleted"

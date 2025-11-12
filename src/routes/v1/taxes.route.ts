@@ -14,6 +14,69 @@ export enum TaxTypeEnum {
 
 const router = Router();
 
+/**
+ * @swagger
+ * /v1/taxes:
+ *   get:
+ *     summary: Get all taxes for the company
+ *     description: Retrieves all tax configurations for the authenticated company
+ *     tags: [taxes]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Taxes retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       tax_id:
+ *                         type: integer
+ *                         example: 1
+ *                       tax_code:
+ *                         type: string
+ *                         example: IVA
+ *                       tax_name:
+ *                         type: string
+ *                         example: Value Added Tax
+ *                       tax_description:
+ *                         type: string
+ *                         example: Standard VAT rate
+ *                       tax_type:
+ *                         type: integer
+ *                         example: 2
+ *                       tax_value:
+ *                         type: number
+ *                         example: 16.0
+ *                       tax_status:
+ *                         type: integer
+ *                         example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Taxes retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ */
 router.get('/',
     [
         authMiddleware,
@@ -21,6 +84,123 @@ router.get('/',
     ],
     TaxesController.getTaxesByCompany);
 
+/**
+ * @swagger
+ * /v1/taxes:
+ *   post:
+ *     summary: Create a new tax
+ *     description: Creates a new tax configuration for the company
+ *     tags: [taxes]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tax_code
+ *               - tax_name
+ *               - tax_type
+ *               - tax_value
+ *             properties:
+ *               tax_code:
+ *                 type: string
+ *                 description: Tax code
+ *                 example: IVA
+ *               tax_name:
+ *                 type: string
+ *                 description: Tax name
+ *                 example: Value Added Tax
+ *               tax_description:
+ *                 type: string
+ *                 description: Tax description
+ *                 example: Standard VAT rate
+ *               tax_type:
+ *                 type: integer
+ *                 enum: [1, 2, 3]
+ *                 description: Tax type (1=exempt, 2=percent, 3=fixed)
+ *                 example: 2
+ *               tax_value:
+ *                 type: number
+ *                 format: float
+ *                 minimum: 0
+ *                 description: Tax value
+ *                 example: 16.0
+ *     responses:
+ *       201:
+ *         description: Tax created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     tax_id:
+ *                       type: integer
+ *                       example: 1
+ *                     tax_code:
+ *                       type: string
+ *                       example: IVA
+ *                     tax_name:
+ *                       type: string
+ *                       example: Value Added Tax
+ *                     tax_description:
+ *                       type: string
+ *                       example: Standard VAT rate
+ *                     tax_type:
+ *                       type: integer
+ *                       example: 2
+ *                     tax_value:
+ *                       type: number
+ *                       example: 16.0
+ *                     tax_status:
+ *                       type: integer
+ *                       example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Tax created successfully
+ *       400:
+ *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: tax_type
+ *                       message:
+ *                         type: string
+ *                         example: tax_type must be 1 (exempt), 2 (percent) or 3 (fixed)
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ */
 router.post('/',
     [
         authMiddleware,
@@ -46,6 +226,54 @@ router.post('/',
     ],
     TaxesController.create);
 
+/**
+ * @swagger
+ * /v1/taxes/{id}:
+ *   put:
+ *     summary: Update a tax (full update)
+ *     tags: [taxes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the tax
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - tax_name
+ *               - tax_type
+ *               - tax_value
+ *             properties:
+ *               tax_name:
+ *                 type: string
+ *               tax_description:
+ *                 type: string
+ *               tax_type:
+ *                 type: integer
+ *                 enum: [1, 2, 3]
+ *                 description: Tax type (1=exempt, 2=percent, 3=fixed)
+ *               tax_value:
+ *                 type: number
+ *                 format: float
+ *                 minimum: 0
+ *     responses:
+ *       200:
+ *         description: Tax updated successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Tax not found
+ */
 router.put('/:id',
     [
         authMiddleware,
@@ -69,6 +297,50 @@ router.put('/:id',
     ],
     TaxesController.update);
 
+/**
+ * @swagger
+ * /v1/taxes/{id}:
+ *   patch:
+ *     summary: Update a tax (partial update)
+ *     tags: [taxes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the tax
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tax_name:
+ *                 type: string
+ *               tax_description:
+ *                 type: string
+ *               tax_type:
+ *                 type: integer
+ *                 enum: [1, 2, 3]
+ *                 description: Tax type (1=exempt, 2=percent, 3=fixed)
+ *               tax_value:
+ *                 type: number
+ *                 format: float
+ *                 minimum: 0
+ *     responses:
+ *       200:
+ *         description: Tax updated successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Tax not found
+ */
 router.patch('/:id',
     [
         authMiddleware,

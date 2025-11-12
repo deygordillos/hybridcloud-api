@@ -6,10 +6,199 @@ import { findAllCoins, assignCoinsToCompanies, assignCoinsToSucursales } from '.
 
 const router = Router();
 
+/**
+ * @swagger
+ * /v1/coins:
+ *   get:
+ *     summary: Get all coins
+ *     description: Retrieves a list of all available currencies/coins with optional pagination and company filter
+ *     tags: [coins]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: offset
+ *         schema:
+ *           type: integer
+ *           minimum: 0
+ *           default: 0
+ *         description: Number of records to skip for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Maximum number of records to return
+ *       - in: query
+ *         name: company_id
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Filter coins by company ID
+ *     responses:
+ *       200:
+ *         description: List of coins retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       coin_id:
+ *                         type: integer
+ *                         example: 1
+ *                       coin_code:
+ *                         type: string
+ *                         example: "USD"
+ *                       coin_name:
+ *                         type: string
+ *                         example: "US Dollar"
+ *                       coin_symbol:
+ *                         type: string
+ *                         example: "$"
+ *                       coin_status:
+ *                         type: integer
+ *                         example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Coins retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ */
 router.get('/',
     checkJwtMiddleware,
     findAllCoins);
 
+/**
+ * @swagger
+ * /v1/coins/assign_to_company/{company_id}:
+ *   put:
+ *     summary: Assign coins to a company
+ *     description: Assigns multiple coins with their conversion factors to a specific company
+ *     tags: [coins]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: company_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the company
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - coins
+ *             properties:
+ *               coins:
+ *                 type: array
+ *                 minItems: 1
+ *                 description: Array of coins to assign
+ *                 items:
+ *                   type: object
+ *                   required:
+ *                     - id
+ *                     - factor
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       description: Coin ID
+ *                       example: 1
+ *                     factor:
+ *                       type: number
+ *                       format: float
+ *                       description: Conversion factor
+ *                       example: 1.25
+ *     responses:
+ *       200:
+ *         description: Coins assigned successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     company_id:
+ *                       type: integer
+ *                       example: 1
+ *                     assigned_coins:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           coin_id:
+ *                             type: integer
+ *                             example: 1
+ *                           factor:
+ *                             type: number
+ *                             example: 1.25
+ *                 message:
+ *                   type: string
+ *                   example: Coins assigned to company successfully
+ *       400:
+ *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: coins
+ *                       message:
+ *                         type: string
+ *                         example: El campo "coins" debe ser un array de números con al menos un elemento
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ */
 router.put('/assign_to_company/:company_id', checkJwtMiddleware,
     [
         check('coins').isArray().notEmpty().isLength({ min: 1 }).withMessage('El campo "coins" debe ser un array de números con al menos un elemento')
@@ -31,6 +220,52 @@ router.put('/assign_to_company/:company_id', checkJwtMiddleware,
     validatorRequestMiddleware,
     assignCoinsToCompanies);
 
+/**
+ * @swagger
+ * /v1/coins/{coin_id}/assign/{company_id}/sucursales:
+ *   put:
+ *     summary: Assign coin to company branches
+ *     description: Assigns a specific coin to multiple branches (sucursales) of a company
+ *     tags: [coins]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: coin_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the coin
+ *       - in: path
+ *         name: company_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the company
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - sucursal_id
+ *             properties:
+ *               sucursal_id:
+ *                 type: array
+ *                 minItems: 1
+ *                 description: Array of branch IDs (no duplicates allowed)
+ *                 items:
+ *                   type: integer
+ *                 example: [1, 2, 3]
+ *     responses:
+ *       200:
+ *         description: Coin assigned to branches successfully
+ *       400:
+ *         description: Invalid input data or duplicate branch IDs
+ *       401:
+ *         description: Unauthorized
+ */
 router.put('/:coin_id/assign/:company_id/sucursales', checkJwtMiddleware,
     [
         // Valida que "sucursal_id" sea un array

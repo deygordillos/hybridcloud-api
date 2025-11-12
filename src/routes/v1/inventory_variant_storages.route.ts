@@ -20,26 +20,145 @@ import { body, param, query } from "express-validator";
 const router = Router();
 
 /**
- * @route GET /api/v1/inventory/variant-storages/variant/:variantId
- * @desc Get all variant storages for a specific inventory variant
- * @access Private (requires authentication and company context)
- * @param {number} variantId - The ID of the inventory variant
- * @query {number} [page=1] - Page number for pagination
- * @query {number} [limit=10] - Number of items per page (max 100)
- * @returns {Object} Array of variant storages with pagination info
- * @example
- * GET /api/v1/inventory/variant-storages/variant/123?page=1&limit=10
- * Response: {
- *   "success": true,
- *   "data": [...],
- *   "pagination": {
- *     "total": 25,
- *     "perPage": 10,
- *     "currentPage": 1,
- *     "lastPage": 3
- *   },
- *   "message": "Variant storages found"
- * }
+ * @swagger
+ * /v1/inventory/variant-storages/variant/{variantId}:
+ *   get:
+ *     summary: Get all variant storages for a specific variant
+ *     description: Retrieves all storage locations for a specific inventory variant with pagination
+ *     tags: [inventory-variant-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: variantId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory variant ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: Variant storages found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       inv_var_sto_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 10
+ *                       inv_sto_id:
+ *                         type: integer
+ *                         example: 2
+ *                       var_sto_current_stock:
+ *                         type: number
+ *                         example: 500
+ *                       var_sto_reserved_stock:
+ *                         type: number
+ *                         example: 50
+ *                       var_sto_committed_stock:
+ *                         type: number
+ *                         example: 100
+ *                       var_sto_previous_stock:
+ *                         type: number
+ *                         example: 450
+ *                       var_sto_minimum_stock:
+ *                         type: number
+ *                         example: 100
+ *                       storage_name:
+ *                         type: string
+ *                         example: "Main Warehouse"
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 15
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 2
+ *                 message:
+ *                   type: string
+ *                   example: Variant storages found
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: variantId
+ *                       message:
+ *                         type: string
+ *                         example: Variant ID must be a positive integer
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ *       403:
+ *         description: Forbidden - Company context required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Company context is required
  */
 router.get(
     "/variant/:variantId",
@@ -55,26 +174,53 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/variant-storages/variant/:variantId/storage/:storageId
- * @desc Get a specific variant storage by variant ID and storage ID
- * @access Private (requires authentication and company context)
- * @param {number} variantId - The ID of the inventory variant
- * @param {number} storageId - The ID of the storage location
- * @returns {Object} The variant storage details
- * @example
- * GET /api/v1/inventory/variant-storages/variant/123/storage/456
- * Response: {
- *   "success": true,
- *   "data": {
- *     "inv_var_storage_id": 789,
- *     "inv_var_id": 123,
- *     "id_inv_storage": 456,
- *     "inv_vs_stock": 100.5,
- *     "inv_vs_stock_reserved": 10.0,
- *     ...
- *   },
- *   "message": "Variant storage found"
- * }
+ * @swagger
+ * /v1/inventory/variant-storages/variant/{variantId}/storage/{storageId}:
+ *   get:
+ *     summary: Get a specific variant storage
+ *     description: Retrieves a specific variant storage by variant ID and storage ID
+ *     tags: [inventory-variant-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: variantId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory variant ID
+ *       - in: path
+ *         name: storageId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Storage location ID
+ *     responses:
+ *       200:
+ *         description: Variant storage found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Variant storage found
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
+ *       404:
+ *         description: Variant storage not found
  */
 router.get(
     "/variant/:variantId/storage/:storageId",
@@ -89,25 +235,63 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/variant-storages/variant/:variantId/stock-summary
- * @desc Get stock summary for a specific inventory variant
- * @access Private (requires authentication and company context)
- * @param {number} variantId - The ID of the inventory variant
- * @returns {Object} Stock summary statistics across all storage locations
- * @example
- * GET /api/v1/inventory/variant-storages/variant/123/stock-summary
- * Response: {
- *   "success": true,
- *   "data": {
- *     "total_stock": 500.5,
- *     "total_reserved": 50.0,
- *     "total_committed": 25.0,
- *     "total_prev": 450.0,
- *     "total_min": 100.0,
- *     "storage_locations": 3
- *   },
- *   "message": "Stock summary found"
- * }
+ * @swagger
+ * /v1/inventory/variant-storages/variant/{variantId}/stock-summary:
+ *   get:
+ *     summary: Get stock summary for a variant
+ *     description: Retrieves stock summary statistics across all storage locations for a variant
+ *     tags: [inventory-variant-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: variantId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory variant ID
+ *     responses:
+ *       200:
+ *         description: Stock summary found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     total_stock:
+ *                       type: number
+ *                       example: 500.5
+ *                     total_reserved:
+ *                       type: number
+ *                       example: 50.0
+ *                     total_committed:
+ *                       type: number
+ *                       example: 25.0
+ *                     total_prev:
+ *                       type: number
+ *                       example: 450.0
+ *                     total_min:
+ *                       type: number
+ *                       example: 100.0
+ *                     storage_locations:
+ *                       type: integer
+ *                       example: 3
+ *                 message:
+ *                   type: string
+ *                   example: Stock summary found
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
  */
 router.get(
     "/variant/:variantId/stock-summary",
@@ -121,26 +305,63 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/variant-storages/location/:storageId
- * @desc Get all variant storages for a specific storage location
- * @access Private (requires authentication and company context)
- * @param {number} storageId - The ID of the storage location
- * @query {number} [page=1] - Page number for pagination
- * @query {number} [limit=10] - Number of items per page (max 100)
- * @returns {Object} Array of variant storages with pagination info
- * @example
- * GET /api/v1/inventory/variant-storages/location/456?page=1&limit=10
- * Response: {
- *   "success": true,
- *   "data": [...],
- *   "pagination": {
- *     "total": 15,
- *     "perPage": 10,
- *     "currentPage": 1,
- *     "lastPage": 2
- *   },
- *   "message": "Location storages found"
- * }
+ * @swagger
+ * /v1/inventory/variant-storages/location/{storageId}:
+ *   get:
+ *     summary: Get all variant storages for a location
+ *     description: Retrieves all inventory variants at a specific storage location with pagination
+ *     tags: [inventory-variant-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: storageId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Storage location ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: Location storages found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                 pagination:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Location storages found
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
  */
 router.get(
     "/location/:storageId",
@@ -156,32 +377,75 @@ router.get(
 );
 
 /**
- * @route POST /api/v1/inventory/variant-storages
- * @desc Create a new variant storage
- * @access Private (requires authentication and company context)
- * @body {Object} storageData - The variant storage data
- * @body {number} storageData.inv_var_id - The inventory variant ID (required)
- * @body {number} storageData.id_inv_storage - The storage location ID (required)
- * @body {number} storageData.inv_vs_stock - The current stock level (required)
- * @body {number} [storageData.inv_vs_stock_reserved] - The reserved stock level (optional)
- * @body {number} [storageData.inv_vs_stock_committed] - The committed stock level (optional)
- * @body {number} [storageData.inv_vs_stock_prev] - The previous stock level (optional)
- * @body {number} [storageData.inv_vs_stock_min] - The minimum stock level (optional)
- * @returns {Object} The created variant storage
- * @example
- * POST /api/v1/inventory/variant-storages
- * Body: {
- *   "inv_var_id": 123,
- *   "id_inv_storage": 456,
- *   "inv_vs_stock": 100.5,
- *   "inv_vs_stock_reserved": 10.0,
- *   "inv_vs_stock_min": 20.0
- * }
- * Response: {
- *   "success": true,
- *   "data": {...},
- *   "message": "Variant storage created"
- * }
+ * @swagger
+ * /v1/inventory/variant-storages:
+ *   post:
+ *     summary: Create a new variant storage
+ *     description: Creates a new variant storage entry for a specific variant and storage location
+ *     tags: [inventory-variant-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - inv_var_id
+ *               - id_inv_storage
+ *               - inv_vs_stock
+ *             properties:
+ *               inv_var_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Inventory variant ID
+ *                 example: 123
+ *               id_inv_storage:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Storage location ID
+ *                 example: 456
+ *               inv_vs_stock:
+ *                 type: number
+ *                 description: Current stock level
+ *                 example: 100.5
+ *               inv_vs_stock_reserved:
+ *                 type: number
+ *                 description: Reserved stock level
+ *                 example: 10.0
+ *               inv_vs_stock_committed:
+ *                 type: number
+ *                 description: Committed stock level
+ *               inv_vs_stock_prev:
+ *                 type: number
+ *                 description: Previous stock level
+ *               inv_vs_stock_min:
+ *                 type: number
+ *                 description: Minimum stock level
+ *                 example: 20.0
+ *     responses:
+ *       201:
+ *         description: Variant storage created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Variant storage created
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
  */
 router.post(
     "/",
@@ -201,31 +465,76 @@ router.post(
 );
 
 /**
- * @route PUT /api/v1/inventory/variant-storages/:id
- * @desc Update an existing variant storage
- * @access Private (requires authentication and company context)
- * @param {number} id - The ID of the variant storage
- * @body {Object} storageData - The variant storage data to update
- * @body {number} [storageData.inv_var_id] - The inventory variant ID (optional)
- * @body {number} [storageData.id_inv_storage] - The storage location ID (optional)
- * @body {number} [storageData.inv_vs_stock] - The current stock level (optional)
- * @body {number} [storageData.inv_vs_stock_reserved] - The reserved stock level (optional)
- * @body {number} [storageData.inv_vs_stock_committed] - The committed stock level (optional)
- * @body {number} [storageData.inv_vs_stock_prev] - The previous stock level (optional)
- * @body {number} [storageData.inv_vs_stock_min] - The minimum stock level (optional)
- * @returns {Object} The updated variant storage
- * @example
- * PUT /api/v1/inventory/variant-storages/789
- * Body: {
- *   "inv_vs_stock": 150.0,
- *   "inv_vs_stock_reserved": 15.0,
- *   "inv_vs_stock_min": 25.0
- * }
- * Response: {
- *   "success": true,
- *   "data": {...},
- *   "message": "Variant storage updated"
- * }
+ * @swagger
+ * /v1/inventory/variant-storages/{id}:
+ *   put:
+ *     summary: Update a variant storage
+ *     description: Updates an existing variant storage entry
+ *     tags: [inventory-variant-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Variant storage ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               inv_var_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Inventory variant ID
+ *               id_inv_storage:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Storage location ID
+ *               inv_vs_stock:
+ *                 type: number
+ *                 description: Current stock level
+ *               inv_vs_stock_reserved:
+ *                 type: number
+ *                 description: Reserved stock level
+ *               inv_vs_stock_committed:
+ *                 type: number
+ *                 description: Committed stock level
+ *               inv_vs_stock_prev:
+ *                 type: number
+ *                 description: Previous stock level
+ *               inv_vs_stock_min:
+ *                 type: number
+ *                 description: Minimum stock level
+ *     responses:
+ *       200:
+ *         description: Variant storage updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Variant storage updated
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
+ *       404:
+ *         description: Variant storage not found
  */
 router.put(
     "/:id",
@@ -246,13 +555,13 @@ router.put(
 );
 
 /**
- * @route DELETE /api/v1/inventory/variant-storages/:id
+ * @route DELETE /v1/inventory/variant-storages/:id
  * @desc Delete an existing variant storage
  * @access Private (requires authentication and company context)
  * @param {number} id - The ID of the variant storage
  * @returns {Object} Success message
  * @example
- * DELETE /api/v1/inventory/variant-storages/789
+ * DELETE /v1/inventory/variant-storages/789
  * Response: {
  *   "success": true,
  *   "message": "Variant storage deleted"
@@ -270,30 +579,78 @@ router.put(
 // );
 
 /**
- * @route PATCH /api/v1/inventory/variant-storages/variant/:variantId/storage/:storageId/stock
- * @desc Update stock levels for a specific variant storage
- * @access Private (requires authentication and company context)
- * @param {number} variantId - The ID of the inventory variant
- * @param {number} storageId - The ID of the storage location
- * @body {Object} stockData - The stock data to update
- * @body {number} [stockData.inv_vs_stock] - The current stock level (optional)
- * @body {number} [stockData.inv_vs_stock_reserved] - The reserved stock level (optional)
- * @body {number} [stockData.inv_vs_stock_committed] - The committed stock level (optional)
- * @body {number} [stockData.inv_vs_stock_prev] - The previous stock level (optional)
- * @body {number} [stockData.inv_vs_stock_min] - The minimum stock level (optional)
- * @returns {Object} The updated variant storage
- * @example
- * PATCH /api/v1/inventory/variant-storages/variant/123/storage/456/stock
- * Body: {
- *   "inv_vs_stock": 200.0,
- *   "inv_vs_stock_reserved": 20.0,
- *   "inv_vs_stock_min": 30.0
- * }
- * Response: {
- *   "success": true,
- *   "data": {...},
- *   "message": "Stock updated successfully"
- * }
+ * @swagger
+ * /v1/inventory/variant-storages/variant/{variantId}/storage/{storageId}/stock:
+ *   patch:
+ *     summary: Update stock levels for a variant storage
+ *     description: Updates stock levels for a specific variant at a specific storage location
+ *     tags: [inventory-variant-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: variantId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory variant ID
+ *       - in: path
+ *         name: storageId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Storage location ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               inv_vs_stock:
+ *                 type: number
+ *                 description: Current stock level
+ *                 example: 200.0
+ *               inv_vs_stock_reserved:
+ *                 type: number
+ *                 description: Reserved stock level
+ *                 example: 20.0
+ *               inv_vs_stock_committed:
+ *                 type: number
+ *                 description: Committed stock level
+ *               inv_vs_stock_prev:
+ *                 type: number
+ *                 description: Previous stock level
+ *               inv_vs_stock_min:
+ *                 type: number
+ *                 description: Minimum stock level
+ *                 example: 30.0
+ *     responses:
+ *       200:
+ *         description: Stock updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Stock updated successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
+ *       404:
+ *         description: Variant storage not found
  */
 router.patch(
     "/variant/:variantId/storage/:storageId/stock",

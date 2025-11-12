@@ -7,6 +7,69 @@ import { InventoryFamilyController } from '../../controllers/inventoryFamily.con
 
 const router = Router();
 
+/**
+ * @swagger
+ * /v1/inventory/family:
+ *   get:
+ *     summary: Get all inventory families for the company
+ *     description: Retrieves all inventory family configurations for the authenticated company
+ *     tags: [inventory-family]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Inventory families retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       inv_family_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_family_code:
+ *                         type: string
+ *                         example: FAM001
+ *                       inv_family_name:
+ *                         type: string
+ *                         example: Electronics
+ *                       inv_family_status:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_is_stockable:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_is_lot_managed:
+ *                         type: integer
+ *                         example: 0
+ *                       tax_id:
+ *                         type: integer
+ *                         example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Inventory families retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ */
 router.get('/',
     [
         authMiddleware,
@@ -14,6 +77,126 @@ router.get('/',
     ],
     InventoryFamilyController.getInventoryFamiliesByCompany);
 
+/**
+ * @swagger
+ * /v1/inventory/family:
+ *   post:
+ *     summary: Create a new inventory family
+ *     description: Creates a new inventory family with product configuration settings
+ *     tags: [inventory-family]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - inv_family_code
+ *               - inv_family_name
+ *             properties:
+ *               inv_family_code:
+ *                 type: string
+ *                 description: Family code
+ *                 example: FAM001
+ *               inv_family_name:
+ *                 type: string
+ *                 maxLength: 80
+ *                 description: Family name
+ *                 example: Electronics
+ *               inv_family_status:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Status (0=inactive, 1=active)
+ *                 example: 1
+ *               inv_is_stockable:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Is stockable (0=no, 1=yes)
+ *                 example: 1
+ *               inv_is_lot_managed:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Is lot managed (0=no, 1=yes)
+ *                 example: 0
+ *               tax_id:
+ *                 type: integer
+ *                 description: Tax ID
+ *                 example: 1
+ *     responses:
+ *       201:
+ *         description: Inventory family created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_family_id:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_family_code:
+ *                       type: string
+ *                       example: FAM001
+ *                     inv_family_name:
+ *                       type: string
+ *                       example: Electronics
+ *                     inv_family_status:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_is_stockable:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_is_lot_managed:
+ *                       type: integer
+ *                       example: 0
+ *                     tax_id:
+ *                       type: integer
+ *                       example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Inventory family created successfully
+ *       400:
+ *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: inv_family_code
+ *                       message:
+ *                         type: string
+ *                         example: inv_family_code is required
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ */
 router.post('/',
     [
         authMiddleware,
@@ -39,6 +222,47 @@ router.post('/',
     ],
     InventoryFamilyController.create);
 
+/**
+ * @swagger
+ * /v1/inventory/family/{id}:
+ *   put:
+ *     summary: Update an inventory family (full update)
+ *     tags: [inventory-family]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the inventory family
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               inv_family_status:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *               inv_is_stockable:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *               inv_is_lot_managed:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *     responses:
+ *       200:
+ *         description: Inventory family updated successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Inventory family not found
+ */
 router.put('/:id', 
     [
         authMiddleware,
@@ -53,6 +277,47 @@ router.put('/:id',
     ],
     InventoryFamilyController.update);
 
+/**
+ * @swagger
+ * /v1/inventory/family/{id}:
+ *   patch:
+ *     summary: Update an inventory family (partial update)
+ *     tags: [inventory-family]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the inventory family
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               inv_family_status:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *               inv_is_stockable:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *               inv_is_lot_managed:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *     responses:
+ *       200:
+ *         description: Inventory family updated successfully
+ *       400:
+ *         description: Invalid input data
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Inventory family not found
+ */
 router.patch('/:id', 
     [
         authMiddleware,

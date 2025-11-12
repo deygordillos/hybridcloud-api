@@ -20,26 +20,106 @@ import { body, param, query } from "express-validator";
 const router = Router();
 
 /**
- * @route GET /api/v1/inventory/lots-storages/variant/:variantId
- * @desc Get all lot storages for a specific inventory variant
- * @access Private (requires authentication and company context)
- * @param {number} variantId - The ID of the inventory variant
- * @query {number} [page=1] - Page number for pagination
- * @query {number} [limit=10] - Number of items per page (max 100)
- * @returns {Object} Array of lot storages with pagination info
- * @example
- * GET /api/v1/inventory/lots-storages/variant/123?page=1&limit=10
- * Response: {
- *   "success": true,
- *   "data": [...],
- *   "pagination": {
- *     "total": 25,
- *     "perPage": 10,
- *     "currentPage": 1,
- *     "lastPage": 3
- *   },
- *   "message": "Lot storages found"
- * }
+ * @swagger
+ * /v1/inventory/lots-storages/variant/{variantId}:
+ *   get:
+ *     summary: Get all lot storages for a specific inventory variant
+ *     tags: [inventory-lots-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: variantId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the inventory variant
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Items per page
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       inv_ls_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 10
+ *                       inv_lot_id:
+ *                         type: integer
+ *                         example: 5
+ *                       id_inv_storage:
+ *                         type: integer
+ *                         example: 2
+ *                       inv_ls_stock:
+ *                         type: number
+ *                         example: 100.5
+ *                       inv_ls_stock_reserved:
+ *                         type: number
+ *                         example: 10.0
+ *                       inv_ls_stock_committed:
+ *                         type: number
+ *                         example: 5.0
+ *                       inv_ls_stock_prev:
+ *                         type: number
+ *                         example: 95.0
+ *                       inv_ls_stock_min:
+ *                         type: number
+ *                         example: 20.0
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 15
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 2
+ *                 message:
+ *                   type: string
+ *                   example: Lot storages retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.get(
     "/variant/:variantId",
@@ -55,26 +135,128 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/lots-storages/lot/:lotId
- * @desc Get all lot storages for a specific inventory lot
- * @access Private (requires authentication and company context)
- * @param {number} lotId - The ID of the inventory lot
- * @query {number} [page=1] - Page number for pagination
- * @query {number} [limit=10] - Number of items per page (max 100)
- * @returns {Object} Array of lot storages with pagination info
- * @example
- * GET /api/v1/inventory/lots-storages/lot/456?page=1&limit=10
- * Response: {
- *   "success": true,
- *   "data": [...],
- *   "pagination": {
- *     "total": 15,
- *     "perPage": 10,
- *     "currentPage": 1,
- *     "lastPage": 2
- *   },
- *   "message": "Lot storages found"
- * }
+ * @swagger
+ * /v1/inventory/lots-storages/lot/{lotId}:
+ *   get:
+ *     summary: Get all lot storages for a specific inventory lot
+ *     tags: [inventory-lots-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: lotId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The ID of the inventory lot
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: Lot storages found successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       inv_ls_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 10
+ *                       inv_lot_id:
+ *                         type: integer
+ *                         example: 5
+ *                       id_inv_storage:
+ *                         type: integer
+ *                         example: 2
+ *                       inv_ls_stock:
+ *                         type: number
+ *                         example: 100.5
+ *                       inv_ls_stock_reserved:
+ *                         type: number
+ *                         example: 10.0
+ *                       inv_ls_stock_committed:
+ *                         type: number
+ *                         example: 5.0
+ *                       storage_name:
+ *                         type: string
+ *                         example: Main Warehouse
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 8
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Lot storages found successfully
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ *       400:
+ *         description: Invalid parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: lotId
+ *                       message:
+ *                         type: string
+ *                         example: Lot ID must be a positive integer
  */
 router.get(
     "/lot/:lotId",
@@ -90,27 +272,98 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/lots-storages/lot/:lotId/storage/:storageId
- * @desc Get a specific lot storage by lot ID and storage ID
- * @access Private (requires authentication and company context)
- * @param {number} lotId - The ID of the inventory lot
- * @param {number} storageId - The ID of the storage location
- * @returns {Object} The lot storage details
- * @example
- * GET /api/v1/inventory/lots-storages/lot/456/storage/789
- * Response: {
- *   "success": true,
- *   "data": {
- *     "inv_lot_storage_id": 101,
- *     "inv_var_id": 123,
- *     "inv_lot_id": 456,
- *     "id_inv_storage": 789,
- *     "inv_ls_stock": 50.5,
- *     "inv_ls_stock_reserved": 5.0,
- *     ...
- *   },
- *   "message": "Lot storage found"
- * }
+ * @swagger
+ * /v1/inventory/lots-storages/lot/{lotId}/storage/{storageId}:
+ *   get:
+ *     summary: Get a specific lot storage by lot ID and storage ID
+ *     tags: [inventory-lots-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: lotId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The ID of the inventory lot
+ *       - in: path
+ *         name: storageId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The ID of the storage location
+ *     responses:
+ *       200:
+ *         description: Lot storage found successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_ls_id:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_var_id:
+ *                       type: integer
+ *                       example: 10
+ *                     inv_lot_id:
+ *                       type: integer
+ *                       example: 5
+ *                     id_inv_storage:
+ *                       type: integer
+ *                       example: 2
+ *                     inv_ls_stock:
+ *                       type: number
+ *                       example: 100.5
+ *                     inv_ls_stock_reserved:
+ *                       type: number
+ *                       example: 10.0
+ *                     inv_ls_stock_committed:
+ *                       type: number
+ *                       example: 5.0
+ *                     inv_ls_stock_prev:
+ *                       type: number
+ *                       example: 95.0
+ *                     inv_ls_stock_min:
+ *                       type: number
+ *                       example: 20.0
+ *                 message:
+ *                   type: string
+ *                   example: Lot storage found successfully
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ *       404:
+ *         description: Lot storage not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Lot storage not found
  */
 router.get(
     "/lot/:lotId/storage/:storageId",
@@ -125,25 +378,83 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/lots-storages/lot/:lotId/stock-summary
- * @desc Get stock summary for a specific inventory lot
- * @access Private (requires authentication and company context)
- * @param {number} lotId - The ID of the inventory lot
- * @returns {Object} Stock summary statistics across all storage locations
- * @example
- * GET /api/v1/inventory/lots-storages/lot/456/stock-summary
- * Response: {
- *   "success": true,
- *   "data": {
- *     "total_stock": 250.5,
- *     "total_reserved": 25.0,
- *     "total_committed": 15.0,
- *     "total_prev": 200.0,
- *     "total_min": 50.0,
- *     "storage_locations": 2
- *   },
- *   "message": "Stock summary found"
- * }
+ * @swagger
+ * /v1/inventory/lots-storages/lot/{lotId}/stock-summary:
+ *   get:
+ *     summary: Get stock summary for a specific inventory lot
+ *     description: Returns aggregated stock statistics across all storage locations for the specified lot
+ *     tags: [inventory-lots-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: lotId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The ID of the inventory lot
+ *     responses:
+ *       200:
+ *         description: Stock summary retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_lot_id:
+ *                       type: integer
+ *                       example: 5
+ *                     total_stock:
+ *                       type: number
+ *                       example: 500.5
+ *                     total_reserved:
+ *                       type: number
+ *                       example: 50.0
+ *                     total_committed:
+ *                       type: number
+ *                       example: 25.0
+ *                     available_stock:
+ *                       type: number
+ *                       example: 425.5
+ *                     storage_locations:
+ *                       type: integer
+ *                       example: 3
+ *                 message:
+ *                   type: string
+ *                   example: Stock summary retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ *       404:
+ *         description: Lot not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Lot not found
  */
 router.get(
     "/lot/:lotId/stock-summary",
@@ -157,26 +468,125 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/lots-storages/location/:storageId
- * @desc Get all lot storages for a specific storage location
- * @access Private (requires authentication and company context)
- * @param {number} storageId - The ID of the storage location
- * @query {number} [page=1] - Page number for pagination
- * @query {number} [limit=10] - Number of items per page (max 100)
- * @returns {Object} Array of lot storages with pagination info
- * @example
- * GET /api/v1/inventory/lots-storages/location/789?page=1&limit=10
- * Response: {
- *   "success": true,
- *   "data": [...],
- *   "pagination": {
- *     "total": 20,
- *     "perPage": 10,
- *     "currentPage": 1,
- *     "lastPage": 2
- *   },
- *   "message": "Location storages found"
- * }
+ * @swagger
+ * /v1/inventory/lots-storages/location/{storageId}:
+ *   get:
+ *     summary: Get all lot storages for a specific storage location
+ *     tags: [inventory-lots-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: storageId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The ID of the storage location
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: Location storages found successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       inv_ls_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 10
+ *                       inv_lot_id:
+ *                         type: integer
+ *                         example: 5
+ *                       lot_number:
+ *                         type: string
+ *                         example: LOT-2025-001
+ *                       inv_ls_stock:
+ *                         type: number
+ *                         example: 100.5
+ *                       inv_ls_stock_reserved:
+ *                         type: number
+ *                         example: 10.0
+ *                       inv_ls_stock_committed:
+ *                         type: number
+ *                         example: 5.0
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 25
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 3
+ *                 message:
+ *                   type: string
+ *                   example: Location storages found successfully
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ *       400:
+ *         description: Invalid parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: storageId
+ *                       message:
+ *                         type: string
+ *                         example: Storage ID must be a positive integer
  */
 router.get(
     "/location/:storageId",
@@ -192,27 +602,135 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/lots-storages/variant/:variantId/lot/:lotId
- * @desc Get all lot storages for a specific variant and lot combination
- * @access Private (requires authentication and company context)
- * @param {number} variantId - The ID of the inventory variant
- * @param {number} lotId - The ID of the inventory lot
- * @query {number} [page=1] - Page number for pagination
- * @query {number} [limit=10] - Number of items per page (max 100)
- * @returns {Object} Array of lot storages with pagination info
- * @example
- * GET /api/v1/inventory/lots-storages/variant/123/lot/456?page=1&limit=10
- * Response: {
- *   "success": true,
- *   "data": [...],
- *   "pagination": {
- *     "total": 8,
- *     "perPage": 10,
- *     "currentPage": 1,
- *     "lastPage": 1
- *   },
- *   "message": "Variant lot storages found"
- * }
+ * @swagger
+ * /v1/inventory/lots-storages/variant/{variantId}/lot/{lotId}:
+ *   get:
+ *     summary: Get all lot storages for a specific variant and lot combination
+ *     tags: [inventory-lots-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: variantId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The ID of the inventory variant
+ *       - in: path
+ *         name: lotId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The ID of the inventory lot
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: Variant lot storages found successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       inv_ls_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 10
+ *                       inv_lot_id:
+ *                         type: integer
+ *                         example: 5
+ *                       id_inv_storage:
+ *                         type: integer
+ *                         example: 2
+ *                       storage_name:
+ *                         type: string
+ *                         example: Main Warehouse
+ *                       inv_ls_stock:
+ *                         type: number
+ *                         example: 100.5
+ *                       inv_ls_stock_reserved:
+ *                         type: number
+ *                         example: 10.0
+ *                       inv_ls_stock_committed:
+ *                         type: number
+ *                         example: 5.0
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 5
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Variant lot storages found successfully
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ *       400:
+ *         description: Invalid parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: variantId
+ *                       message:
+ *                         type: string
+ *                         example: Variant ID must be a positive integer
  */
 router.get(
     "/variant/:variantId/lot/:lotId",
@@ -229,34 +747,139 @@ router.get(
 );
 
 /**
- * @route POST /api/v1/inventory/lots-storages
- * @desc Create a new lot storage
- * @access Private (requires authentication and company context)
- * @body {Object} storageData - The lot storage data
- * @body {number} storageData.inv_var_id - The inventory variant ID (required)
- * @body {number} storageData.inv_lot_id - The inventory lot ID (required)
- * @body {number} storageData.id_inv_storage - The storage location ID (required)
- * @body {number} storageData.inv_ls_stock - The current stock level (required)
- * @body {number} [storageData.inv_ls_stock_reserved] - The reserved stock level (optional)
- * @body {number} [storageData.inv_ls_stock_committed] - The committed stock level (optional)
- * @body {number} [storageData.inv_ls_stock_prev] - The previous stock level (optional)
- * @body {number} [storageData.inv_ls_stock_min] - The minimum stock level (optional)
- * @returns {Object} The created lot storage
- * @example
- * POST /api/v1/inventory/lots-storages
- * Body: {
- *   "inv_var_id": 123,
- *   "inv_lot_id": 456,
- *   "id_inv_storage": 789,
- *   "inv_ls_stock": 50.5,
- *   "inv_ls_stock_reserved": 5.0,
- *   "inv_ls_stock_min": 10.0
- * }
- * Response: {
- *   "success": true,
- *   "data": {...},
- *   "message": "Lot storage created"
- * }
+ * @swagger
+ * /v1/inventory/lots-storages:
+ *   post:
+ *     summary: Create a new lot storage
+ *     description: Creates a new inventory lot storage record tracking stock levels at a specific location
+ *     tags: [inventory-lots-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - inv_var_id
+ *               - inv_lot_id
+ *               - id_inv_storage
+ *               - inv_ls_stock
+ *             properties:
+ *               inv_var_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: The inventory variant ID
+ *                 example: 123
+ *               inv_lot_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: The inventory lot ID
+ *                 example: 456
+ *               id_inv_storage:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: The storage location ID
+ *                 example: 789
+ *               inv_ls_stock:
+ *                 type: number
+ *                 description: The current stock level
+ *                 example: 50.5
+ *               inv_ls_stock_reserved:
+ *                 type: number
+ *                 description: The reserved stock level
+ *                 example: 5.0
+ *               inv_ls_stock_committed:
+ *                 type: number
+ *                 description: The committed stock level
+ *                 example: 0
+ *               inv_ls_stock_prev:
+ *                 type: number
+ *                 description: The previous stock level
+ *                 example: 45.0
+ *               inv_ls_stock_min:
+ *                 type: number
+ *                 description: The minimum stock level
+ *                 example: 10.0
+ *     responses:
+ *       201:
+ *         description: Lot storage created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_ls_id:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_var_id:
+ *                       type: integer
+ *                       example: 123
+ *                     inv_lot_id:
+ *                       type: integer
+ *                       example: 456
+ *                     id_inv_storage:
+ *                       type: integer
+ *                       example: 789
+ *                     inv_ls_stock:
+ *                       type: number
+ *                       example: 50.5
+ *                     inv_ls_stock_reserved:
+ *                       type: number
+ *                       example: 5.0
+ *                     inv_ls_stock_committed:
+ *                       type: number
+ *                       example: 0
+ *                     inv_ls_stock_prev:
+ *                       type: number
+ *                       example: 45.0
+ *                     inv_ls_stock_min:
+ *                       type: number
+ *                       example: 10.0
+ *                 message:
+ *                   type: string
+ *                   example: Lot storage created successfully
+ *       400:
+ *         description: Invalid input
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: inv_var_id
+ *                       message:
+ *                         type: string
+ *                         example: Variant ID must be a positive integer
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  */
 router.post(
     "/",
@@ -277,32 +900,143 @@ router.post(
 );
 
 /**
- * @route PUT /api/v1/inventory/lots-storages/:id
- * @desc Update an existing lot storage
- * @access Private (requires authentication and company context)
- * @param {number} id - The ID of the lot storage
- * @body {Object} storageData - The lot storage data to update
- * @body {number} [storageData.inv_var_id] - The inventory variant ID (optional)
- * @body {number} [storageData.inv_lot_id] - The inventory lot ID (optional)
- * @body {number} [storageData.id_inv_storage] - The storage location ID (optional)
- * @body {number} [storageData.inv_ls_stock] - The current stock level (optional)
- * @body {number} [storageData.inv_ls_stock_reserved] - The reserved stock level (optional)
- * @body {number} [storageData.inv_ls_stock_committed] - The committed stock level (optional)
- * @body {number} [storageData.inv_ls_stock_prev] - The previous stock level (optional)
- * @body {number} [storageData.inv_ls_stock_min] - The minimum stock level (optional)
- * @returns {Object} The updated lot storage
- * @example
- * PUT /api/v1/inventory/lots-storages/101
- * Body: {
- *   "inv_ls_stock": 75.0,
- *   "inv_ls_stock_reserved": 7.5,
- *   "inv_ls_stock_min": 15.0
- * }
- * Response: {
- *   "success": true,
- *   "data": {...},
- *   "message": "Lot storage updated"
- * }
+ * @swagger
+ * /v1/inventory/lots-storages/{id}:
+ *   put:
+ *     summary: Update an existing lot storage
+ *     tags: [inventory-lots-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The ID of the lot storage
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               inv_var_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: The inventory variant ID
+ *               inv_lot_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: The inventory lot ID
+ *               id_inv_storage:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: The storage location ID
+ *               inv_ls_stock:
+ *                 type: number
+ *                 description: The current stock level
+ *                 example: 75.0
+ *               inv_ls_stock_reserved:
+ *                 type: number
+ *                 description: The reserved stock level
+ *                 example: 7.5
+ *               inv_ls_stock_committed:
+ *                 type: number
+ *                 description: The committed stock level
+ *               inv_ls_stock_prev:
+ *                 type: number
+ *                 description: The previous stock level
+ *               inv_ls_stock_min:
+ *                 type: number
+ *                 description: The minimum stock level
+ *                 example: 15.0
+ *     responses:
+ *       200:
+ *         description: Lot storage updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_ls_id:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_var_id:
+ *                       type: integer
+ *                       example: 10
+ *                     inv_lot_id:
+ *                       type: integer
+ *                       example: 5
+ *                     id_inv_storage:
+ *                       type: integer
+ *                       example: 2
+ *                     inv_ls_stock:
+ *                       type: number
+ *                       example: 75.0
+ *                     inv_ls_stock_reserved:
+ *                       type: number
+ *                       example: 7.5
+ *                     inv_ls_stock_min:
+ *                       type: number
+ *                       example: 15.0
+ *                 message:
+ *                   type: string
+ *                   example: Lot storage updated successfully
+ *       400:
+ *         description: Invalid input
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: inv_ls_stock
+ *                       message:
+ *                         type: string
+ *                         example: Stock must be a number
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ *       404:
+ *         description: Lot storage not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Lot storage not found
  */
 router.put(
     "/:id",
@@ -324,13 +1058,13 @@ router.put(
 );
 
 /**
- * @route DELETE /api/v1/inventory/lots-storages/:id
+ * @route DELETE /v1/inventory/lots-storages/:id
  * @desc Delete an existing lot storage
  * @access Private (requires authentication and company context)
  * @param {number} id - The ID of the lot storage
  * @returns {Object} Success message
  * @example
- * DELETE /api/v1/inventory/lots-storages/101
+ * DELETE /v1/inventory/lots-storages/101
  * Response: {
  *   "success": true,
  *   "message": "Lot storage deleted"
@@ -348,30 +1082,136 @@ router.put(
 // );
 
 /**
- * @route PATCH /api/v1/inventory/lots-storages/lot/:lotId/storage/:storageId/stock
- * @desc Update stock levels for a specific lot storage
- * @access Private (requires authentication and company context)
- * @param {number} lotId - The ID of the inventory lot
- * @param {number} storageId - The ID of the storage location
- * @body {Object} stockData - The stock data to update
- * @body {number} [stockData.inv_ls_stock] - The current stock level (optional)
- * @body {number} [stockData.inv_ls_stock_reserved] - The reserved stock level (optional)
- * @body {number} [stockData.inv_ls_stock_committed] - The committed stock level (optional)
- * @body {number} [stockData.inv_ls_stock_prev] - The previous stock level (optional)
- * @body {number} [stockData.inv_ls_stock_min] - The minimum stock level (optional)
- * @returns {Object} The updated lot storage
- * @example
- * PATCH /api/v1/inventory/lots-storages/lot/456/storage/789/stock
- * Body: {
- *   "inv_ls_stock": 100.0,
- *   "inv_ls_stock_reserved": 10.0,
- *   "inv_ls_stock_min": 20.0
- * }
- * Response: {
- *   "success": true,
- *   "data": {...},
- *   "message": "Stock updated successfully"
- * }
+ * @swagger
+ * /v1/inventory/lots-storages/lot/{lotId}/storage/{storageId}/stock:
+ *   patch:
+ *     summary: Update stock levels for a specific lot storage
+ *     description: Partially updates the stock levels for a specific lot at a storage location
+ *     tags: [inventory-lots-storages]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: lotId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The ID of the inventory lot
+ *       - in: path
+ *         name: storageId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: The ID of the storage location
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               inv_ls_stock:
+ *                 type: number
+ *                 description: The current stock level
+ *                 example: 100.0
+ *               inv_ls_stock_reserved:
+ *                 type: number
+ *                 description: The reserved stock level
+ *                 example: 10.0
+ *               inv_ls_stock_committed:
+ *                 type: number
+ *                 description: The committed stock level
+ *               inv_ls_stock_prev:
+ *                 type: number
+ *                 description: The previous stock level
+ *               inv_ls_stock_min:
+ *                 type: number
+ *                 description: The minimum stock level
+ *                 example: 20.0
+ *     responses:
+ *       200:
+ *         description: Stock updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_ls_id:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_lot_id:
+ *                       type: integer
+ *                       example: 5
+ *                     id_inv_storage:
+ *                       type: integer
+ *                       example: 2
+ *                     inv_ls_stock:
+ *                       type: number
+ *                       example: 100.0
+ *                     inv_ls_stock_reserved:
+ *                       type: number
+ *                       example: 10.0
+ *                     inv_ls_stock_min:
+ *                       type: number
+ *                       example: 20.0
+ *                 message:
+ *                   type: string
+ *                   example: Stock updated successfully
+ *       400:
+ *         description: Invalid input
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       field:
+ *                         type: string
+ *                         example: inv_ls_stock
+ *                       message:
+ *                         type: string
+ *                         example: Stock must be a number
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ *       404:
+ *         description: Lot storage not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Lot storage not found
  */
 router.patch(
     "/lot/:lotId/storage/:storageId/stock",

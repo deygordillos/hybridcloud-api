@@ -20,26 +20,138 @@ import { InventoryPricesController } from '../../controllers/inventory_prices.co
 const router = Router();
 
 /**
- * @route GET /api/v1/inventory/prices/variant/:variantId
- * @desc Get all inventory prices for a specific inventory variant with pagination
- * @access Private (requires authentication and company context)
- * @param {number} variantId - The ID of the inventory variant
- * @query {number} [page=1] - Page number for pagination
- * @query {number} [limit=10] - Number of items per page
- * @returns {Object} Paginated array of inventory prices associated with the variant
- * @example
- * GET /api/v1/inventory/prices/variant/123?page=1&limit=10
- * Response: {
- *   "success": true,
- *   "data": [...],
- *   "message": "Inventory prices found",
- *   "pagination": {
- *     "total": 25,
- *     "perPage": 10,
- *     "currentPage": 1,
- *     "lastPage": 3
- *   }
- * }
+ * @swagger
+ * /v1/inventory/prices/variant/{variantId}:
+ *   get:
+ *     summary: Get all prices for a specific variant
+ *     description: Retrieves all inventory prices for a specific variant with pagination
+ *     tags: [inventory-prices]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: variantId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory variant ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number for pagination
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 10
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: Inventory prices found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       inv_price_id:
+ *                         type: integer
+ *                         example: 1
+ *                       inv_var_id:
+ *                         type: integer
+ *                         example: 123
+ *                       typeprice_id:
+ *                         type: integer
+ *                         example: 1
+ *                       is_current:
+ *                         type: integer
+ *                         example: 1
+ *                       price_local:
+ *                         type: number
+ *                         example: 100.50
+ *                       price_ref:
+ *                         type: number
+ *                         example: 95.25
+ *                       price_stable:
+ *                         type: number
+ *                         example: 100.50
+ *                       currency_id_local:
+ *                         type: integer
+ *                         example: 1
+ *                       valid_from:
+ *                         type: string
+ *                         format: date
+ *                         example: 2024-01-01
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 25
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 3
+ *                 message:
+ *                   type: string
+ *                   example: Inventory prices found
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ *       403:
+ *         description: Forbidden - Company context required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Company context is required
  */
 router.get('/variant/:variantId',
     [
@@ -54,18 +166,48 @@ router.get('/variant/:variantId',
 );
 
 /**
- * @route GET /api/v1/inventory/prices/variant/:variantId/current
- * @desc Get current (active) inventory prices for a specific inventory variant
- * @access Private (requires authentication and company context)
- * @param {number} variantId - The ID of the inventory variant
- * @returns {Object} Array of current inventory prices associated with the variant
- * @example
- * GET /api/v1/inventory/prices/variant/123/current
- * Response: {
- *   "success": true,
- *   "data": [...],
- *   "message": "Current inventory prices found"
- * }
+ * @swagger
+ * /v1/inventory/prices/variant/{variantId}/current:
+ *   get:
+ *     summary: Get current prices for a specific variant
+ *     description: Retrieves current (active) inventory prices for a specific variant
+ *     tags: [inventory-prices]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: variantId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory variant ID
+ *     responses:
+ *       200:
+ *         description: Current inventory prices found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                 message:
+ *                   type: string
+ *                   example: Current inventory prices found
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
+ *       404:
+ *         description: Variant not found
  */
 router.get('/variant/:variantId/current',
     [
@@ -86,19 +228,55 @@ router.get('/variant/:variantId/current',
 );
 
 /**
- * @route GET /api/v1/inventory/prices/variant/:variantId/type/:typeId
- * @desc Get inventory prices for a specific variant and price type
- * @access Private (requires authentication and company context)
- * @param {number} variantId - The ID of the inventory variant
- * @param {number} typeId - The ID of the price type
- * @returns {Object} Array of inventory prices for the specific variant and type
- * @example
- * GET /api/v1/inventory/prices/variant/123/type/1
- * Response: {
- *   "success": true,
- *   "data": [...],
- *   "message": "Inventory prices found"
- * }
+ * @swagger
+ * /v1/inventory/prices/variant/{variantId}/type/{typeId}:
+ *   get:
+ *     summary: Get prices for a variant by price type
+ *     description: Retrieves inventory prices for a specific variant and price type
+ *     tags: [inventory-prices]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: variantId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory variant ID
+ *       - in: path
+ *         name: typeId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Price type ID
+ *     responses:
+ *       200:
+ *         description: Inventory prices found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                 message:
+ *                   type: string
+ *                   example: Inventory prices found
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
+ *       404:
+ *         description: Variant or price type not found
  */
 router.get('/variant/:variantId/type/:typeId',
     [
@@ -128,60 +306,154 @@ router.get('/variant/:variantId/type/:typeId',
 );
 
 /**
- * @route POST /api/v1/inventory/prices
- * @desc Create a new inventory price
- * @access Private (requires authentication and company context)
- * @body {Object} priceData - The inventory price data
- * @body {number} priceData.inv_var_id - The inventory variant ID (required)
- * @body {number} priceData.typeprice_id - The price type ID (required)
- * @body {number} [priceData.is_current] - Whether this is the current price (optional, 0 or 1)
- * @body {number} [priceData.price_local] - Total price in local currency (optional, positive number)
- * @body {number} [priceData.price_stable] - Stable price (optional, positive number)
- * @body {number} [priceData.price_ref] - Total price in reference currency (optional, positive number)
- * @body {number} [priceData.price_base_local] - Base price in local currency (optional, positive number)
- * @body {number} [priceData.price_base_stable] - Stable base price (optional, positive number)
- * @body {number} [priceData.price_base_ref] - Base price in reference currency (optional, positive number)
- * @body {number} [priceData.tax_amount_local] - Tax amount in local currency (optional, positive number)
- * @body {number} [priceData.tax_amount_stable] - Stable tax amount (optional, positive number)
- * @body {number} [priceData.tax_amount_ref] - Tax amount in reference currency (optional, positive number)
- * @body {number} [priceData.cost_local] - Cost in local currency (optional, positive number)
- * @body {number} [priceData.cost_stable] - Stable cost (optional, positive number)
- * @body {number} [priceData.cost_ref] - Cost in reference currency (optional, positive number)
- * @body {number} [priceData.cost_avg_local] - Average cost in local currency (optional, positive number)
- * @body {number} [priceData.cost_avg_stable] - Stable average cost (optional, positive number)
- * @body {number} [priceData.cost_avg_ref] - Average cost in reference currency (optional, positive number)
- * @body {number} [priceData.profit_local] - Profit in local currency (optional)
- * @body {number} [priceData.profit_stable] - Stable profit (optional, positive number)
- * @body {number} [priceData.profit_ref] - Profit in reference currency (optional)
- * @body {number} [priceData.currency_id_local] - Local currency ID (optional, default: 1)
- * @body {number} [priceData.currency_id_stable] - Stable currency ID (optional, default: 1)
- * @body {number} [priceData.currency_id_ref] - Reference currency ID (optional, default: 1)
- * @body {string} [priceData.valid_from] - Date from which this price is valid (optional, ISO8601 format)
- * @returns {Object} The created inventory price
- * @example
- * POST /api/v1/inventory/prices
- * Body: {
- *   "inv_var_id": 123,
- *   "typeprice_id": 1,
- *   "is_current": 1,
- *   "price_local": 100.50,
- *   "price_ref": 95.25,
- *   "currency_id_local": 1,
- *   "currency_id_ref": 2,
- *   "currency_id_stable": 3,
- *   "valid_from": "2024-01-01",
- *   "price_stable": 100.50,
- *   "price_base_stable": 95.25,
- *   "tax_amount_stable": 0.00,
- *   "cost_stable": 0.00,
- *   "cost_avg_stable": 0.00,
- *   "profit_stable": 0.00
- * }
- * Response: {
- *   "success": true,
- *   "data": {...},
- *   "message": "Inventory price created"
- * }
+ * @swagger
+ * /v1/inventory/prices:
+ *   post:
+ *     summary: Create a new inventory price
+ *     description: Creates a new inventory price with local, stable, and reference currency support
+ *     tags: [inventory-prices]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - inv_var_id
+ *               - typeprice_id
+ *             properties:
+ *               inv_var_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Inventory variant ID
+ *                 example: 123
+ *               typeprice_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Price type ID
+ *                 example: 1
+ *               is_current:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Whether this is the current price (0=no, 1=yes)
+ *                 example: 1
+ *               price_local:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Total price in local currency
+ *                 example: 100.50
+ *               price_stable:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Stable price
+ *                 example: 100.50
+ *               price_ref:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Total price in reference currency
+ *                 example: 95.25
+ *               price_base_local:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Base price in local currency
+ *               price_base_stable:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Stable base price
+ *               price_base_ref:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Base price in reference currency
+ *               tax_amount_local:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Tax amount in local currency
+ *               tax_amount_stable:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Stable tax amount
+ *               tax_amount_ref:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Tax amount in reference currency
+ *               cost_local:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Cost in local currency
+ *               cost_stable:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Stable cost
+ *               cost_ref:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Cost in reference currency
+ *               cost_avg_local:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Average cost in local currency
+ *               cost_avg_stable:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Stable average cost
+ *               cost_avg_ref:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Average cost in reference currency
+ *               profit_local:
+ *                 type: number
+ *                 description: Profit in local currency
+ *               profit_stable:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Stable profit
+ *               profit_ref:
+ *                 type: number
+ *                 description: Profit in reference currency
+ *               currency_id_local:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Local currency ID
+ *                 example: 1
+ *               currency_id_stable:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Stable currency ID
+ *                 example: 1
+ *               currency_id_ref:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Reference currency ID
+ *                 example: 2
+ *               valid_from:
+ *                 type: string
+ *                 format: date
+ *                 description: Date from which this price is valid
+ *                 example: 2024-01-01
+ *     responses:
+ *       201:
+ *         description: Inventory price created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Inventory price created
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
  */
 router.post('/',
     [
@@ -257,55 +529,81 @@ router.post('/',
 );
 
 /**
- * @route PUT /api/v1/inventory/prices/:id
- * @desc Update an existing inventory price
- * @access Private (requires authentication and company context)
- * @param {number} id - The ID of the inventory price to update
- * @body {Object} priceData - The inventory price data to update
- * @body {number} [priceData.inv_var_id] - The inventory variant ID (optional)
- * @body {number} [priceData.typeprice_id] - The price type ID (optional)
- * @body {number} [priceData.is_current] - Whether this is the current price (optional, 0 or 1)
- * @body {number} [priceData.price_local] - Total price in local currency (optional, positive number)
- * @body {number} [priceData.price_ref] - Total price in reference currency (optional, positive number)
- * @body {number} [priceData.price_base_local] - Base price in local currency (optional, positive number)
- * @body {number} [priceData.price_base_ref] - Base price in reference currency (optional, positive number)
- * @body {number} [priceData.tax_amount_local] - Tax amount in local currency (optional, positive number)
- * @body {number} [priceData.tax_amount_ref] - Tax amount in reference currency (optional, positive number)
- * @body {number} [priceData.cost_local] - Cost in local currency (optional, positive number)
- * @body {number} [priceData.cost_ref] - Cost in reference currency (optional, positive number)
- * @body {number} [priceData.cost_avg_local] - Average cost in local currency (optional, positive number)
- * @body {number} [priceData.cost_avg_ref] - Average cost in reference currency (optional, positive number)
- * @body {number} [priceData.profit_local] - Profit in local currency (optional)
- * @body {number} [priceData.profit_ref] - Profit in reference currency (optional)
- * @body {number} [priceData.currency_id_local] - Local currency ID (optional)
- * @body {number} [priceData.currency_id_ref] - Reference currency ID (optional)
- * @body {number} [priceData.currency_id_stable] - Stable currency ID (optional)
- * @body {string} [priceData.valid_from] - Date from which this price is valid (optional, ISO8601 format)
- * @body {number} [priceData.price_stable] - Stable price (optional, positive number)
- * @body {number} [priceData.price_base_stable] - Stable base price (optional, positive number)
- * @body {number} [priceData.tax_amount_stable] - Stable tax amount (optional, positive number)
- * @body {number} [priceData.cost_stable] - Stable cost (optional, positive number)
- * @body {number} [priceData.cost_avg_stable] - Stable average cost (optional, positive number)
- * @body {number} [priceData.profit_stable] - Stable profit (optional, positive number)
- * @returns {Object} The updated inventory price
- * @example
- * PUT /api/v1/inventory/prices/456
- * Body: {
- *   "price_local": 110.75,
- *   "price_ref": 105.50,
- *   "is_current": 1,
- *   "price_stable": 100.50,
- *   "price_base_stable": 95.25,
- *   "tax_amount_stable": 0.00,
- *   "cost_stable": 0.00,
- *   "cost_avg_stable": 0.00,
- *   "profit_stable": 0.00
- * }
- * Response: {
- *   "success": true,
- *   "data": {...},
- *   "message": "Inventory price updated"
- * }
+ * @swagger
+ * /v1/inventory/prices/{id}:
+ *   put:
+ *     summary: Update an inventory price
+ *     description: Updates an existing inventory price
+ *     tags: [inventory-prices]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory price ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               inv_var_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Inventory variant ID
+ *               typeprice_id:
+ *                 type: integer
+ *                 minimum: 1
+ *                 description: Price type ID
+ *               is_current:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 description: Whether this is the current price
+ *               price_local:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Total price in local currency
+ *               price_stable:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Stable price
+ *               price_ref:
+ *                 type: number
+ *                 minimum: 0
+ *                 description: Total price in reference currency
+ *               valid_from:
+ *                 type: string
+ *                 format: date
+ *                 description: Date from which this price is valid
+ *     responses:
+ *       200:
+ *         description: Inventory price updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Inventory price updated
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
+ *       404:
+ *         description: Price not found
  */
 router.put('/:id',
     [
@@ -379,13 +677,13 @@ router.put('/:id',
 );
 
 /**
- * @route DELETE /api/v1/inventory/prices/:id
+ * @route DELETE /v1/inventory/prices/:id
  * @desc Delete an inventory price
  * @access Private (requires authentication and company context)
  * @param {number} id - The ID of the inventory price to delete
  * @returns {Object} Success message
  * @example
- * DELETE /api/v1/inventory/prices/456
+ * DELETE /v1/inventory/prices/456
  * Response: {
  *   "success": true,
  *   "message": "Inventory price deleted"
@@ -410,18 +708,46 @@ router.put('/:id',
 // );
 
 /**
- * @route PATCH /api/v1/inventory/prices/:id/set-current
- * @desc Set an inventory price as the current price for its variant and type
- * @access Private (requires authentication and company context)
- * @param {number} id - The ID of the inventory price to set as current
- * @returns {Object} The updated inventory price with current status
- * @example
- * PATCH /api/v1/inventory/prices/456/set-current
- * Response: {
- *   "success": true,
- *   "data": {...},
- *   "message": "Price set as current"
- * }
+ * @swagger
+ * /v1/inventory/prices/{id}/set-current:
+ *   patch:
+ *     summary: Set a price as current
+ *     description: Sets an inventory price as the current price for its variant and type
+ *     tags: [inventory-prices]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Inventory price ID
+ *     responses:
+ *       200:
+ *         description: Price set as current
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                 message:
+ *                   type: string
+ *                   example: Price set as current
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Company context required
+ *       404:
+ *         description: Price not found
  */
 router.patch('/:id/set-current',
     [
