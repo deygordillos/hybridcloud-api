@@ -17,6 +17,7 @@ import inventoryLotsStoragesRoutes from './inventory_lots_storages.route'
 import inventoryMovementsRoutes from './inventory_movements.route'
 import typesOfPricesRoutes from './types_of_prices.route'
 import currenciesExchangesRoutes from './currencies_exchanges.route'
+import { swaggerSpec, swaggerUi } from '../../swagger-config'
 
 const router = Router();
 router.use('/v1/auth', authRoutes);
@@ -38,4 +39,9 @@ router.use('/v1/inventory/movements', inventoryMovementsRoutes);
 router.use('/v1/types-of-prices', typesOfPricesRoutes);
 router.use('/v1/currencies-exchanges', currenciesExchangesRoutes);
 
+router.use('/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+router.use('/v1/docs.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
 export default router
