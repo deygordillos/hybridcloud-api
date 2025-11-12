@@ -104,6 +104,7 @@ export class InventoryPricesService {
                     );
             }
             priceData.user_id = user_id;
+            priceData.valid_from = new Date();
             const newPrice = transactionalEntityManager.create(InventoryPrices, priceData);
             const savedPrice = await transactionalEntityManager.save(InventoryPrices, newPrice);
 

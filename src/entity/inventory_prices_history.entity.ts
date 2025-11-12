@@ -229,10 +229,7 @@ export class InventoryPricesHistory {
     })
     currency_id_ref: number;
 
-    @Column({ 
-        type: "date", 
-        default: () => "CURRENT_TIMESTAMP" 
-    })
+    @Column({ type: "date", nullable: true })
     valid_from: Date;
 
     @CreateDateColumn({ 
