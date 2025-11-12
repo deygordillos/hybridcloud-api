@@ -21,7 +21,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/inventory/lots-storages/variant/{variantId}:
+ * /v1/inventory/lots-storages/variant/{variantId}:
  *   get:
  *     summary: Get all lot storages for a specific inventory variant
  *     tags: [inventory-lots-storages]
@@ -136,7 +136,7 @@ router.get(
 
 /**
  * @swagger
- * /api/v1/inventory/lots-storages/lot/{lotId}:
+ * /v1/inventory/lots-storages/lot/{lotId}:
  *   get:
  *     summary: Get all lot storages for a specific inventory lot
  *     tags: [inventory-lots-storages]
@@ -273,7 +273,7 @@ router.get(
 
 /**
  * @swagger
- * /api/v1/inventory/lots-storages/lot/{lotId}/storage/{storageId}:
+ * /v1/inventory/lots-storages/lot/{lotId}/storage/{storageId}:
  *   get:
  *     summary: Get a specific lot storage by lot ID and storage ID
  *     tags: [inventory-lots-storages]
@@ -379,7 +379,7 @@ router.get(
 
 /**
  * @swagger
- * /api/v1/inventory/lots-storages/lot/{lotId}/stock-summary:
+ * /v1/inventory/lots-storages/lot/{lotId}/stock-summary:
  *   get:
  *     summary: Get stock summary for a specific inventory lot
  *     description: Returns aggregated stock statistics across all storage locations for the specified lot
@@ -469,7 +469,7 @@ router.get(
 
 /**
  * @swagger
- * /api/v1/inventory/lots-storages/location/{storageId}:
+ * /v1/inventory/lots-storages/location/{storageId}:
  *   get:
  *     summary: Get all lot storages for a specific storage location
  *     tags: [inventory-lots-storages]
@@ -603,7 +603,7 @@ router.get(
 
 /**
  * @swagger
- * /api/v1/inventory/lots-storages/variant/{variantId}/lot/{lotId}:
+ * /v1/inventory/lots-storages/variant/{variantId}/lot/{lotId}:
  *   get:
  *     summary: Get all lot storages for a specific variant and lot combination
  *     tags: [inventory-lots-storages]
@@ -748,7 +748,7 @@ router.get(
 
 /**
  * @swagger
- * /api/v1/inventory/lots-storages:
+ * /v1/inventory/lots-storages:
  *   post:
  *     summary: Create a new lot storage
  *     description: Creates a new inventory lot storage record tracking stock levels at a specific location
@@ -901,7 +901,7 @@ router.post(
 
 /**
  * @swagger
- * /api/v1/inventory/lots-storages/{id}:
+ * /v1/inventory/lots-storages/{id}:
  *   put:
  *     summary: Update an existing lot storage
  *     tags: [inventory-lots-storages]
@@ -1058,13 +1058,13 @@ router.put(
 );
 
 /**
- * @route DELETE /api/v1/inventory/lots-storages/:id
+ * @route DELETE /v1/inventory/lots-storages/:id
  * @desc Delete an existing lot storage
  * @access Private (requires authentication and company context)
  * @param {number} id - The ID of the lot storage
  * @returns {Object} Success message
  * @example
- * DELETE /api/v1/inventory/lots-storages/101
+ * DELETE /v1/inventory/lots-storages/101
  * Response: {
  *   "success": true,
  *   "message": "Lot storage deleted"
@@ -1083,7 +1083,7 @@ router.put(
 
 /**
  * @swagger
- * /api/v1/inventory/lots-storages/lot/{lotId}/storage/{storageId}/stock:
+ * /v1/inventory/lots-storages/lot/{lotId}/storage/{storageId}/stock:
  *   patch:
  *     summary: Update stock levels for a specific lot storage
  *     description: Partially updates the stock levels for a specific lot at a storage location

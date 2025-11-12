@@ -10,7 +10,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/companies:
+ * /v1/companies:
  *   post:
  *     summary: Create a new company
  *     description: Creates a new company with all required information (Admin only)
@@ -219,7 +219,7 @@ router.post('/',
 
 /**
  * @swagger
- * /api/v1/companies/{id}:
+ * /v1/companies/{id}:
  *   put:
  *     summary: Update a company (full update)
  *     description: Updates all fields of an existing company (Admin only)
@@ -284,7 +284,7 @@ router.put('/:id',
 
 /**
  * @swagger
- * /api/v1/companies/{id}:
+ * /v1/companies/{id}:
  *   patch:
  *     summary: Update a company (partial update)
  *     description: Partially updates specific fields of an existing company (Admin only)
@@ -349,7 +349,7 @@ router.patch('/:id',
 
 /**
  * @swagger
- * /api/v1/companies/register_admin/{company_id}:
+ * /v1/companies/register_admin/{company_id}:
  *   post:
  *     summary: Register an admin for a company
  *     description: Creates a new admin user for a specific company (Admin only)

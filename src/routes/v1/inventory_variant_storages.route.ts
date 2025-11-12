@@ -21,7 +21,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/inventory/variant-storages/variant/{variantId}:
+ * /v1/inventory/variant-storages/variant/{variantId}:
  *   get:
  *     summary: Get all variant storages for a specific variant
  *     description: Retrieves all storage locations for a specific inventory variant with pagination
@@ -175,7 +175,7 @@ router.get(
 
 /**
  * @swagger
- * /api/v1/inventory/variant-storages/variant/{variantId}/storage/{storageId}:
+ * /v1/inventory/variant-storages/variant/{variantId}/storage/{storageId}:
  *   get:
  *     summary: Get a specific variant storage
  *     description: Retrieves a specific variant storage by variant ID and storage ID
@@ -236,7 +236,7 @@ router.get(
 
 /**
  * @swagger
- * /api/v1/inventory/variant-storages/variant/{variantId}/stock-summary:
+ * /v1/inventory/variant-storages/variant/{variantId}/stock-summary:
  *   get:
  *     summary: Get stock summary for a variant
  *     description: Retrieves stock summary statistics across all storage locations for a variant
@@ -306,7 +306,7 @@ router.get(
 
 /**
  * @swagger
- * /api/v1/inventory/variant-storages/location/{storageId}:
+ * /v1/inventory/variant-storages/location/{storageId}:
  *   get:
  *     summary: Get all variant storages for a location
  *     description: Retrieves all inventory variants at a specific storage location with pagination
@@ -378,7 +378,7 @@ router.get(
 
 /**
  * @swagger
- * /api/v1/inventory/variant-storages:
+ * /v1/inventory/variant-storages:
  *   post:
  *     summary: Create a new variant storage
  *     description: Creates a new variant storage entry for a specific variant and storage location
@@ -466,7 +466,7 @@ router.post(
 
 /**
  * @swagger
- * /api/v1/inventory/variant-storages/{id}:
+ * /v1/inventory/variant-storages/{id}:
  *   put:
  *     summary: Update a variant storage
  *     description: Updates an existing variant storage entry
@@ -555,13 +555,13 @@ router.put(
 );
 
 /**
- * @route DELETE /api/v1/inventory/variant-storages/:id
+ * @route DELETE /v1/inventory/variant-storages/:id
  * @desc Delete an existing variant storage
  * @access Private (requires authentication and company context)
  * @param {number} id - The ID of the variant storage
  * @returns {Object} Success message
  * @example
- * DELETE /api/v1/inventory/variant-storages/789
+ * DELETE /v1/inventory/variant-storages/789
  * Response: {
  *   "success": true,
  *   "message": "Variant storage deleted"
@@ -580,7 +580,7 @@ router.put(
 
 /**
  * @swagger
- * /api/v1/inventory/variant-storages/variant/{variantId}/storage/{storageId}/stock:
+ * /v1/inventory/variant-storages/variant/{variantId}/storage/{storageId}/stock:
  *   patch:
  *     summary: Update stock levels for a variant storage
  *     description: Updates stock levels for a specific variant at a specific storage location

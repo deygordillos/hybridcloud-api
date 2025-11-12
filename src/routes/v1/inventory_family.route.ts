@@ -9,7 +9,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/inventory/family:
+ * /v1/inventory/family:
  *   get:
  *     summary: Get all inventory families for the company
  *     description: Retrieves all inventory family configurations for the authenticated company
@@ -79,7 +79,7 @@ router.get('/',
 
 /**
  * @swagger
- * /api/v1/inventory/family:
+ * /v1/inventory/family:
  *   post:
  *     summary: Create a new inventory family
  *     description: Creates a new inventory family with product configuration settings
@@ -224,7 +224,7 @@ router.post('/',
 
 /**
  * @swagger
- * /api/v1/inventory/family/{id}:
+ * /v1/inventory/family/{id}:
  *   put:
  *     summary: Update an inventory family (full update)
  *     tags: [inventory-family]
@@ -279,7 +279,7 @@ router.put('/:id',
 
 /**
  * @swagger
- * /api/v1/inventory/family/{id}:
+ * /v1/inventory/family/{id}:
  *   patch:
  *     summary: Update an inventory family (partial update)
  *     tags: [inventory-family]

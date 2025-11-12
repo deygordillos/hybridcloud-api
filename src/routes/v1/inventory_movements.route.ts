@@ -22,7 +22,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/inventory/movements/variant/{variantId}:
+ * /v1/inventory/movements/variant/{variantId}:
  *   get:
  *     summary: Get all movements for a specific variant
  *     description: Retrieves all movements for a specific inventory variant with pagination
@@ -180,7 +180,7 @@ router.get(
 
 /**
  * @swagger
- * /api/v1/inventory/movements/lot/{lotId}:
+ * /v1/inventory/movements/lot/{lotId}:
  *   get:
  *     summary: Get all movements for a specific lot
  *     description: Retrieves all movements for a specific inventory lot with pagination
@@ -251,7 +251,7 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/storage/:storageId
+ * @route GET /v1/inventory/movements/storage/:storageId
  * @desc Get all movements for a specific storage location
  * @access Private (requires authentication and company context)
  * @param {number} storageId - The ID of the storage location
@@ -259,7 +259,7 @@ router.get(
  * @query {number} [limit=10] - Number of items per page (max 100)
  * @returns {Object} Array of movements with pagination info
  * @example
- * GET /api/v1/inventory/movements/storage/789?page=1&limit=10
+ * GET /v1/inventory/movements/storage/789?page=1&limit=10
  * Response: {
  *   "success": true,
  *   "data": [...],
@@ -286,7 +286,7 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/type/:type
+ * @route GET /v1/inventory/movements/type/:type
  * @desc Get all movements by movement type
  * @access Private (requires authentication and company context)
  * @param {number} type - The movement type (1: In, 2: Out, 3: Transfer)
@@ -294,7 +294,7 @@ router.get(
  * @query {number} [limit=10] - Number of items per page (max 100)
  * @returns {Object} Array of movements with pagination info
  * @example
- * GET /api/v1/inventory/movements/type/1?page=1&limit=10
+ * GET /v1/inventory/movements/type/1?page=1&limit=10
  * Response: {
  *   "success": true,
  *   "data": [...],
@@ -321,7 +321,7 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/user/:userId
+ * @route GET /v1/inventory/movements/user/:userId
  * @desc Get all movements by user ID
  * @access Private (requires authentication and company context)
  * @param {number} userId - The ID of the user
@@ -329,7 +329,7 @@ router.get(
  * @query {number} [limit=10] - Number of items per page (max 100)
  * @returns {Object} Array of movements with pagination info
  * @example
- * GET /api/v1/inventory/movements/user/101?page=1&limit=10
+ * GET /v1/inventory/movements/user/101?page=1&limit=10
  * Response: {
  *   "success": true,
  *   "data": [...],
@@ -356,7 +356,7 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/statistics
+ * @route GET /v1/inventory/movements/statistics
  * @desc Get movement statistics
  * @access Private (requires authentication and company context)
  * @query {string} [startDate] - Start date for filtering (ISO format)
@@ -364,7 +364,7 @@ router.get(
  * @query {number} [movement_type] - Movement type filter (1, 2, or 3)
  * @returns {Object} Movement statistics
  * @example
- * GET /api/v1/inventory/movements/statistics?startDate=2024-01-01&endDate=2024-12-31
+ * GET /v1/inventory/movements/statistics?startDate=2024-01-01&endDate=2024-12-31
  * Response: {
  *   "success": true,
  *   "data": {
@@ -392,7 +392,7 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/date-range/:startDate/:endDate
+ * @route GET /v1/inventory/movements/date-range/:startDate/:endDate
  * @desc Get movements by date range
  * @access Private (requires authentication and company context)
  * @param {string} startDate - Start date (YYYY-MM-DD format)
@@ -401,7 +401,7 @@ router.get(
  * @query {number} [limit=10] - Number of items per page (max 100)
  * @returns {Object} Array of movements with pagination info
  * @example
- * GET /api/v1/inventory/movements/date-range/2024-01-01/2024-12-31?page=1&limit=10
+ * GET /v1/inventory/movements/date-range/2024-01-01/2024-12-31?page=1&limit=10
  * Response: {
  *   "success": true,
  *   "data": [...],
@@ -429,7 +429,7 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/related-doc/:relatedDoc
+ * @route GET /v1/inventory/movements/related-doc/:relatedDoc
  * @desc Get movements by related document
  * @access Private (requires authentication and company context)
  * @param {string} relatedDoc - The related document identifier
@@ -437,7 +437,7 @@ router.get(
  * @query {number} [limit=10] - Number of items per page (max 100)
  * @returns {Object} Array of movements with pagination info
  * @example
- * GET /api/v1/inventory/movements/related-doc/INV-2024-001?page=1&limit=10
+ * GET /v1/inventory/movements/related-doc/INV-2024-001?page=1&limit=10
  * Response: {
  *   "success": true,
  *   "data": [...],
@@ -464,13 +464,13 @@ router.get(
 );
 
 /**
- * @route GET /api/v1/inventory/movements/latest
+ * @route GET /v1/inventory/movements/latest
  * @desc Get latest movements
  * @access Private (requires authentication and company context)
  * @query {number} [limit=10] - Number of latest movements to retrieve (max 100)
  * @returns {Object} Array of latest movements
  * @example
- * GET /api/v1/inventory/movements/latest?limit=5
+ * GET /v1/inventory/movements/latest?limit=5
  * Response: {
  *   "success": true,
  *   "data": [...],
@@ -490,7 +490,7 @@ router.get(
 
 /**
  * @swagger
- * /api/v1/inventory/movements:
+ * /v1/inventory/movements:
  *   post:
  *     summary: Create a new inventory movement
  *     description: Creates a new inventory movement (in, out, or transfer)
@@ -583,7 +583,7 @@ router.post(
 );
 
 /**
- * @route PUT /api/v1/inventory/movements/:id
+ * @route PUT /v1/inventory/movements/:id
  * @desc Update an existing inventory movement
  * @access Private (requires authentication and company context)
  * @param {number} id - The ID of the movement
@@ -597,7 +597,7 @@ router.post(
  * @body {string} [movementData.related_doc] - The related document (optional, max 100 chars)
  * @returns {Object} The updated movement
  * @example
- * PUT /api/v1/inventory/movements/101
+ * PUT /v1/inventory/movements/101
  * Body: {
  *   "quantity": 75.0,
  *   "movement_reason": "Updated reason",
@@ -628,13 +628,13 @@ router.put(
 );
 
 /**
- * @route DELETE /api/v1/inventory/movements/:id
+ * @route DELETE /v1/inventory/movements/:id
  * @desc Delete an existing inventory movement
  * @access Private (requires authentication and company context)
  * @param {number} id - The ID of the movement
  * @returns {Object} Success message
  * @example
- * DELETE /api/v1/inventory/movements/101
+ * DELETE /v1/inventory/movements/101
  * Response: {
  *   "success": true,
  *   "message": "Inventory movement deleted"

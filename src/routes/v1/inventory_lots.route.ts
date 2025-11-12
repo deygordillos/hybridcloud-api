@@ -22,7 +22,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/inventory/lots/variant/{variantId}:
+ * /v1/inventory/lots/variant/{variantId}:
  *   get:
  *     summary: Get all inventory lots for a specific variant
  *     description: Retrieves all inventory lots associated with a specific inventory variant
@@ -134,7 +134,7 @@ router.get('/variant/:variantId',
 
 /**
  * @swagger
- * /api/v1/inventory/lots/search/{lotNumber}:
+ * /v1/inventory/lots/search/{lotNumber}:
  *   get:
  *     summary: Search inventory lots by lot number
  *     description: Searches for inventory lots matching the specified lot number
@@ -189,7 +189,7 @@ router.get('/search/:lotNumber',
 
 /**
  * @swagger
- * /api/v1/inventory/lots/summary/stats:
+ * /v1/inventory/lots/summary/stats:
  *   get:
  *     summary: Get inventory lots summary statistics
  *     description: Retrieves summary statistics including total, active, inactive, expiring soon, and expired lots
@@ -243,7 +243,7 @@ router.get('/summary/stats',
 
 /**
  * @swagger
- * /api/v1/inventory/lots/{id}:
+ * /v1/inventory/lots/{id}:
  *   get:
  *     summary: Get a specific inventory lot by ID
  *     description: Retrieves details of a specific inventory lot
@@ -310,7 +310,7 @@ router.get('/:id',
 
 /**
  * @swagger
- * /api/v1/inventory/lots:
+ * /v1/inventory/lots:
  *   post:
  *     summary: Create a new inventory lot
  *     description: Creates a new inventory lot with optional expiration dates, costs, and notes
@@ -507,7 +507,7 @@ router.post('/',
 
 /**
  * @swagger
- * /api/v1/inventory/lots/{id}:
+ * /v1/inventory/lots/{id}:
  *   put:
  *     summary: Update an inventory lot (full update)
  *     description: Updates an existing inventory lot with all fields
@@ -706,7 +706,7 @@ router.put('/:id',
 
 /**
  * @swagger
- * /api/v1/inventory/lots/{id}:
+ * /v1/inventory/lots/{id}:
  *   patch:
  *     summary: Update an inventory lot (partial update)
  *     description: Partially updates an existing inventory lot
@@ -904,13 +904,13 @@ router.patch('/:id',
 );
 
 /**
- * @route PATCH /api/v1/inventory/lots/:id/deactivate
+ * @route PATCH /v1/inventory/lots/:id/deactivate
  * @desc Deactivate an inventory lot (set status to 0)
  * @access Private (requires authentication and company context)
  * @param {number} id - The ID of the inventory lot to deactivate
  * @returns {Object} Success message
  * @example
- * PATCH /api/v1/inventory/lots/456/deactivate
+ * PATCH /v1/inventory/lots/456/deactivate
  * Response: {
  *   "success": true,
  *   "message": "Inventory lot deactivated successfully"
@@ -935,13 +935,13 @@ router.patch('/:id/deactivate',
 );
 
 /**
- * @route PATCH /api/v1/inventory/lots/:id/activate
+ * @route PATCH /v1/inventory/lots/:id/activate
  * @desc Activate an inventory lot (set status to 1)
  * @access Private (requires authentication and company context)
  * @param {number} id - The ID of the inventory lot to activate
  * @returns {Object} Success message
  * @example
- * PATCH /api/v1/inventory/lots/456/activate
+ * PATCH /v1/inventory/lots/456/activate
  * Response: {
  *   "success": true,
  *   "message": "Inventory lot activated successfully"

@@ -8,7 +8,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/coins:
+ * /v1/coins:
  *   get:
  *     summary: Get all coins
  *     description: Retrieves a list of all available currencies/coins with optional pagination and company filter
@@ -91,7 +91,7 @@ router.get('/',
 
 /**
  * @swagger
- * /api/v1/coins/assign_to_company/{company_id}:
+ * /v1/coins/assign_to_company/{company_id}:
  *   put:
  *     summary: Assign coins to a company
  *     description: Assigns multiple coins with their conversion factors to a specific company
@@ -222,7 +222,7 @@ router.put('/assign_to_company/:company_id', checkJwtMiddleware,
 
 /**
  * @swagger
- * /api/v1/coins/{coin_id}/assign/{company_id}/sucursales:
+ * /v1/coins/{coin_id}/assign/{company_id}/sucursales:
  *   put:
  *     summary: Assign coin to company branches
  *     description: Assigns a specific coin to multiple branches (sucursales) of a company

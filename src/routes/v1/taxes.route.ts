@@ -16,7 +16,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/taxes:
+ * /v1/taxes:
  *   get:
  *     summary: Get all taxes for the company
  *     description: Retrieves all tax configurations for the authenticated company
@@ -86,7 +86,7 @@ router.get('/',
 
 /**
  * @swagger
- * /api/v1/taxes:
+ * /v1/taxes:
  *   post:
  *     summary: Create a new tax
  *     description: Creates a new tax configuration for the company
@@ -228,7 +228,7 @@ router.post('/',
 
 /**
  * @swagger
- * /api/v1/taxes/{id}:
+ * /v1/taxes/{id}:
  *   put:
  *     summary: Update a tax (full update)
  *     tags: [taxes]
@@ -299,7 +299,7 @@ router.put('/:id',
 
 /**
  * @swagger
- * /api/v1/taxes/{id}:
+ * /v1/taxes/{id}:
  *   patch:
  *     summary: Update a tax (partial update)
  *     tags: [taxes]

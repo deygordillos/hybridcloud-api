@@ -7,7 +7,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/auth/login:
+ * /v1/auth/login:
  *   post:
  *     summary: User login
  *     description: Authenticates a user and returns access and refresh tokens
@@ -99,7 +99,7 @@ router.post('/login',
 
 /**
  * @swagger
- * /api/v1/auth/refresh:
+ * /v1/auth/refresh:
  *   post:
  *     summary: Refresh access token
  *     description: Generates a new access token using a valid refresh token

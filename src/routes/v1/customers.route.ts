@@ -9,7 +9,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/customers:
+ * /v1/customers:
  *   get:
  *     summary: Get all customers for the company
  *     description: Retrieves all customers associated with the authenticated company
@@ -79,7 +79,7 @@ router.get('/',
 
 /**
  * @swagger
- * /api/v1/customers:
+ * /v1/customers:
  *   post:
  *     summary: Create a new customer
  *     description: Creates a new customer for the authenticated company
@@ -211,7 +211,7 @@ router.post('/',
 
 /**
  * @swagger
- * /api/v1/customers/{id}:
+ * /v1/customers/{id}:
  *   put:
  *     summary: Update a customer (full update)
  *     tags: [customers]
@@ -264,7 +264,7 @@ router.put('/:id',
 
 /**
  * @swagger
- * /api/v1/customers/{id}:
+ * /v1/customers/{id}:
  *   patch:
  *     summary: Update a customer (partial update)
  *     tags: [customers]

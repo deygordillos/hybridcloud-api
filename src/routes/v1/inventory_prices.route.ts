@@ -21,7 +21,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/inventory/prices/variant/{variantId}:
+ * /v1/inventory/prices/variant/{variantId}:
  *   get:
  *     summary: Get all prices for a specific variant
  *     description: Retrieves all inventory prices for a specific variant with pagination
@@ -167,7 +167,7 @@ router.get('/variant/:variantId',
 
 /**
  * @swagger
- * /api/v1/inventory/prices/variant/{variantId}/current:
+ * /v1/inventory/prices/variant/{variantId}/current:
  *   get:
  *     summary: Get current prices for a specific variant
  *     description: Retrieves current (active) inventory prices for a specific variant
@@ -229,7 +229,7 @@ router.get('/variant/:variantId/current',
 
 /**
  * @swagger
- * /api/v1/inventory/prices/variant/{variantId}/type/{typeId}:
+ * /v1/inventory/prices/variant/{variantId}/type/{typeId}:
  *   get:
  *     summary: Get prices for a variant by price type
  *     description: Retrieves inventory prices for a specific variant and price type
@@ -307,7 +307,7 @@ router.get('/variant/:variantId/type/:typeId',
 
 /**
  * @swagger
- * /api/v1/inventory/prices:
+ * /v1/inventory/prices:
  *   post:
  *     summary: Create a new inventory price
  *     description: Creates a new inventory price with local, stable, and reference currency support
@@ -530,7 +530,7 @@ router.post('/',
 
 /**
  * @swagger
- * /api/v1/inventory/prices/{id}:
+ * /v1/inventory/prices/{id}:
  *   put:
  *     summary: Update an inventory price
  *     description: Updates an existing inventory price
@@ -677,13 +677,13 @@ router.put('/:id',
 );
 
 /**
- * @route DELETE /api/v1/inventory/prices/:id
+ * @route DELETE /v1/inventory/prices/:id
  * @desc Delete an inventory price
  * @access Private (requires authentication and company context)
  * @param {number} id - The ID of the inventory price to delete
  * @returns {Object} Success message
  * @example
- * DELETE /api/v1/inventory/prices/456
+ * DELETE /v1/inventory/prices/456
  * Response: {
  *   "success": true,
  *   "message": "Inventory price deleted"
@@ -709,7 +709,7 @@ router.put('/:id',
 
 /**
  * @swagger
- * /api/v1/inventory/prices/{id}/set-current:
+ * /v1/inventory/prices/{id}/set-current:
  *   patch:
  *     summary: Set a price as current
  *     description: Sets an inventory price as the current price for its variant and type

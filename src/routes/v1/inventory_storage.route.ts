@@ -9,7 +9,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/inventory/storage:
+ * /v1/inventory/storage:
  *   get:
  *     summary: Get all inventory storage locations for the company
  *     description: Retrieves all storage locations configured for the authenticated company
@@ -71,7 +71,7 @@ router.get('/',
 
 /**
  * @swagger
- * /api/v1/inventory/storage:
+ * /v1/inventory/storage:
  *   post:
  *     summary: Create a new inventory storage location
  *     description: Creates a new storage location for inventory management
@@ -175,7 +175,7 @@ router.post('/',
 
 /**
  * @swagger
- * /api/v1/inventory/storage/{id}:
+ * /v1/inventory/storage/{id}:
  *   put:
  *     summary: Update a storage location (full update)
  *     tags: [inventory-storage]
@@ -220,7 +220,7 @@ router.put('/:id',
 
 /**
  * @swagger
- * /api/v1/inventory/storage/{id}:
+ * /v1/inventory/storage/{id}:
  *   patch:
  *     summary: Update a storage location (partial update)
  *     tags: [inventory-storage]

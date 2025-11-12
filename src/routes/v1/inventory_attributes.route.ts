@@ -9,7 +9,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/inventory/attributes:
+ * /v1/inventory/attributes:
  *   get:
  *     summary: Get all inventory attributes for the company
  *     description: Retrieves all inventory attributes with their values for the authenticated company
@@ -82,7 +82,7 @@ router.get('/',
 
 /**
  * @swagger
- * /api/v1/inventory/attributes:
+ * /v1/inventory/attributes:
  *   post:
  *     summary: Create a new inventory attribute
  *     description: Creates a new inventory attribute with optional predefined values
@@ -224,7 +224,7 @@ router.post('/',
 
 /**
  * @swagger
- * /api/v1/inventory/attributes/{id}:
+ * /v1/inventory/attributes/{id}:
  *   put:
  *     summary: Update an inventory attribute (full update)
  *     tags: [inventory-attributes]
@@ -301,7 +301,7 @@ router.put('/:id',
 
 /**
  * @swagger
- * /api/v1/inventory/attributes/{id}:
+ * /v1/inventory/attributes/{id}:
  *   patch:
  *     summary: Update an inventory attribute (partial update)
  *     tags: [inventory-attributes]

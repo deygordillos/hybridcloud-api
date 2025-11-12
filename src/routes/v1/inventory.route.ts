@@ -9,7 +9,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/inventory:
+ * /v1/inventory:
  *   get:
  *     summary: Get all inventories for the company
  *     description: Retrieves all inventory items for the authenticated user's company
@@ -93,7 +93,7 @@ router.get('/',
 
 /**
  * @swagger
- * /api/v1/inventory:
+ * /v1/inventory:
  *   post:
  *     summary: Create a new inventory item
  *     description: Creates a new inventory item with optional variants, taxes, and attributes
@@ -376,7 +376,7 @@ router.post('/',
 
 /**
  * @swagger
- * /api/v1/inventory/{id}:
+ * /v1/inventory/{id}:
  *   put:
  *     summary: Update an inventory item (full update)
  *     description: Updates an existing inventory item with all fields
@@ -644,7 +644,7 @@ router.put('/:id',
 
 /**
  * @swagger
- * /api/v1/inventory/{id}:
+ * /v1/inventory/{id}:
  *   patch:
  *     summary: Update an inventory item (partial update)
  *     description: Partially updates an existing inventory item

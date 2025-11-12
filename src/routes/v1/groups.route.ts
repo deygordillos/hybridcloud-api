@@ -9,7 +9,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/groups:
+ * /v1/groups:
  *   get:
  *     summary: Get all groups
  *     description: Retrieves all groups (Admin only)
@@ -80,7 +80,7 @@ router.get('/',
 
 /**
  * @swagger
- * /api/v1/groups:
+ * /v1/groups:
  *   post:
  *     summary: Create a new group
  *     description: Creates a new group (Admin only)
@@ -185,7 +185,7 @@ router.post('/',
 
 /**
  * @swagger
- * /api/v1/groups/{id}:
+ * /v1/groups/{id}:
  *   put:
  *     summary: Update a group (full update)
  *     description: Updates all fields of an existing group (Admin only)
@@ -234,7 +234,7 @@ router.put('/:id',
 
 /**
  * @swagger
- * /api/v1/groups/{id}:
+ * /v1/groups/{id}:
  *   patch:
  *     summary: Update a group (partial update)
  *     description: Partially updates an existing group (Admin only)

@@ -19,23 +19,23 @@ import typesOfPricesRoutes from './types_of_prices.route'
 import currenciesExchangesRoutes from './currencies_exchanges.route'
 
 const router = Router();
-router.use('/api/v1/auth', authRoutes);
-router.use('/api/v1/users', usersRoutes);
-router.use('/api/v1/groups', groupsRoutes);
-router.use('/api/v1/companies', companiesRoutes);
-router.use('/api/v1/customers', customersRoute);
-router.use('/api/v1/taxes', taxesRoutes);
-router.use('/api/v1/coins', coinsRoutes);
-router.use('/api/v1/inventory', inventoryRoutes);
-router.use('/api/v1/inventory/family', inventoryFamilyRoutes);
-router.use('/api/v1/inventory/storage', inventoryStorageRoutes);
-router.use('/api/v1/inventory/attributes', inventoryAttrsRoutes);
-router.use('/api/v1/inventory/lots', inventoryLotsRoutes);
-router.use('/api/v1/inventory/prices', inventoryPricesRoutes);
-router.use('/api/v1/inventory/variant-storages', inventoryVariantStoragesRoutes);
-router.use('/api/v1/inventory/lots-storages', inventoryLotsStoragesRoutes);
-router.use('/api/v1/inventory/movements', inventoryMovementsRoutes);
-router.use('/api/v1/types-of-prices', typesOfPricesRoutes);
-router.use('/api/v1/currencies-exchanges', currenciesExchangesRoutes);
+router.use('/v1/auth', authRoutes);
+router.use('/v1/users', usersRoutes);
+router.use('/v1/groups', groupsRoutes);
+router.use('/v1/companies', companiesRoutes);
+router.use('/v1/customers', customersRoute);
+router.use('/v1/taxes', taxesRoutes);
+router.use('/v1/coins', coinsRoutes);
+router.use('/v1/inventory', inventoryRoutes);
+router.use('/v1/inventory/family', inventoryFamilyRoutes);
+router.use('/v1/inventory/storage', inventoryStorageRoutes);
+router.use('/v1/inventory/attributes', inventoryAttrsRoutes);
+router.use('/v1/inventory/lots', inventoryLotsRoutes);
+router.use('/v1/inventory/prices', inventoryPricesRoutes);
+router.use('/v1/inventory/variant-storages', inventoryVariantStoragesRoutes);
+router.use('/v1/inventory/lots-storages', inventoryLotsStoragesRoutes);
+router.use('/v1/inventory/movements', inventoryMovementsRoutes);
+router.use('/v1/types-of-prices', typesOfPricesRoutes);
+router.use('/v1/currencies-exchanges', currenciesExchangesRoutes);
 
 export default router

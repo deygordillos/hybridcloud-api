@@ -34,7 +34,7 @@ router.use(companyMiddleware);
 
 /**
  * @swagger
- * /api/v1/currencies-exchanges:
+ * /v1/currencies-exchanges:
  *   get:
  *     summary: Get all currencies configured for the company
  *     description: Retrieves all currency exchange configurations for the authenticated company
@@ -105,7 +105,7 @@ router.get('/', CurrenciesExchangesController.getCompanyCurrencies);
 
 /**
  * @swagger
- * /api/v1/currencies-exchanges/history:
+ * /v1/currencies-exchanges/history:
  *   get:
  *     summary: Get currency exchange rate history
  *     description: Retrieves historical records of exchange rate changes with optional filtering
@@ -201,7 +201,7 @@ router.get('/history', CurrenciesExchangesController.getCurrencyHistory);
 
 /**
  * @swagger
- * /api/v1/currencies-exchanges/{id}:
+ * /v1/currencies-exchanges/{id}:
  *   get:
  *     summary: Get a specific currency exchange by ID
  *     tags: [currencies-exchanges]
@@ -234,7 +234,7 @@ router.get('/:id', [
 
 /**
  * @swagger
- * /api/v1/currencies-exchanges:
+ * /v1/currencies-exchanges:
  *   post:
  *     summary: Create a new currency exchange configuration
  *     description: Creates a new currency exchange rate configuration for the company
@@ -306,7 +306,7 @@ router.post('/', [
 
 /**
  * @swagger
- * /api/v1/currencies-exchanges/{id}:
+ * /v1/currencies-exchanges/{id}:
  *   put:
  *     summary: Update an existing currency exchange configuration
  *     tags: [currencies-exchanges]
@@ -383,7 +383,7 @@ router.put('/:id', [
 
 /**
  * @swagger
- * /api/v1/currencies-exchanges/set-base:
+ * /v1/currencies-exchanges/set-base:
  *   post:
  *     summary: Set a currency as the base currency for the company
  *     description: Configures the base currency used for all currency conversions

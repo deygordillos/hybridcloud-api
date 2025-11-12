@@ -9,7 +9,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/types-of-prices:
+ * /v1/types-of-prices:
  *   get:
  *     summary: Get all price types for the company
  *     description: Retrieves all price type configurations for the authenticated company
@@ -71,7 +71,7 @@ router.get('/',
 
 /**
  * @swagger
- * /api/v1/types-of-prices:
+ * /v1/types-of-prices:
  *   post:
  *     summary: Create a new price type
  *     description: Creates a new price type configuration for the company
@@ -186,7 +186,7 @@ router.post('/',
 
 /**
  * @swagger
- * /api/v1/types-of-prices/{id}:
+ * /v1/types-of-prices/{id}:
  *   put:
  *     summary: Update a price type (full update)
  *     tags: [types-of-prices]
@@ -244,7 +244,7 @@ router.put('/:id',
 
 /**
  * @swagger
- * /api/v1/types-of-prices/{id}:
+ * /v1/types-of-prices/{id}:
  *   patch:
  *     summary: Update a price type (partial update)
  *     tags: [types-of-prices]
