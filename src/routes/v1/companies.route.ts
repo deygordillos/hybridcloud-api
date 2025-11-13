@@ -11,6 +11,103 @@ const router = Router();
 /**
  * @swagger
  * /v1/companies:
+ *   get:
+ *     summary: List all companies
+ *     description: Retrieves a list of all companies (Admin only)
+ *     tags: [companies]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of companies retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       company_id:
+ *                         type: integer
+ *                         example: 1
+ *                       group_id:
+ *                         type: integer
+ *                         example: 1
+ *                       company_is_principal:
+ *                         type: boolean
+ *                         example: true
+ *                       company_name:
+ *                         type: string
+ *                         example: Acme Corporation
+ *                       company_razon_social:
+ *                         type: string
+ *                         example: Acme Corporation S.A.
+ *                       company_id_fiscal:
+ *                         type: string
+ *                         example: J-123456789
+ *                       company_email:
+ *                         type: string
+ *                         example: info@acme.com
+ *                       company_phone1:
+ *                         type: string
+ *                         example: +1234567890
+ *                       company_start:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2025-01-01T00:00:00.000Z"
+ *                       company_end:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2026-01-01T00:00:00.000Z"
+ *                       country_id:
+ *                         type: integer
+ *                         example: 1
+ *                 message:
+ *                   type: string
+ *                   example: Companies retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ *       403:
+ *         description: Forbidden - Admin access required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Admin access required
+ */
+router.get('/',
+    [
+        authMiddleware,
+        adminMiddleware,
+    ],
+    CompaniesController.list);
+
+/**
+ * @swagger
+ * /v1/companies:
  *   post:
  *     summary: Create a new company
  *     description: Creates a new company with all required information (Admin only)
