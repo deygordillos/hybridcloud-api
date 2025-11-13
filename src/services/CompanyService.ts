@@ -6,6 +6,23 @@ import { CountryRepository } from "../repositories/CountryRepository";
 import { GroupRepository } from "../repositories/GroupRepository";
 
 export class CompanyService {
+
+    static async list(offset: number = 0, limit: number = 10, group_id?: number) {
+        const queryBuilder = CompanyRepository.createQueryBuilder("company")
+            .leftJoinAndSelect("company.group_id", "group")
+            .leftJoinAndSelect("company.country_id", "country")
+            .skip(offset)
+            .take(limit);
+
+        if (group_id) {
+            queryBuilder.where("group.group_id = :group_id", { group_id });
+        }
+
+        const [data, total] = await queryBuilder.getManyAndCount();
+
+        return { data, total };
+    }
+
     static async create(
         group_id: number,
         company_is_principal: number,
