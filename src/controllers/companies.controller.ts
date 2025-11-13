@@ -91,13 +91,14 @@ export class CompaniesController {
             if (isNaN(company_id)) return res.status(400).json({ error: "Invalid companyId" });
 
             const { 
-                company_is_principal, company_name, company_color, company_razon_social, company_id_fiscal, company_email, company_address,
+                company_is_principal, company_status, company_name, company_color, company_razon_social, company_id_fiscal, company_email, company_address,
                 company_phone1, company_phone2, company_website, company_facebook, company_instagram, company_url_logo, company_contact_name,
                 company_contact_phone, company_contact_email, company_start, company_end
             } = req.body;
             const response = await CompanyService.update(
                 company_id,
                 (company_is_principal == 0 || company_is_principal == 1 ? company_is_principal : 0),
+                (company_status == 0 || company_status == 1 ? company_status : 0),
                 company_name || '', 
                 company_color || null, 
                 company_razon_social || null, 

@@ -89,6 +89,7 @@ export class CompanyService {
     static async update(
         company_id: number,
         company_is_principal: number,
+        company_status: number,
         company_name: string,
         company_color: string,
         company_razon_social: string,
@@ -111,6 +112,7 @@ export class CompanyService {
         if (!company) throw new Error(messages.Companies.company_not_exists || "Ups! Company not exists.");
 
         company.company_is_principal = (company_is_principal == 0 || company_is_principal == 1 ? company_is_principal : company.company_is_principal);
+        company.company_status = (company_status == 0 || company_status == 1 ? company_status : company.company_status);
         company.company_name = company_name || company.company_name;
         company.company_color = company_color || company.company_color;
         company.company_razon_social = company_razon_social || company.company_razon_social;
