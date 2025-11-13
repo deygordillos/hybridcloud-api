@@ -31,7 +31,11 @@ export default {
         company_needed: 'You must have send a company id'
     },
     Country: {
-        country_not_exists: 'Sorry, country does not exists'
+        country_created: 'Country created successfully',
+        country_updated: 'Country updated successfully',
+        country_not_exists: 'Sorry, country does not exists',
+        country_exists: 'Sorry, country already exists',
+        country_needed: 'You must have send a country id'
     },
     Customers: {
         customer_created: 'Customer created',
