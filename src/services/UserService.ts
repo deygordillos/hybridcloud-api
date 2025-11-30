@@ -13,7 +13,7 @@ export class UserService {
      * @param company_id ID de la empresa (opcional si isAdmin es true)
      * @param user_status Filtro opcional por estado (1=activo, 0=inactivo)
      * @param user_type Filtro opcional por tipo de usuario
-     * @param is_admin Si es true, muestra todos los usuarios sin filtro de empresa
+     * @param current_user Usuario actual (para verificar permisos)
      */
     static async list(
         offset: number = 0, 
@@ -21,10 +21,10 @@ export class UserService {
         company_id?: number,
         user_status?: number, 
         user_type?: number,
-        is_admin: boolean = false
+        current_user?: any
     ) {
         // Si es admin y no se especifica company_id, listar todos los usuarios
-        if (is_admin && !company_id) {
+        if (current_user?.is_admin && !company_id) {
             const queryBuilder = UserRepository.createQueryBuilder("user")
                 .select([
                     "user.user_id",
@@ -48,6 +48,7 @@ export class UserService {
             if (user_type !== undefined) {
                 queryBuilder.andWhere("user.user_type = :user_type", { user_type });
             }
+            queryBuilder.andWhere("user.user_id != :user_id", { user_id: current_user?.user_id });
 
             queryBuilder
                 .orderBy("user.created_at", "DESC")

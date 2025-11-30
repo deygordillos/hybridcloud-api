@@ -8,16 +8,35 @@ import { UsersCompaniesRepository } from "../repositories/UsersCompaniesReposito
 
 export class CompanyService {
 
-    static async list(offset: number = 0, limit: number = 10, group_id?: number) {
+    static async list(
+        offset: number = 0, 
+        limit: number = 10, 
+        group_id?: number,
+        is_admin: boolean = false,
+        current_user_id?: number
+    ) {
         const queryBuilder = CompanyRepository.createQueryBuilder("company")
             .leftJoinAndSelect("company.group_id", "group")
-            .leftJoinAndSelect("company.country_id", "country")
-            .skip(offset)
-            .take(limit);
+            .leftJoinAndSelect("company.country_id", "country");
+
+        // Si NO es admin, filtrar solo empresas del usuario
+        if (!is_admin && current_user_id) {
+            queryBuilder
+                .innerJoin(
+                    "users_companies",
+                    "uc",
+                    "uc.company_id = company.company_id AND uc.user_id = :current_user_id",
+                    { current_user_id }
+                );
+        }
 
         if (group_id) {
-            queryBuilder.where("group.group_id = :group_id", { group_id });
+            queryBuilder.andWhere("group.group_id = :group_id", { group_id });
         }
+
+        queryBuilder
+            .skip(offset)
+            .take(limit);
 
         const [companies, total] = await queryBuilder.getManyAndCount();
 
