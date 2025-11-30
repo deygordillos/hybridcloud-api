@@ -8,12 +8,19 @@ export default {
         invalid_refresh_token: 'Invalid refresh token.'
     },
     User: {
-        user_created: 'User created',
-        user_updated: 'User updated',
-        user_exists: 'Sorry, user already exists',
+        user_created: 'User created successfully',
+        user_updated: 'User updated successfully',
+        user_exists: 'Sorry, username already exists',
+        email_exists: 'Sorry, email already exists',
         user_not_exists: 'Sorry, user does not exists',
         user_complete_required_fields: 'Please, you have to send username, password, email and user_type at least',
-        user_needed: 'You must have send an userid'
+        user_needed: 'You must have send a userid',
+        user_deactivated: 'User deactivated successfully',
+        user_activated: 'User activated successfully',
+        user_already_inactive: 'User is already inactive',
+        user_already_active: 'User is already active',
+        password_changed: 'Password changed successfully',
+        cannot_delete_user: 'Cannot delete users. You can only deactivate them.'
     },
     Groups: {
         group_created: 'Group created',

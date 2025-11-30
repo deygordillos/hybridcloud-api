@@ -4,7 +4,7 @@ import messages from "../config/messages";
 import { CompanyRepository } from "../repositories/CompanyRepository";
 import { CountryRepository } from "../repositories/CountryRepository";
 import { GroupRepository } from "../repositories/GroupRepository";
-import { UsersCompaniesRepository } from "../repositories/UsersCompanies";
+import { UsersCompaniesRepository } from "../repositories/UsersCompaniesRepository";
 
 export class CompanyService {
 

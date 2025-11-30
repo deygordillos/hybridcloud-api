@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import messages from "../config/messages";
 import { UsersCompaniesService } from "../services/UsersCompaniesService";
-import { UsersService } from "../services/UsersService";
+import { UserService } from "../services/UserService";
 
 export const companyMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const { user_id } = req['user']
     if (!user_id) return res.status(401).json({ error: messages.Auth.user_not_found });
 
-    const user = await UsersService.findUserById(user_id);
+    const user = await UserService.findById(user_id);
     if (!user) return res.status(401).json({ error: messages.Auth.user_not_found });
 
     // Valido que tenga 1 sola empresa asignada
