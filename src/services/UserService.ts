@@ -10,17 +10,55 @@ export class UserService {
      * Lista usuarios con paginación y filtro por empresa
      * @param offset Offset para paginación
      * @param limit Límite de registros
-     * @param company_id ID de la empresa (requerido)
+     * @param company_id ID de la empresa (opcional si isAdmin es true)
      * @param user_status Filtro opcional por estado (1=activo, 0=inactivo)
      * @param user_type Filtro opcional por tipo de usuario
+     * @param is_admin Si es true, muestra todos los usuarios sin filtro de empresa
      */
     static async list(
         offset: number = 0, 
         limit: number = 10, 
-        company_id: number,
+        company_id?: number,
         user_status?: number, 
-        user_type?: number
+        user_type?: number,
+        is_admin: boolean = false
     ) {
+        // Si es admin y no se especifica company_id, listar todos los usuarios
+        if (is_admin && !company_id) {
+            const queryBuilder = UserRepository.createQueryBuilder("user")
+                .select([
+                    "user.user_id",
+                    "user.username",
+                    "user.user_type",
+                    "user.user_status",
+                    "user.email",
+                    "user.first_name",
+                    "user.last_name",
+                    "user.user_phone",
+                    "user.is_admin",
+                    "user.created_at",
+                    "user.updated_at",
+                    "user.last_login"
+                ]);
+
+            if (user_status !== undefined) {
+                queryBuilder.andWhere("user.user_status = :user_status", { user_status });
+            }
+
+            if (user_type !== undefined) {
+                queryBuilder.andWhere("user.user_type = :user_type", { user_type });
+            }
+
+            queryBuilder
+                .orderBy("user.created_at", "DESC")
+                .offset(offset)
+                .limit(limit);
+
+            const [data, total] = await queryBuilder.getManyAndCount();
+
+            return { data, total };
+        }
+
         // Query para obtener usuarios de la empresa
         const queryBuilder = UsersCompaniesRepository.createQueryBuilder("uc")
             .innerJoin("uc.user_id", "user")

@@ -23,7 +23,7 @@ const router = Router();
  *         schema:
  *           type: integer
  *         required: false
- *         description: Company ID to filter users (if not provided, uses authenticated user's company)
+ *         description: Company ID to filter users. If not provided and user is admin, returns all users. If not provided and user is not admin, uses authenticated user's company.
  *       - in: query
  *         name: page
  *         schema:

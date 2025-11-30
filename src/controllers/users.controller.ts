@@ -14,6 +14,9 @@ export class UsersController {
             const user_status = req.query.user_status !== undefined ? parseInt(req.query.user_status as string) : undefined;
             const user_type = req.query.user_type !== undefined ? parseInt(req.query.user_type as string) : undefined;
 
+            const currentUser = (req as any).user;
+            const is_admin = currentUser?.is_admin === 1;
+            
             // Obtener company_id del request (viene del companyMiddleware o del header)
             let company_id = req['company_id'];
             
@@ -25,14 +28,15 @@ export class UsersController {
                 }
             }
 
-            // Si aún no hay company_id, retornar error
-            if (!company_id) {
+            // Si el usuario es admin, company_id es opcional (puede ver todos los usuarios)
+            // Si no es admin, company_id es requerido
+            if (!is_admin && !company_id) {
                 return errorResponse(res, "Company ID is required", 400);
             }
 
             const offset = (page - 1) * limit;
 
-            const { data, total } = await UserService.list(offset, limit, company_id, user_status, user_type);
+            const { data, total } = await UserService.list(offset, limit, company_id, user_status, user_type, is_admin);
 
             const pagination = {
                 total,
