@@ -4,6 +4,7 @@ import messages from "../config/messages";
 import { CompanyRepository } from "../repositories/CompanyRepository";
 import { CountryRepository } from "../repositories/CountryRepository";
 import { GroupRepository } from "../repositories/GroupRepository";
+import { UsersCompaniesRepository } from "../repositories/UsersCompanies";
 
 export class CompanyService {
 
@@ -18,7 +19,32 @@ export class CompanyService {
             queryBuilder.where("group.group_id = :group_id", { group_id });
         }
 
-        const [data, total] = await queryBuilder.getManyAndCount();
+        const [companies, total] = await queryBuilder.getManyAndCount();
+
+        // Para cada empresa, obtener sus usuarios administradores
+        const data = await Promise.all(companies.map(async (company) => {
+            const adminUsers = await UsersCompaniesRepository
+                .createQueryBuilder("uc")
+                .innerJoin("uc.user_id", "user")
+                .where("uc.company_id = :company_id", { company_id: company.company_id })
+                .andWhere("uc.is_company_admin = 1")
+                .andWhere("user.user_status = 1")
+                .select([
+                    "user.user_id as user_id",
+                    "user.username as username",
+                    "user.email as email",
+                    "user.first_name as first_name",
+                    "user.last_name as last_name",
+                    "uc.is_company_admin as is_company_admin",
+                    "uc.created_at as assigned_at"
+                ])
+                .getRawMany();
+
+            return {
+                ...company,
+                admin_users: adminUsers
+            };
+        }));
 
         return { data, total };
     }

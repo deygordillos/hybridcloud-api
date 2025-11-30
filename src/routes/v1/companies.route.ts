@@ -68,6 +68,34 @@ const router = Router();
  *                       country_id:
  *                         type: integer
  *                         example: 1
+ *                       admin_users:
+ *                         type: array
+ *                         description: List of admin users assigned to this company
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             user_id:
+ *                               type: integer
+ *                               example: 5
+ *                             username:
+ *                               type: string
+ *                               example: johndoe
+ *                             email:
+ *                               type: string
+ *                               example: john.doe@acme.com
+ *                             first_name:
+ *                               type: string
+ *                               example: John
+ *                             last_name:
+ *                               type: string
+ *                               example: Doe
+ *                             is_company_admin:
+ *                               type: integer
+ *                               example: 1
+ *                             assigned_at:
+ *                               type: string
+ *                               format: date-time
+ *                               example: "2025-01-15T10:30:00.000Z"
  *                 message:
  *                   type: string
  *                   example: Companies retrieved successfully
