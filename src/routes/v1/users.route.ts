@@ -2,7 +2,6 @@ import { Router } from 'express'
 import { body, param, query } from "express-validator";
 import { validatorRequestMiddleware } from '../../middlewares/validator_request';
 import { authMiddleware } from '../../middlewares/AuthMiddleware';
-import { adminMiddleware } from '../../middlewares/adminMiddleware';
 import { companyMiddleware } from '../../middlewares/companyMiddleware';
 import { UsersController } from '../../controllers/users.controller';
 
@@ -124,7 +123,6 @@ router.get('/',
     [
         authMiddleware,
         companyMiddleware,
-        adminMiddleware,
         query('page').optional().isInt({ min: 1 }).withMessage("Page must be a positive integer"),
         query('limit').optional().isInt({ min: 1, max: 100 }).withMessage("Limit must be between 1 and 100"),
         query('user_status').optional().isInt().isIn([0, 1]).withMessage("User status must be 0 or 1"),
@@ -191,7 +189,6 @@ router.get('/',
 router.get('/:id',
     [
         authMiddleware,
-        adminMiddleware,
         param('id').isInt().withMessage("User ID must be an integer"),
         validatorRequestMiddleware,
     ],
@@ -202,10 +199,17 @@ router.get('/:id',
  * /v1/users:
  *   post:
  *     summary: Create a new user
- *     description: Creates a new user with full details and audit tracking (Admin only)
+ *     description: Creates a new user with full details and audit tracking. The user will be automatically associated with the company specified in the x-company-id header (Admin only)
  *     tags: [users]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: x-company-id
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Company ID to associate the new user with. The user will be linked to this company.
  *     requestBody:
  *       required: true
  *       content:
@@ -256,20 +260,29 @@ router.get('/:id',
  *                 enum: [0, 1]
  *                 default: 0
  *                 example: 0
+ *                 description: Whether the user is a system administrator
+ *               is_company_admin:
+ *                 type: integer
+ *                 enum: [0, 1]
+ *                 default: 0
+ *                 example: 1
+ *                 description: Whether the user is an administrator of the associated company
  *     responses:
  *       201:
- *         description: User created successfully
+ *         description: User created successfully and associated with company
  *       400:
  *         description: Invalid input or user/email already exists
  *       401:
  *         description: Unauthorized
  *       403:
  *         description: Forbidden - Admin access required
+ *       404:
+ *         description: Company not found
  */
 router.post('/',
     [
         authMiddleware,
-        adminMiddleware,
+        companyMiddleware,
         body('username')
             .notEmpty().withMessage("Username is required")
             .trim()
@@ -363,7 +376,6 @@ router.post('/',
 router.put('/:id',
     [
         authMiddleware,
-        adminMiddleware,
         param('id').isInt().withMessage("User ID must be an integer"),
         body('email')
             .optional()
@@ -422,7 +434,6 @@ router.put('/:id',
 router.post('/:id/deactivate',
     [
         authMiddleware,
-        adminMiddleware,
         param('id').isInt().withMessage("User ID must be an integer"),
         validatorRequestMiddleware,
     ],
@@ -459,7 +470,6 @@ router.post('/:id/deactivate',
 router.post('/:id/activate',
     [
         authMiddleware,
-        adminMiddleware,
         param('id').isInt().withMessage("User ID must be an integer"),
         validatorRequestMiddleware,
     ],
@@ -511,7 +521,6 @@ router.post('/:id/activate',
 router.post('/:id/change-password',
     [
         authMiddleware,
-        adminMiddleware,
         param('id').isInt().withMessage("User ID must be an integer"),
         body("password")
             .notEmpty().withMessage("Password is required")
@@ -603,7 +612,6 @@ router.post('/:id/change-password',
 router.get('/:id/audit-history',
     [
         authMiddleware,
-        adminMiddleware,
         param('id').isInt().withMessage("User ID must be an integer"),
         query('page').optional().isInt({ min: 1 }).withMessage("Page must be a positive integer"),
         query('limit').optional().isInt({ min: 1, max: 100 }).withMessage("Limit must be between 1 and 100"),
@@ -643,7 +651,7 @@ router.get('/:id/audit-history',
  *                   example: Cannot delete users. Use deactivate instead.
  */
 router.delete('/:id',
-    [authMiddleware, adminMiddleware],
+    [authMiddleware],
     (req, res) => {
         return res.status(403).json({
             success: false,

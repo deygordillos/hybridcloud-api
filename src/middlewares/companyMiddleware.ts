@@ -12,7 +12,6 @@ export const companyMiddleware = async (req: Request, res: Response, next: NextF
 
     // Valido que tenga 1 sola empresa asignada
     const usersCompanies = await UsersCompaniesService.getUserCompanies(user);
-    console.log({usersCompanies})
     if (!user.is_admin) {
         if (usersCompanies.length !== 1) {
 

@@ -15,7 +15,6 @@ export class UsersController {
             const user_type = req.query.user_type !== undefined ? parseInt(req.query.user_type as string) : undefined;
 
             const current_user = (req as any).user;
-            
             // Obtener company_id del request (viene del companyMiddleware o del header)
             let company_id = req['company_id'];
             
@@ -92,6 +91,7 @@ export class UsersController {
 
             const currentUser = (req as any).user;
             const ipAddress = req.ip || req.socket.remoteAddress;
+            const company_id = (req as any).company_id; // Viene del companyMiddleware
 
             const user = await UserService.create(
                 {
@@ -105,7 +105,8 @@ export class UsersController {
                     is_admin
                 },
                 currentUser,
-                ipAddress
+                ipAddress,
+                company_id
             );
 
             // Remover el password de la respuesta
@@ -116,6 +117,9 @@ export class UsersController {
             console.error('UsersController.create error:', error);
             if (error.message === messages.User.user_exists || error.message === messages.User.email_exists) {
                 return errorResponse(res, error.message, 400);
+            }
+            if (error.message === "Company not found") {
+                return errorResponse(res, error.message, 404);
             }
             return errorResponse(res, error.message, 500);
         }

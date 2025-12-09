@@ -4,6 +4,8 @@ import { Users } from "../entity/users.entity";
 import { UserRepository } from "../repositories/UserRepository";
 import { UserAuditRepository } from "../repositories/UserAuditRepository";
 import { UsersCompaniesRepository } from "../repositories/UsersCompaniesRepository";
+import { CompanyRepository } from "../repositories/CompanyRepository";
+import { UsersCompaniesService } from "./UsersCompaniesService";
 
 export class UserService {
     /**
@@ -88,6 +90,8 @@ export class UserService {
         if (user_type !== undefined) {
             queryBuilder.andWhere("user.user_type = :user_type", { user_type });
         }
+
+        queryBuilder.andWhere("user.user_id != :user_id", { user_id: current_user?.user_id });
 
         queryBuilder
             .orderBy("user.created_at", "DESC")
@@ -197,6 +201,7 @@ export class UserService {
      * @param userData Datos del usuario
      * @param createdBy Usuario que crea el registro
      * @param ipAddress IP desde donde se crea
+     * @param company_id ID de la empresa (opcional, viene del middleware)
      */
     static async create(
         userData: {
@@ -210,7 +215,9 @@ export class UserService {
             is_admin?: number;
         },
         createdBy: Users,
-        ipAddress?: string
+        ipAddress?: string,
+        company_id?: number,
+        is_company_admin: number = 0
     ) {
         // Verificar si el username ya existe
         const existingUsername = await UserRepository.findOneBy({ username: userData.username });
@@ -222,6 +229,14 @@ export class UserService {
         const existingEmail = await UserRepository.findOneBy({ email: userData.email });
         if (existingEmail) {
             throw new Error(messages.User.email_exists || "Email already exists.");
+        }
+
+        // Validar que la empresa existe si se proporciona company_id
+        if (company_id) {
+            const company = await CompanyRepository.findOneBy({ company_id });
+            if (!company) {
+                throw new Error("Company not found");
+            }
         }
 
         // Hash del password
@@ -244,6 +259,14 @@ export class UserService {
 
         await UserRepository.save(user);
 
+        // Asociar usuario con la empresa si se proporciona company_id
+        if (company_id) {
+            const company = await CompanyRepository.findOneBy({ company_id });
+            if (company) {
+                await UsersCompaniesService.linkUserToCompany(user, company, is_company_admin);
+            }
+        }
+
         // Registrar auditoría
         await this.createAuditLog(
             user,
@@ -255,7 +278,9 @@ export class UserService {
                 email: userData.email,
                 first_name: userData.first_name,
                 last_name: userData.last_name,
-                is_admin: userData.is_admin || 0
+                is_admin: userData.is_admin || 0,
+                company_id: company_id,
+                is_company_admin: is_company_admin
             },
             ipAddress
         );
