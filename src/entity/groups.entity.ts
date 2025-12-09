@@ -6,7 +6,7 @@ import { Companies } from "./companies.entity";
 @Index('group_name', ['group_name'], {})
 @Index('user_id', ['user_id'], {})
 
-@Entity('Groups')
+@Entity('groups')
 export class Groups {
     @PrimaryGeneratedColumn({ type: 'int', unsigned: true, comment: "id incremental del grupo" })
     group_id: number
