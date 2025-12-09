@@ -15,6 +15,10 @@ const options = {
         url: 'http://localhost:3001/api',
         description: 'Servidor local',
       },
+      {
+        url: 'https://api-dev.tuhybrid.com',
+        description: 'Servidor desarrollo',
+      },
     ],
     components: {
       securitySchemes: {

@@ -1,170 +1,305 @@
 import { Request, Response } from "express";
-import { appDataSource } from "../app-data-source";
-import bcrypt from "bcrypt";
-import 'dotenv/config';
-
-import { Users } from "../entity/users.entity";
 import messages from "../config/messages";
-// import { Sucursales } from "../entity/sucursales.entity";
-import { In } from "typeorm";
+import { UserService } from "../services/UserService";
+import { successResponse, errorResponse } from "../helpers/responseHelper";
 
-/**
- * Create an user
- * @param req Request object { username, password, user_type, email, first_name, last_name, user_phone, sucursal_id }
- * @param res Response object
- * @returns 
- */
-// export const createUser = async (req: Request, res: Response): Promise<Response> => {
-//     try {
-//         const { username, password, user_type, email, first_name, last_name, user_phone, sucursal_id } = req.body;
-//         appDataSource
-//         .initialize()
-//         .then(async () => {
-//             const sucursalData = await appDataSource.manager.findOneBy(Sucursales, {
-//                 sucursal_id: parseInt(sucursal_id)
-//             });
-//             // If sucursal not exists
-//             if (!sucursalData) return res.status(400).json({ message: messages.Sucursales.sucursal_not_exists });
+export class UsersController {
+    /**
+     * Lista todos los usuarios con paginación filtrados por empresa
+     */
+    static async list(req: Request, res: Response): Promise<Response> {
+        try {
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+            const user_status = req.query.user_status !== undefined ? parseInt(req.query.user_status as string) : undefined;
+            const user_type = req.query.user_type !== undefined ? parseInt(req.query.user_type as string) : undefined;
 
-//             const userData = await appDataSource.manager.findOneBy(Users, {
-//                 username: username
-//             });
-//             // If username exists
-//             if (userData) return res.status(400).json({ message: messages.User.user_exists });
-
-//             const hashedPassword = await bcrypt.hash(password, 10);
-
-//             // Creo el user
-//             const userRepository = appDataSource.getRepository(Users);
-//             const user = userRepository.create({ username, password: hashedPassword, user_type, email, first_name, last_name, user_phone });
-//             await userRepository.save(user);
-
-//             res.status(201).json({ message: messages.User.user_created, data: user });
-//         })
-//         .catch((err) => {
-//             console.error("Error during Data Source initialization:", err)
-//             return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
-//         })
-//         .finally(() => {
-//             appDataSource.destroy();
-//         })
-//     } catch (e) {
-//         console.log('UserController.createUser catch error: ', e);
-//         return res.status(500).json({ message: 'error', data: e.name });
-//     }
-// }
-
-/**
- * Update a user
- * @param req Request object :id { email, first_name, last_name, user_phone }
- * @param res Response object
- * @returns 
- */
-// export const updateUser = async (req: Request, res: Response): Promise<Response> => {
-//     try {
-//         const user_id = req.params.id; // get user id from URL param
-//         const { email, first_name, last_name, user_phone, user_status } = req.body;
-
-//         if (!user_id) return res.status(400).json({ message: messages.User.user_needed });
-
-//         appDataSource
-//         .initialize()
-//         .then(async () => {
-//             const userRepository = appDataSource.getRepository(Users);
-
-//             const userData = await userRepository.findOneBy({
-//                 user_id: parseInt(user_id)
-//             });
-//             // If user not exists
-//             if (!userData) return res.status(400).json({ message: messages.User.user_not_exists });
-
-//             // Actualiza los campos del usuario
-//             userData.email = email || userData.email;
-//             userData.first_name = first_name || userData.first_name;
-//             userData.last_name = last_name || userData.last_name;
-//             userData.user_phone = user_phone || userData.user_phone;
-//             userData.updated_at = new Date();
-//             userData.user_status = (user_status == 0 || user_status == 1 ? user_status : userData.user_status);
+            const current_user = (req as any).user;
+            // Obtener company_id del request (viene del companyMiddleware o del header)
+            let company_id = req['company_id'];
             
-//             delete userData.password;
+            // Si no viene por middleware, verificar en headers
+            if (!company_id) {
+                const companyIdHeader = req.headers['x-company-id'];
+                if (companyIdHeader) {
+                    company_id = parseInt(companyIdHeader as string);
+                }
+            }
 
-//             // Guarda los cambios en la base de datos
-//             await userRepository.save(userData);
-//             res.status(200).json({ message: messages.User.user_updated, data: userData });
-//         })
-//         .catch((err) => {
-//             console.error("Error during Data Source initialization:", err)
-//             return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
-//         })
-//         .finally(() => {
-//             appDataSource.destroy();
-//         })
-//     } catch (e) {
-//         console.log('UserController.updateUser catch error: ', e);
-//         return res.status(500).json({ message: 'error', data: e.name });
-//     }
-// }
+            // Si el usuario es admin, company_id es opcional (puede ver todos los usuarios)
+            // Si no es admin, company_id es requerido
+            if (!current_user?.is_admin && !company_id) {
+                return errorResponse(res, "Company ID is required", 400);
+            }
 
-/**
- * Assign sucursal to an user
- * @param req Request object :id { sucursal_id: array | int }
- * @param res Response object
- * @returns 
- */
-// export const assignSucursalesToUser = async (req: Request, res: Response): Promise<Response> => {
-//     try {
-//         const user_id = req.params.id; // get user id from URL param
-//         const { sucursal_id } = req.body;
-//         if (!user_id) return res.status(400).json({ message: messages.User.user_needed });
+            const offset = (page - 1) * limit;
 
-//         appDataSource
-//         .initialize()
-//         .then(async () => {
-//             const userRepository = appDataSource.getRepository(Users);
-//             const userData = await userRepository.findOneBy({
-//                 user_id: parseInt(user_id)
-//             });
-//             // If user not exists
-//             if (!userData) return res.status(400).json({ message: messages.User.user_not_exists });
+            const { data, total } = await UserService.list(offset, limit, company_id, user_status, user_type, current_user);
 
-//             const sucursalRepository = appDataSource.getRepository(Sucursales);
-//             const sucursalData = await sucursalRepository.find({
-//                 where: {
-//                     sucursal_id: In(sucursal_id),
-//                 }
-//             });
-//             // If sucursales not exists
-//             if (!sucursalData || sucursalData.length == 0) return res.status(400).json({ message: messages.Sucursales.sucursal_not_exists });
-            
-//             // (async () => {
-//             //     const relUserSucRepository = appDataSource.getRepository(Rel_Users_Sucursales);
-            
-//             //     try {
-//             //         const promises = sucursalData.map((sucursal) => {
-//             //             const relUserSuc = new Rel_Users_Sucursales();
-//             //             relUserSuc.users = userData;
-//             //             relUserSuc.sucursales = sucursal;
-//             //             return relUserSucRepository.save(relUserSuc);
-//             //         });
-                
-//             //         await Promise.all(promises);
-//             //         console.log("Todas las inserciones exitosas");
-//             //     } catch (error) {
-//             //         console.error("Error al insertar: ", error.sqlMessage);
-//             //     }
-//             // })();
+            const pagination = {
+                total,
+                perPage: limit,
+                currentPage: page,
+                lastPage: Math.ceil(total / limit)
+            };
 
-//             res.status(200).json({ message: messages.User.user_updated });
-//         })
-//         .catch((err) => {
-//             console.error("Error during Data Source initialization:", err)
-//             return res.status(500).json({ message: 'Ups! Parece tuvimos un inconveniente. Intente nuevamente.' });
-//         })
-//         .finally(() => {
-//             appDataSource.destroy();
-//         })
-//     } catch (e) {
-//         console.log('UserController.assignSucursalesToUser catch error: ', e);
-//         return res.status(500).json({ message: 'error', data: e.name });
-//     }
-// }
+            return successResponse(res, "Users retrieved successfully", 200, data, pagination);
+        } catch (error: any) {
+            console.error('UsersController.list error:', error);
+            return errorResponse(res, error.message, 500);
+        }
+    }
+
+    /**
+     * Obtiene un usuario por ID
+     */
+    static async getById(req: Request, res: Response): Promise<Response> {
+        try {
+            const user_id = parseInt(req.params.id);
+
+            if (!user_id || isNaN(user_id)) {
+                return errorResponse(res, messages.User.user_needed, 400);
+            }
+
+            const user = await UserService.findById(user_id);
+
+            return successResponse(res, "User retrieved successfully", 200, user);
+        } catch (error: any) {
+            console.error('UsersController.getById error:', error);
+            if (error.message === messages.User.user_not_exists) {
+                return errorResponse(res, error.message, 404);
+            }
+            return errorResponse(res, error.message, 500);
+        }
+    }
+
+    /**
+     * Crea un nuevo usuario
+     */
+    static async create(req: Request, res: Response): Promise<Response> {
+        try {
+            const {
+                username,
+                password,
+                user_type,
+                email,
+                first_name,
+                last_name,
+                user_phone,
+                is_admin
+            } = req.body;
+
+            const currentUser = (req as any).user;
+            const ipAddress = req.ip || req.socket.remoteAddress;
+            const company_id = (req as any).company_id; // Viene del companyMiddleware
+
+            const user = await UserService.create(
+                {
+                    username,
+                    password,
+                    user_type,
+                    email,
+                    first_name,
+                    last_name,
+                    user_phone,
+                    is_admin
+                },
+                currentUser,
+                ipAddress,
+                company_id
+            );
+
+            // Remover el password de la respuesta
+            const { password: _, ...userWithoutPassword } = user as any;
+
+            return successResponse(res, messages.User.user_created, 201, userWithoutPassword);
+        } catch (error: any) {
+            console.error('UsersController.create error:', error);
+            if (error.message === messages.User.user_exists || error.message === messages.User.email_exists) {
+                return errorResponse(res, error.message, 400);
+            }
+            if (error.message === "Company not found") {
+                return errorResponse(res, error.message, 404);
+            }
+            return errorResponse(res, error.message, 500);
+        }
+    }
+
+    /**
+     * Actualiza un usuario existente
+     */
+    static async update(req: Request, res: Response): Promise<Response> {
+        try {
+            const user_id = parseInt(req.params.id);
+
+            if (!user_id || isNaN(user_id)) {
+                return errorResponse(res, messages.User.user_needed, 400);
+            }
+
+            const {
+                email,
+                first_name,
+                last_name,
+                user_phone,
+                user_type,
+                is_admin
+            } = req.body;
+
+            const currentUser = (req as any).user;
+            const ipAddress = req.ip || req.socket.remoteAddress;
+
+            const user = await UserService.findById(user_id);
+
+            const updatedUser = await UserService.update(
+                user,
+                {
+                    email,
+                    first_name,
+                    last_name,
+                    user_phone,
+                    user_type,
+                    is_admin
+                },
+                currentUser,
+                ipAddress
+            );
+
+            // Remover el password de la respuesta
+            const { password: _, ...userWithoutPassword } = updatedUser as any;
+
+            return successResponse(res, messages.User.user_updated, 200, userWithoutPassword);
+        } catch (error: any) {
+            console.error('UsersController.update error:', error);
+            if (error.message === messages.User.user_not_exists) {
+                return errorResponse(res, error.message, 404);
+            }
+            if (error.message === messages.User.email_exists) {
+                return errorResponse(res, error.message, 400);
+            }
+            return errorResponse(res, error.message, 500);
+        }
+    }
+
+    /**
+     * Desactiva un usuario (no lo elimina)
+     */
+    static async deactivate(req: Request, res: Response): Promise<Response> {
+        try {
+            const user_id = parseInt(req.params.id);
+
+            if (!user_id || isNaN(user_id)) {
+                return errorResponse(res, messages.User.user_needed, 400);
+            }
+
+            const currentUser = (req as any).user;
+            const ipAddress = req.ip || req.socket.remoteAddress;
+
+            const user = await UserService.findById(user_id);
+
+            await UserService.deactivate(user, currentUser, ipAddress);
+
+            return successResponse(res, messages.User.user_deactivated, 200, null);
+        } catch (error: any) {
+            console.error('UsersController.deactivate error:', error);
+            if (error.message === messages.User.user_not_exists) {
+                return errorResponse(res, error.message, 404);
+            }
+            if (error.message === messages.User.user_already_inactive) {
+                return errorResponse(res, error.message, 400);
+            }
+            return errorResponse(res, error.message, 500);
+        }
+    }
+
+    /**
+     * Activa un usuario
+     */
+    static async activate(req: Request, res: Response): Promise<Response> {
+        try {
+            const user_id = parseInt(req.params.id);
+
+            if (!user_id || isNaN(user_id)) {
+                return errorResponse(res, messages.User.user_needed, 400);
+            }
+
+            const currentUser = (req as any).user;
+            const ipAddress = req.ip || req.socket.remoteAddress;
+
+            const user = await UserService.findById(user_id);
+
+            await UserService.activate(user, currentUser, ipAddress);
+
+            return successResponse(res, messages.User.user_activated, 200, null);
+        } catch (error: any) {
+            console.error('UsersController.activate error:', error);
+            if (error.message === messages.User.user_not_exists) {
+                return errorResponse(res, error.message, 404);
+            }
+            if (error.message === messages.User.user_already_active) {
+                return errorResponse(res, error.message, 400);
+            }
+            return errorResponse(res, error.message, 500);
+        }
+    }
+
+    /**
+     * Cambia la contraseña de un usuario
+     */
+    static async changePassword(req: Request, res: Response): Promise<Response> {
+        try {
+            const user_id = parseInt(req.params.id);
+
+            if (!user_id || isNaN(user_id)) {
+                return errorResponse(res, messages.User.user_needed, 400);
+            }
+
+            const { password } = req.body;
+
+            const currentUser = (req as any).user;
+            const ipAddress = req.ip || req.socket.remoteAddress;
+
+            const user = await UserService.findById(user_id);
+
+            await UserService.changePassword(user, password, currentUser, ipAddress);
+
+            return successResponse(res, messages.User.password_changed, 200, null);
+        } catch (error: any) {
+            console.error('UsersController.changePassword error:', error);
+            if (error.message === messages.User.user_not_exists) {
+                return errorResponse(res, error.message, 404);
+            }
+            return errorResponse(res, error.message, 500);
+        }
+    }
+
+    /**
+     * Obtiene el historial de auditoría de un usuario
+     */
+    static async getAuditHistory(req: Request, res: Response): Promise<Response> {
+        try {
+            const user_id = parseInt(req.params.id);
+
+            if (!user_id || isNaN(user_id)) {
+                return errorResponse(res, messages.User.user_needed, 400);
+            }
+
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 50;
+            const offset = (page - 1) * limit;
+
+            const { data, total } = await UserService.getAuditHistory(user_id, offset, limit);
+
+            const pagination = {
+                total,
+                perPage: limit,
+                currentPage: page,
+                lastPage: Math.ceil(total / limit)
+            };
+
+            return successResponse(res, "Audit history retrieved successfully", 200, data, pagination);
+        } catch (error: any) {
+            console.error('UsersController.getAuditHistory error:', error);
+            return errorResponse(res, error.message, 500);
+        }
+    }
+}

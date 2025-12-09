@@ -19,7 +19,12 @@ export class CompaniesController {
             const offset = (page - 1) * limit;
             const group_id = req.query.group_id ? parseInt(req.query.group_id as string) : undefined;
 
-            const { data, total } = await CompanyService.list(offset, limit, group_id);
+            // Obtener información del usuario autenticado
+            const currentUser = (req as any).user;
+            const is_admin = currentUser?.is_admin === 1;
+            const current_user_id = currentUser?.user_id;
+
+            const { data, total } = await CompanyService.list(offset, limit, group_id, is_admin, current_user_id);
             const totalPages = Math.ceil(total / limit);
             
             const pagination = {

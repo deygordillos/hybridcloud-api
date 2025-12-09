@@ -1,6 +1,6 @@
 import { Companies } from "../entity/companies.entity";
 import { Users } from "../entity/users.entity";
-import { UsersCompaniesRepository } from "../repositories/UsersCompanies";
+import { UsersCompaniesRepository } from "../repositories/UsersCompaniesRepository";
 
 export class UsersCompaniesService {
     static async linkUserToCompany(user: Users, company: Companies, is_company_admin: number = 0) {
