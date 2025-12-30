@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import config from '../config/config';
 
 export class EmailService {
@@ -15,6 +16,8 @@ export class EmailService {
         }
     });
 
+    private static resend = new Resend(config.RESEND_API_KEY);
+
     /**
      * Envía email de reset de contraseña
      * @param to Email destino
@@ -22,7 +25,7 @@ export class EmailService {
      * @param username Nombre de usuario
      */
     static async sendPasswordResetEmail(to: string, token: string, username: string) {
-        const resetUrl = `${config.FRONTEND_URL}/reset-password?token=${token}`;
+        const resetUrl = `${config.FRONTEND_URL}/auth/reset-password?token=${token}`;
 
         const mailOptions = {
             from: `"${config.EMAIL_FROM_NAME}" <${config.EMAIL_FROM}>`,
@@ -154,11 +157,31 @@ export class EmailService {
 
         try {
             const info = await this.transporter.sendMail(mailOptions);
-            console.log('Password reset email sent:', info.messageId);
+            console.log('Password reset email sent via SMTP:', info.messageId);
             return info;
-        } catch (error) {
-            console.error('Error sending email:', error);
-            throw error;
+        } catch (smtpError) {
+            console.error('Error sending email via SMTP:', smtpError);
+            console.log('Attempting to send via Resend as fallback...');
+            
+            try {
+                const resendInfo = await this.resend.emails.send({
+                    from: `Hybrid <onboarding@resend.dev>`,
+                    to: to,
+                    subject: 'Recuperación de Contraseña - Hybrid',
+                    html: mailOptions.html,
+                    text: mailOptions.text
+                });
+                
+                if (resendInfo.data) {
+                    console.log('Password reset email sent via Resend:', resendInfo.data.id);
+                    return resendInfo;
+                } else {
+                    throw new Error(resendInfo.error?.message || 'Resend failed without error details');
+                }
+            } catch (resendError) {
+                console.error('Error sending email via Resend:', resendError);
+                throw new Error('Failed to send email via both SMTP and Resend');
+            }
         }
     }
 
@@ -194,11 +217,31 @@ export class EmailService {
 
         try {
             const info = await this.transporter.sendMail(mailOptions);
-            console.log('Email sent:', info.messageId);
+            console.log('Email sent via SMTP:', info.messageId);
             return info;
-        } catch (error) {
-            console.error('Error sending email:', error);
-            throw error;
+        } catch (smtpError) {
+            console.error('Error sending email via SMTP:', smtpError);
+            console.log('Attempting to send via Resend as fallback...');
+            
+            try {
+                const resendInfo = await this.resend.emails.send({
+                    from: `${config.EMAIL_FROM_NAME} <${config.EMAIL_FROM}>`,
+                    to: to,
+                    subject: subject,
+                    html: html,
+                    text: text
+                });
+                
+                if (resendInfo.data) {
+                    console.log('Email sent via Resend:', resendInfo.data.id);
+                    return resendInfo;
+                } else {
+                    throw new Error(resendInfo.error?.message || 'Resend failed without error details');
+                }
+            } catch (resendError) {
+                console.error('Error sending email via Resend:', resendError);
+                throw new Error('Failed to send email via both SMTP and Resend');
+            }
         }
     }
 }

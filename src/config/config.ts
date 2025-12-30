@@ -29,5 +29,8 @@ export default {
     EMAIL_PASSWORD: process.env.EMAIL_PASSWORD || '',
     EMAIL_FROM: process.env.EMAIL_FROM || '',
     EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME || '',
-    FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:4200'
+    FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:4200',
+    
+    // Resend API (fallback for email sending)
+    RESEND_API_KEY: process.env.RESEND_API_KEY || ''
 }
