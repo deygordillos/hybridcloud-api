@@ -302,4 +302,38 @@ export class UsersController {
             return errorResponse(res, error.message, 500);
         }
     }
+
+    /**
+     * Cambia la propia contraseña del usuario autenticado
+     */
+    static async changeOwnPassword(req: Request, res: Response): Promise<Response> {
+        try {
+            const currentUser = (req as any).user;
+            
+            if (!currentUser || !currentUser.user_id) {
+                return errorResponse(res, "User not authenticated", 401);
+            }
+
+            const { current_password, new_password } = req.body;
+            const ipAddress = req.ip || req.socket.remoteAddress;
+
+            await UserService.changeOwnPassword(
+                currentUser.user_id,
+                current_password,
+                new_password,
+                ipAddress
+            );
+
+            return successResponse(res, messages.User.password_changed, 200, null);
+        } catch (error: any) {
+            console.error('UsersController.changeOwnPassword error:', error);
+            if (error.message === messages.User.user_not_exists) {
+                return errorResponse(res, error.message, 404);
+            }
+            if (error.message === messages.User.current_password_incorrect) {
+                return errorResponse(res, error.message, 401);
+            }
+            return errorResponse(res, error.message, 500);
+        }
+    }
 }

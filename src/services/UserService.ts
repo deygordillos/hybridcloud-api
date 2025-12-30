@@ -441,6 +441,54 @@ export class UserService {
     }
 
     /**
+     * Cambia la propia contraseña del usuario (user self-change)
+     * @param user_id ID del usuario
+     * @param currentPassword Contraseña actual
+     * @param newPassword Nueva contraseña
+     * @param ipAddress IP desde donde se cambia
+     */
+    static async changeOwnPassword(
+        user_id: number,
+        currentPassword: string,
+        newPassword: string,
+        ipAddress?: string
+    ) {
+        // Buscar usuario con contraseña para validar
+        const user = await UserRepository.findOne({
+            where: { user_id },
+            select: ['user_id', 'username', 'password', 'user_status', 'email', 'first_name', 'last_name']
+        });
+
+        if (!user) {
+            throw new Error(messages.User.user_not_exists);
+        }
+
+        // Validar contraseña actual
+        const isValidPassword = await user.validarPassword(currentPassword);
+        if (!isValidPassword) {
+            throw new Error(messages.User.current_password_incorrect);
+        }
+
+        // Hash nueva contraseña
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+        user.updated_at = new Date();
+
+        await UserRepository.save(user);
+
+        // Registrar auditoría (usuario se cambia a sí mismo)
+        await this.createAuditLog(
+            user,
+            'PASSWORD_CHANGE',
+            user, // El usuario se cambia a sí mismo
+            { action: 'User changed own password' },
+            ipAddress
+        );
+
+        return user;
+    }
+
+    /**
      * Obtiene el historial de auditoría de un usuario
      * @param user_id ID del usuario
      * @param offset Offset para paginación
