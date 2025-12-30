@@ -56,4 +56,32 @@ export class AuthController {
             res.status(401).json({ error: error.message });
         }
     }
+
+    static async requestPasswordReset(req: Request, res: Response) {
+        try {
+            const { email } = req.body;
+            if (!email) {
+                return res.status(400).json({ error: "Email is required" });
+            }
+
+            const response = await AuthService.requestPasswordReset(email);
+            res.json(response);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
+    }
+
+    static async resetPassword(req: Request, res: Response) {
+        try {
+            const { token, new_password } = req.body;
+            if (!token || !new_password) {
+                return res.status(400).json({ error: "Token and new password are required" });
+            }
+
+            const response = await AuthService.resetPassword(token, new_password);
+            res.json(response);
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
+    }
 }

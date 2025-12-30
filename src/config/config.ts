@@ -20,5 +20,17 @@ export default {
     JWT_REFRESH_TOKEN: process.env.JWT_REFRESH_TOKEN || '',
     JWT_EXPIRES_IN_ACCESS: process.env.JWT_EXPIRES_IN_ACCESS || '1h',
     JWT_EXPIRES_IN_REFRESH: process.env.JWT_EXPIRES_IN_REFRESH || '1d',
-    BCRYPT_SALT: parseInt(process.env.BCRYPT_SALT || "10", 10)
+    BCRYPT_SALT: parseInt(process.env.BCRYPT_SALT || "10", 10),
+
+    // Email configuration
+    EMAIL_HOST: process.env.EMAIL_HOST || '',
+    EMAIL_PORT: parseInt(process.env.EMAIL_PORT || ""),
+    EMAIL_USER: process.env.EMAIL_USER || '',
+    EMAIL_PASSWORD: process.env.EMAIL_PASSWORD || '',
+    EMAIL_FROM: process.env.EMAIL_FROM || '',
+    EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME || '',
+    FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:4200',
+    
+    // Resend API (fallback for email sending)
+    RESEND_API_KEY: process.env.RESEND_API_KEY || ''
 }

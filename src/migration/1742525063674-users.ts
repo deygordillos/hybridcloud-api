@@ -136,7 +136,8 @@ export class Users_1742525063674 implements MigrationInterface {
         );
         if (!existing) {
             // Insert default admin user
-            const hashedPassword = await bcrypt.hash("admin", config.BCRYPT_SALT);
+            // Password: Admin123 (cumple requisitos: 8+ chars, mayúscula, minúscula, número)
+            const hashedPassword = await bcrypt.hash("Admin123", config.BCRYPT_SALT);
             await queryRunner.query(`INSERT INTO ${this.table_name} (username, password, email, first_name, is_admin) 
                 VALUES (?, ?, ?, ?, ?);`, 
                 ['admin', hashedPassword, 'admin@admin.com', 'administrator', 1]

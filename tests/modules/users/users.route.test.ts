@@ -555,6 +555,204 @@ describe('Users Routes - /api/v1/users', () => {
     });
   });
 
+  describe('POST /api/v1/users/me/change-password - Change Own Password', () => {
+    let regularUserToken: string;
+    let regularUserId: number;
+
+    beforeAll(async () => {
+      // Crear un usuario regular (no admin) para probar cambio de propia contraseña
+      const userData = {
+        username: 'regularuser',
+        password: 'CurrentPass123',
+        user_type: 2,
+        email: 'regular@test.com',
+        first_name: 'Regular',
+        last_name: 'User',
+        is_admin: 0
+      };
+
+      const createRes = await request(app)
+        .post('/api/v1/users')
+        .set(authHeader(token, companyId))
+        .send(userData);
+
+      regularUserId = createRes.body.data.user_id;
+
+      // Login para obtener token
+      const loginRes = await request(app)
+        .post('/api/v1/auth/login')
+        .send({
+          username: 'regularuser',
+          password: 'CurrentPass123'
+        });
+
+      regularUserToken = loginRes.body.access_token;
+    });
+
+    it('should allow user to change own password with valid credentials', async () => {
+      const res = await request(app)
+        .post('/api/v1/users/me/change-password')
+        .set('Authorization', `Bearer ${regularUserToken}`)
+        .send({
+          current_password: 'CurrentPass123',
+          new_password: 'NewSecurePass456'
+        });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.message).toBe('Password changed successfully');
+
+      // Verificar que puede hacer login con la nueva contraseña
+      const loginRes = await request(app)
+        .post('/api/v1/auth/login')
+        .send({
+          username: 'regularuser',
+          password: 'NewSecurePass456'
+        });
+
+      expect(loginRes.statusCode).toBe(200);
+      expect(loginRes.body).toHaveProperty('access_token');
+
+      // Actualizar token para siguiente test
+      regularUserToken = loginRes.body.access_token;
+    });
+
+    it('should fail when current password is incorrect', async () => {
+      const res = await request(app)
+        .post('/api/v1/users/me/change-password')
+        .set('Authorization', `Bearer ${regularUserToken}`)
+        .send({
+          current_password: 'WrongPassword123',
+          new_password: 'NewSecurePass789'
+        });
+
+      expect(res.statusCode).toBe(401);
+      expect(res.body.success).toBe(false);
+      expect(res.body.message).toContain('Current password is incorrect');
+    });
+
+    it('should fail validation when current password is missing', async () => {
+      const res = await request(app)
+        .post('/api/v1/users/me/change-password')
+        .set('Authorization', `Bearer ${regularUserToken}`)
+        .send({
+          new_password: 'NewSecurePass789'
+        });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body.message).toBe('error');
+      expect(res.body.errors).toBeDefined();
+    });
+
+    it('should fail validation when new password is missing', async () => {
+      const res = await request(app)
+        .post('/api/v1/users/me/change-password')
+        .set('Authorization', `Bearer ${regularUserToken}`)
+        .send({
+          current_password: 'NewSecurePass456'
+        });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body.message).toBe('error');
+      expect(res.body.errors).toBeDefined();
+    });
+
+    it('should fail validation with weak password (too short)', async () => {
+      const res = await request(app)
+        .post('/api/v1/users/me/change-password')
+        .set('Authorization', `Bearer ${regularUserToken}`)
+        .send({
+          current_password: 'NewSecurePass456',
+          new_password: 'Short1'
+        });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body.errors.some((error: any) => 
+        error.msg.includes('at least 8 characters')
+      )).toBe(true);
+    });
+
+    it('should fail validation with password missing uppercase', async () => {
+      const res = await request(app)
+        .post('/api/v1/users/me/change-password')
+        .set('Authorization', `Bearer ${regularUserToken}`)
+        .send({
+          current_password: 'NewSecurePass456',
+          new_password: 'nouppercase123'
+        });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body.errors.some((error: any) => 
+        error.msg.includes('uppercase')
+      )).toBe(true);
+    });
+
+    it('should fail validation with password missing lowercase', async () => {
+      const res = await request(app)
+        .post('/api/v1/users/me/change-password')
+        .set('Authorization', `Bearer ${regularUserToken}`)
+        .send({
+          current_password: 'NewSecurePass456',
+          new_password: 'NOLOWERCASE123'
+        });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body.errors.some((error: any) => 
+        error.msg.includes('lowercase')
+      )).toBe(true);
+    });
+
+    it('should fail validation with password missing number', async () => {
+      const res = await request(app)
+        .post('/api/v1/users/me/change-password')
+        .set('Authorization', `Bearer ${regularUserToken}`)
+        .send({
+          current_password: 'NewSecurePass456',
+          new_password: 'NoNumberPass'
+        });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body.errors.some((error: any) => 
+        error.msg.includes('number')
+      )).toBe(true);
+    });
+
+    it('should require authentication', async () => {
+      const res = await request(app)
+        .post('/api/v1/users/me/change-password')
+        .send({
+          current_password: 'CurrentPass123',
+          new_password: 'NewSecurePass789'
+        });
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('should work for admin users too', async () => {
+      const res = await request(app)
+        .post('/api/v1/users/me/change-password')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          current_password: 'test',
+          new_password: 'NewAdminPass123'
+        });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.success).toBe(true);
+      
+      // Restaurar contraseña del admin para otros tests
+      const restoreRes = await request(app)
+        .post('/api/v1/users/me/change-password')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          current_password: 'NewAdminPass123',
+          new_password: 'TestPass123'
+        });
+      
+      expect(restoreRes.statusCode).toBe(200);
+    });
+  });
+
   describe('Authorization Tests', () => {
     it('should return 400 without authentication token', async () => {
       const res = await request(app)

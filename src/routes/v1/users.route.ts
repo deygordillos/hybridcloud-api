@@ -4,6 +4,7 @@ import { validatorRequestMiddleware } from '../../middlewares/validator_request'
 import { authMiddleware } from '../../middlewares/AuthMiddleware';
 import { companyMiddleware } from '../../middlewares/companyMiddleware';
 import { UsersController } from '../../controllers/users.controller';
+import { adminMiddleware } from '../../middlewares/adminMiddleware';
 
 const router = Router();
 
@@ -319,6 +320,63 @@ router.post('/',
         validatorRequestMiddleware,
     ],
     UsersController.create);
+
+/**
+ * @swagger
+ * /v1/users/me/change-password:
+ *   post:
+ *     summary: Change own password
+ *     description: Allows authenticated users to change their own password
+ *     tags: [users]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - current_password
+ *               - new_password
+ *             properties:
+ *               current_password:
+ *                 type: string
+ *                 format: password
+ *                 example: OldPassword123
+ *                 description: Current password for validation
+ *               new_password:
+ *                 type: string
+ *                 format: password
+ *                 minLength: 8
+ *                 example: NewSecurePass123
+ *                 description: Must contain at least one uppercase, one lowercase, and one number
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *       400:
+ *         description: Invalid password format
+ *       401:
+ *         description: Unauthorized or current password incorrect
+ *       404:
+ *         description: User not found
+ */
+router.post('/me/change-password',
+    [
+        authMiddleware,
+        body("current_password")
+            .notEmpty().withMessage("Current password is required")
+            .trim(),
+        body("new_password")
+            .notEmpty().withMessage("New password is required")
+            .trim()
+            .isLength({ min: 8 }).withMessage("Password must be at least 8 characters long")
+            .matches(/[A-Z]/).withMessage("Password must contain at least one uppercase letter")
+            .matches(/[a-z]/).withMessage("Password must contain at least one lowercase letter")
+            .matches(/[0-9]/).withMessage("Password must contain at least one number"),
+        validatorRequestMiddleware,
+    ],
+    UsersController.changeOwnPassword);
 
 /**
  * @swagger

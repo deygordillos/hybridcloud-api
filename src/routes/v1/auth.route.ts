@@ -165,4 +165,125 @@ router.post('/refresh',
     ],
     AuthController.refreshLogin);
 
+/**
+ * @swagger
+ * /v1/auth/request-password-reset:
+ *   post:
+ *     summary: Request password reset
+ *     description: Sends a password reset token to the user's email
+ *     tags: [auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: User's email address
+ *                 example: user@example.com
+ *     responses:
+ *       200:
+ *         description: Reset token sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Password reset instructions have been sent to your email
+ *                 token:
+ *                   type: string
+ *                   description: Reset token (only in development mode)
+ *                   example: a1b2c3d4e5f6...
+ *       400:
+ *         description: Invalid email or user not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: No user found with this email address
+ */
+router.post('/request-password-reset', 
+    [
+        body('email')
+            .notEmpty().withMessage("Email is required")
+            .isEmail().withMessage("Invalid email format")
+            .trim(),
+        validatorRequestMiddleware
+    ],
+    AuthController.requestPasswordReset);
+
+/**
+ * @swagger
+ * /v1/auth/reset-password:
+ *   post:
+ *     summary: Reset password
+ *     description: Resets the user's password using a valid reset token
+ *     tags: [auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - token
+ *               - new_password
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 description: Valid reset token received via email
+ *                 example: a1b2c3d4e5f6...
+ *               new_password:
+ *                 type: string
+ *                 format: password
+ *                 description: New password (min 8 chars, uppercase, lowercase, number)
+ *                 example: NewPassword123
+ *     responses:
+ *       200:
+ *         description: Password reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Password has been reset successfully
+ *       400:
+ *         description: Invalid or expired token, or validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Invalid or expired reset token
+ */
+router.post('/reset-password', 
+    [
+        body('token')
+            .notEmpty().withMessage("Reset token is required")
+            .trim(),
+        body('new_password')
+            .notEmpty().withMessage("New password is required")
+            .isLength({ min: 8 }).withMessage("Password must be at least 8 characters long")
+            .matches(/[A-Z]/).withMessage("Password must contain at least one uppercase letter")
+            .matches(/[a-z]/).withMessage("Password must contain at least one lowercase letter")
+            .matches(/[0-9]/).withMessage("Password must contain at least one number")
+            .trim(),
+        validatorRequestMiddleware
+    ],
+    AuthController.resetPassword);
+
 export default router

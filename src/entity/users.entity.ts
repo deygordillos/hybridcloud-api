@@ -57,6 +57,12 @@ export class Users {
     @Column({ width: 1, default: 0, comment: "1 es user admin, 0 no es user admin" })
     is_admin: number
 
+    @Column({ length: 255, nullable: true, comment: "token for password reset", select: false })
+    reset_password_token: string
+
+    @Column({ type: 'datetime', nullable: true, comment: "expiration date for reset token" })
+    reset_password_expires: Date | null
+
     async validarPassword(password: string): Promise<boolean> {
         return bcrypt.compare(password, this.password);
     }
