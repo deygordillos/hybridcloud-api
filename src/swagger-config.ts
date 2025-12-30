@@ -7,7 +7,7 @@ const options = {
     openapi: '3.0.0',
     info: {
       title: 'Hybrid API',
-      version: '1.4.0',
+      version: '1.4.4',
       description: 'Documentación de la API REST con Swagger',
     },
     servers: [

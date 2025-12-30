@@ -1,7 +1,7 @@
 {
   "name": "hybrid-api-ts",
-  "version": "1.4.0",
-  "description": "API for Hybrid Systems",
+  "version": "1.4.4",
+  "description": "API for Hybrid. Insite application built with TypeScript, Express, and TypeORM.",
   "main": "index.js",
   "scripts": {
     "start": "node dist/index.js",
