@@ -5,7 +5,11 @@ export default {
         user_not_found: 'User not found',
         user_auth_incorrect: 'User or password incorrect.',
         user_complete_user_and_pass: 'Please, you have to complete username and password',
-        invalid_refresh_token: 'Invalid refresh token.'
+        invalid_refresh_token: 'Invalid refresh token.',
+        reset_token_sent: 'Password reset instructions have been sent to your email',
+        invalid_reset_token: 'Invalid or expired reset token',
+        password_reset_success: 'Password has been reset successfully',
+        user_email_not_found: 'No user found with this email address'
     },
     User: {
         user_created: 'User created successfully',
@@ -20,7 +24,8 @@ export default {
         user_already_inactive: 'User is already inactive',
         user_already_active: 'User is already active',
         password_changed: 'Password changed successfully',
-        cannot_delete_user: 'Cannot delete users. You can only deactivate them.'
+        cannot_delete_user: 'Cannot delete users. You can only deactivate them.',
+        current_password_incorrect: 'Current password is incorrect'
     },
     Groups: {
         group_created: 'Group created',
