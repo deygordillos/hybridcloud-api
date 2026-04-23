@@ -18,7 +18,7 @@ const router = Router();
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Inventory families retrieved successfully
+ *         description: Inventory families found
  *         content:
  *           application/json:
  *             schema:
@@ -27,12 +27,15 @@ const router = Router();
  *                 success:
  *                   type: boolean
  *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Inventory families found
  *                 data:
  *                   type: array
  *                   items:
  *                     type: object
  *                     properties:
- *                       inv_family_id:
+ *                       id_inv_family:
  *                         type: integer
  *                         example: 1
  *                       inv_family_code:
@@ -53,9 +56,34 @@ const router = Router();
  *                       tax_id:
  *                         type: integer
  *                         example: 1
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 50
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 5
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
  *                 message:
  *                   type: string
- *                   example: Inventory families retrieved successfully
+ *                   example: Company ID is required
  *       401:
  *         description: Unauthorized
  *         content:
@@ -126,7 +154,7 @@ router.get('/',
  *                 example: 1
  *     responses:
  *       201:
- *         description: Inventory family created successfully
+ *         description: Inventory family created
  *         content:
  *           application/json:
  *             schema:
@@ -135,10 +163,13 @@ router.get('/',
  *                 success:
  *                   type: boolean
  *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Inventory family created
  *                 data:
  *                   type: object
  *                   properties:
- *                     inv_family_id:
+ *                     id_inv_family:
  *                       type: integer
  *                       example: 1
  *                     inv_family_code:
@@ -159,9 +190,6 @@ router.get('/',
  *                     tax_id:
  *                       type: integer
  *                       example: 1
- *                 message:
- *                   type: string
- *                   example: Inventory family created successfully
  *       400:
  *         description: Invalid input data
  *         content:
@@ -172,6 +200,9 @@ router.get('/',
  *                 success:
  *                   type: boolean
  *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: inv_family_code is required
  *                 errors:
  *                   type: array
  *                   items:
@@ -256,12 +287,60 @@ router.post('/',
  *     responses:
  *       200:
  *         description: Inventory family updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Inventory family updated
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   example: null
  *       400:
  *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: You must have send an inventory family id
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       404:
  *         description: Inventory family not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Sorry, Inventory family does not exists
  */
 router.put('/:id', 
     [
@@ -311,12 +390,60 @@ router.put('/:id',
  *     responses:
  *       200:
  *         description: Inventory family updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Inventory family updated
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   example: null
  *       400:
  *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: You must have send an inventory family id
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       404:
  *         description: Inventory family not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Sorry, Inventory family does not exists
  */
 router.patch('/:id', 
     [

@@ -25,6 +25,11 @@ export const companyMiddleware = async (req: Request, res: Response, next: NextF
         } else {
             req["company_id"] = Number(usersCompanies[0].company_id) || '';
         }
+    } else {
+        // Es admin, puede acceder a todas las empresas, pero igual necesita enviar el header x-company-id
+        const companyId = req.headers['x-company-id'];
+        if (!companyId) return res.status(400).json({ message: "Company ID is required" });
+        req["company_id"] = Number(companyId); // Guarda el ID de la empresa en la request
     }
     next();
 };
