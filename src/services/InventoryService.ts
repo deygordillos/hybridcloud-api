@@ -6,17 +6,31 @@ import { appDataSource } from "../app-data-source";
 import { InventoryTaxes } from "../entity/inventory_taxes.entity";
 import { InventoryVariants } from "../entity/inventory_variants.entity";
 
+export interface InventoryFilters {
+    inv_status?: number;
+    inv_type?: number;
+    inv_has_variants?: number;
+    inv_is_exempt?: number;
+    inv_is_stockable?: number;
+    inv_is_lot_managed?: number;
+    inv_brand?: string;
+    inv_model?: string;
+    id_inv_family?: number;
+}
+
 export class InventoryService {
     /**
-     * Get inventories by company id with pagination and status
+     * Get inventories by company id with pagination, status and optional filters
      */
     static async getInventoriesByCompanyId(
         company_id: Companies,
         offset: number = 0,
         limit: number = 10,
-        inv_status: number = 1
+        filters: InventoryFilters = {}
     ) {
-        const [data, total] = await InventoryRepository
+        const { inv_status = 1, inv_type, inv_has_variants, inv_is_exempt, inv_is_stockable, inv_is_lot_managed, inv_brand, inv_model, id_inv_family } = filters;
+
+        const qb = InventoryRepository
             .createQueryBuilder("inv")
             .select([
                 "inv.inv_id",
@@ -53,7 +67,18 @@ export class InventoryService {
             .leftJoin("variantAttrs.attrValue", "attrValue")
             .leftJoin("attrValue.inventoryAttr", "inventoryAttr")
             .where("family.company_id = :company_id", { company_id })
-            .andWhere("inv.inv_status = :inv_status", { inv_status })
+            .andWhere("inv.inv_status = :inv_status", { inv_status });
+
+        if (inv_type !== undefined)         qb.andWhere("inv.inv_type = :inv_type", { inv_type });
+        if (inv_has_variants !== undefined) qb.andWhere("inv.inv_has_variants = :inv_has_variants", { inv_has_variants });
+        if (inv_is_exempt !== undefined)    qb.andWhere("inv.inv_is_exempt = :inv_is_exempt", { inv_is_exempt });
+        if (inv_is_stockable !== undefined) qb.andWhere("inv.inv_is_stockable = :inv_is_stockable", { inv_is_stockable });
+        if (inv_is_lot_managed !== undefined) qb.andWhere("inv.inv_is_lot_managed = :inv_is_lot_managed", { inv_is_lot_managed });
+        if (inv_brand)                      qb.andWhere("inv.inv_brand LIKE :inv_brand", { inv_brand: `%${inv_brand}%` });
+        if (inv_model)                      qb.andWhere("inv.inv_model LIKE :inv_model", { inv_model: `%${inv_model}%` });
+        if (id_inv_family !== undefined)    qb.andWhere("family.id_inv_family = :id_inv_family", { id_inv_family });
+
+        const [data, total] = await qb
             .orderBy("inv.inv_id", "ASC")
             .offset(offset)
             .limit(limit)
