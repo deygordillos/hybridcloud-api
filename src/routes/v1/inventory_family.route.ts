@@ -3,7 +3,7 @@ import { body } from "express-validator";
 import { validatorRequestMiddleware } from '../../middlewares/validator_request';
 import { authMiddleware } from '../../middlewares/AuthMiddleware';
 import { companyMiddleware } from '../../middlewares/companyMiddleware';
-import { InventoryFamilyController } from '../../controllers/inventoryFamily.controller';
+import { InventoryFamilyController } from '../../controllers/inventory.family.controller';
 
 const router = Router();
 

@@ -16,7 +16,7 @@ export class InventoryController {
      */
     static async getInventoriesByCompany(req: Request, res: Response) {
         try {
-            const company_id = req['company_id'] || false;
+            const company_id = (req as any).company_id || false;
             if (!company_id) return errorResponse(res, "Company ID is required", 400);
 
             const page = Number(req.query.page) || 1;
