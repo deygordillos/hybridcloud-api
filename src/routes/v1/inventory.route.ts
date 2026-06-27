@@ -483,7 +483,7 @@ router.post('/',
             .optional().isString().withMessage("inv_url_image must be a string"),
         body("taxes")
             .optional()
-            .isArray({ min: 1 }).withMessage("taxes must be an array of numeric IDs")
+            .isArray().withMessage("taxes must be an array of numeric IDs")
             .custom((arr) => {
                 if (!Array.isArray(arr)) return true; // skip if not present
                 for (const id of arr) {
@@ -495,7 +495,7 @@ router.post('/',
             }),
         body("variants")
             .optional()
-            .isArray({ min: 1 }).withMessage("variants must be a non-empty array")
+            .isArray().withMessage("variants must be an array")
             .custom((arr) => {
                 if (!Array.isArray(arr)) return true; // skip if not present
                 for (const variant of arr) {
@@ -784,7 +784,7 @@ router.put('/:id',
             .optional().isString().withMessage("inv_url_image must be a string"),
         body("taxes")
             .optional()
-            .isArray({ min: 1 }).withMessage("taxes must be an array of numeric IDs")
+            .isArray().withMessage("taxes must be an array of numeric IDs")
             .custom((arr) => {
                 if (!Array.isArray(arr)) return true; // skip if not present
                 for (const id of arr) {
@@ -796,7 +796,7 @@ router.put('/:id',
             }),
         body("variants")
             .optional()
-            .isArray({ min: 1 }).withMessage("variants must be a non-empty array")
+            .isArray().withMessage("variants must be an array")
             .custom((arr) => {
                 if (!Array.isArray(arr)) return true; // skip if not present
                 for (const variant of arr) {
@@ -1085,7 +1085,7 @@ router.patch('/:id',
             .optional().isString().withMessage("inv_url_image must be a string"),
         body("taxes")
             .optional()
-            .isArray({ min: 1 }).withMessage("taxes must be an array of numeric IDs")
+            .isArray().withMessage("taxes must be an array of numeric IDs")
             .custom((arr) => {
                 if (!Array.isArray(arr)) return true; // skip if not present
                 for (const id of arr) {
@@ -1097,7 +1097,7 @@ router.patch('/:id',
             }),
         body("variants")
             .optional()
-            .isArray({ min: 1 }).withMessage("variants must be a non-empty array")
+            .isArray().withMessage("variants must be an array")
             .custom((arr) => {
                 if (!Array.isArray(arr)) return true; // skip if not present
                 for (const variant of arr) {

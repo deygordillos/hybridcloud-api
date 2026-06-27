@@ -67,7 +67,10 @@ export class InventoryController {
 
             const data = { ...req.body, company_id };
             const taxes: number[] = Array.isArray(req.body.taxes) ? req.body.taxes : [];
-            const variants = Array.isArray(req.body.variants) ? req.body.variants : [];
+            const rawVariants = Array.isArray(req.body.variants) ? req.body.variants : [];
+            const variants = rawVariants.length > 0
+                ? rawVariants
+                : [{ inv_var_sku: data.inv_code, inv_var_status: 1 }];
 
             // Check if familyExists
             const inventoryFamily = await InventoryFamilyService.findInventoryFamilyById(data.id_inv_family);
