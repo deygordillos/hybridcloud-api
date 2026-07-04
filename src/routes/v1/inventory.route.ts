@@ -12,10 +12,75 @@ const router = Router();
  * /v1/inventory:
  *   get:
  *     summary: Get all inventories for the company
- *     description: Retrieves all inventory items for the authenticated user's company
+ *     description: Retrieves all inventory items for the authenticated user's company. Supports filtering by multiple fields.
  *     tags: [inventory]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Results per page
+ *       - in: query
+ *         name: inv_status
+ *         schema:
+ *           type: integer
+ *           enum: [0, 1]
+ *           default: 1
+ *         description: Filter by inventory status (0=inactive, 1=active)
+ *       - in: query
+ *         name: inv_type
+ *         schema:
+ *           type: integer
+ *           enum: [1, 2]
+ *         description: Filter by type (1=product, 2=service)
+ *       - in: query
+ *         name: inv_has_variants
+ *         schema:
+ *           type: integer
+ *           enum: [0, 1]
+ *         description: Filter by has variants (0=no, 1=yes)
+ *       - in: query
+ *         name: inv_is_exempt
+ *         schema:
+ *           type: integer
+ *           enum: [0, 1]
+ *         description: Filter by tax exempt status (0=no, 1=yes)
+ *       - in: query
+ *         name: inv_is_stockable
+ *         schema:
+ *           type: integer
+ *           enum: [0, 1]
+ *         description: Filter by stockable flag (0=no, 1=yes)
+ *       - in: query
+ *         name: inv_is_lot_managed
+ *         schema:
+ *           type: integer
+ *           enum: [0, 1]
+ *         description: Filter by lot managed flag (0=no, 1=yes)
+ *       - in: query
+ *         name: inv_brand
+ *         schema:
+ *           type: string
+ *         description: Filter by brand name (partial match, LIKE)
+ *       - in: query
+ *         name: inv_model
+ *         schema:
+ *           type: string
+ *         description: Filter by model name (partial match, LIKE)
+ *       - in: query
+ *         name: id_inv_family
+ *         schema:
+ *           type: integer
+ *         description: Filter by inventory family ID
  *     responses:
  *       200:
  *         description: Inventories retrieved successfully
@@ -27,6 +92,12 @@ const router = Router();
  *                 success:
  *                   type: boolean
  *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Inventories found
+ *                 code:
+ *                   type: integer
+ *                   example: 200
  *                 data:
  *                   type: array
  *                   items:
@@ -49,13 +120,53 @@ const router = Router();
  *                         example: 1
  *                       inv_has_variants:
  *                         type: integer
+ *                         example: 0
+ *                       inv_is_exempt:
+ *                         type: integer
+ *                         example: 0
+ *                       inv_is_stockable:
+ *                         type: integer
  *                         example: 1
+ *                       inv_is_lot_managed:
+ *                         type: integer
+ *                         example: 0
+ *                       inv_brand:
+ *                         type: string
+ *                         example: Brand A
+ *                       inv_model:
+ *                         type: string
+ *                         example: Model X
  *                       id_inv_family:
  *                         type: integer
  *                         example: 1
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 100
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 10
+ *       400:
+ *         description: Bad request - missing or invalid parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
  *                 message:
  *                   type: string
- *                   example: Inventories retrieved successfully
+ *                   example: Company ID is required
  *       401:
  *         description: Unauthorized
  *         content:
@@ -208,6 +319,12 @@ router.get('/',
  *                 success:
  *                   type: boolean
  *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Inventory created
+ *                 code:
+ *                   type: integer
+ *                   example: 201
  *                 data:
  *                   type: object
  *                   properties:
@@ -223,6 +340,27 @@ router.get('/',
  *                     inv_status:
  *                       type: integer
  *                       example: 1
+ *                     inv_type:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_has_variants:
+ *                       type: integer
+ *                       example: 0
+ *                     inv_is_exempt:
+ *                       type: integer
+ *                       example: 0
+ *                     inv_is_stockable:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_is_lot_managed:
+ *                       type: integer
+ *                       example: 0
+ *                     inv_brand:
+ *                       type: string
+ *                       example: Brand A
+ *                     inv_model:
+ *                       type: string
+ *                       example: Model X
  *                     id_inv_family:
  *                       type: integer
  *                       example: 1
@@ -230,11 +368,8 @@ router.get('/',
  *                       type: array
  *                       items:
  *                         type: object
- *                 message:
- *                   type: string
- *                   example: Inventory created successfully
  *       400:
- *         description: Validation error
+ *         description: Validation error or business rule violation
  *         content:
  *           application/json:
  *             schema:
@@ -243,6 +378,12 @@ router.get('/',
  *                 success:
  *                   type: boolean
  *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Inventory already exists
+ *                 code:
+ *                   type: integer
+ *                   example: 400
  *                 errors:
  *                   type: array
  *                   items:
@@ -267,6 +408,9 @@ router.get('/',
  *                 message:
  *                   type: string
  *                   example: Unauthorized access
+ *                 code:
+ *                   type: integer
+ *                   example: 401
  *       403:
  *         description: Forbidden - Company context required
  *         content:
@@ -280,6 +424,25 @@ router.get('/',
  *                 message:
  *                   type: string
  *                   example: Company context is required
+ *                 code:
+ *                   type: integer
+ *                   example: 403
+ *       404:
+ *         description: Inventory family not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Inventory family does not exist
+ *                 code:
+ *                   type: integer
+ *                   example: 404
  */
 router.post('/',
     [
@@ -320,7 +483,7 @@ router.post('/',
             .optional().isString().withMessage("inv_url_image must be a string"),
         body("taxes")
             .optional()
-            .isArray({ min: 1 }).withMessage("taxes must be an array of numeric IDs")
+            .isArray().withMessage("taxes must be an array of numeric IDs")
             .custom((arr) => {
                 if (!Array.isArray(arr)) return true; // skip if not present
                 for (const id of arr) {
@@ -332,7 +495,7 @@ router.post('/',
             }),
         body("variants")
             .optional()
-            .isArray({ min: 1 }).withMessage("variants must be a non-empty array")
+            .isArray().withMessage("variants must be an array")
             .custom((arr) => {
                 if (!Array.isArray(arr)) return true; // skip if not present
                 for (const variant of arr) {
@@ -470,6 +633,12 @@ router.post('/',
  *                 success:
  *                   type: boolean
  *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Inventory updated
+ *                 code:
+ *                   type: integer
+ *                   example: 200
  *                 data:
  *                   type: object
  *                   properties:
@@ -490,7 +659,22 @@ router.post('/',
  *                       example: 1
  *                     inv_has_variants:
  *                       type: integer
+ *                       example: 0
+ *                     inv_is_exempt:
+ *                       type: integer
+ *                       example: 0
+ *                     inv_is_stockable:
+ *                       type: integer
  *                       example: 1
+ *                     inv_is_lot_managed:
+ *                       type: integer
+ *                       example: 0
+ *                     inv_brand:
+ *                       type: string
+ *                       example: Brand A
+ *                     inv_model:
+ *                       type: string
+ *                       example: Model X
  *                     id_inv_family:
  *                       type: integer
  *                       example: 1
@@ -498,9 +682,6 @@ router.post('/',
  *                       type: array
  *                       items:
  *                         type: object
- *                 message:
- *                   type: string
- *                   example: Inventory updated successfully
  *       400:
  *         description: Validation error
  *         content:
@@ -511,6 +692,12 @@ router.post('/',
  *                 success:
  *                   type: boolean
  *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Inventory ID is required
+ *                 code:
+ *                   type: integer
+ *                   example: 400
  *                 errors:
  *                   type: array
  *                   items:
@@ -535,6 +722,9 @@ router.post('/',
  *                 message:
  *                   type: string
  *                   example: Unauthorized access
+ *                 code:
+ *                   type: integer
+ *                   example: 401
  *       403:
  *         description: Forbidden - Company context required
  *         content:
@@ -548,8 +738,11 @@ router.post('/',
  *                 message:
  *                   type: string
  *                   example: Company context is required
+ *                 code:
+ *                   type: integer
+ *                   example: 403
  *       404:
- *         description: Inventory not found
+ *         description: Inventory or related resource not found
  *         content:
  *           application/json:
  *             schema:
@@ -560,7 +753,10 @@ router.post('/',
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: Inventory not found
+ *                   example: Inventory does not exist
+ *                 code:
+ *                   type: integer
+ *                   example: 404
  */
 router.put('/:id',
     [
@@ -588,7 +784,7 @@ router.put('/:id',
             .optional().isString().withMessage("inv_url_image must be a string"),
         body("taxes")
             .optional()
-            .isArray({ min: 1 }).withMessage("taxes must be an array of numeric IDs")
+            .isArray().withMessage("taxes must be an array of numeric IDs")
             .custom((arr) => {
                 if (!Array.isArray(arr)) return true; // skip if not present
                 for (const id of arr) {
@@ -600,7 +796,7 @@ router.put('/:id',
             }),
         body("variants")
             .optional()
-            .isArray({ min: 1 }).withMessage("variants must be a non-empty array")
+            .isArray().withMessage("variants must be an array")
             .custom((arr) => {
                 if (!Array.isArray(arr)) return true; // skip if not present
                 for (const variant of arr) {
@@ -738,6 +934,12 @@ router.put('/:id',
  *                 success:
  *                   type: boolean
  *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Inventory updated
+ *                 code:
+ *                   type: integer
+ *                   example: 200
  *                 data:
  *                   type: object
  *                   properties:
@@ -756,12 +958,31 @@ router.put('/:id',
  *                     inv_type:
  *                       type: integer
  *                       example: 1
+ *                     inv_has_variants:
+ *                       type: integer
+ *                       example: 0
+ *                     inv_is_exempt:
+ *                       type: integer
+ *                       example: 0
+ *                     inv_is_stockable:
+ *                       type: integer
+ *                       example: 1
+ *                     inv_is_lot_managed:
+ *                       type: integer
+ *                       example: 0
+ *                     inv_brand:
+ *                       type: string
+ *                       example: Brand A
+ *                     inv_model:
+ *                       type: string
+ *                       example: Model X
  *                     id_inv_family:
  *                       type: integer
  *                       example: 1
- *                 message:
- *                   type: string
- *                   example: Inventory updated successfully
+ *                     variants:
+ *                       type: array
+ *                       items:
+ *                         type: object
  *       400:
  *         description: Validation error
  *         content:
@@ -772,6 +993,12 @@ router.put('/:id',
  *                 success:
  *                   type: boolean
  *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Inventory ID is required
+ *                 code:
+ *                   type: integer
+ *                   example: 400
  *                 errors:
  *                   type: array
  *                   items:
@@ -796,6 +1023,9 @@ router.put('/:id',
  *                 message:
  *                   type: string
  *                   example: Unauthorized access
+ *                 code:
+ *                   type: integer
+ *                   example: 401
  *       403:
  *         description: Forbidden - Company context required
  *         content:
@@ -809,8 +1039,11 @@ router.put('/:id',
  *                 message:
  *                   type: string
  *                   example: Company context is required
+ *                 code:
+ *                   type: integer
+ *                   example: 403
  *       404:
- *         description: Inventory not found
+ *         description: Inventory or related resource not found
  *         content:
  *           application/json:
  *             schema:
@@ -821,7 +1054,10 @@ router.put('/:id',
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: Inventory not found
+ *                   example: Inventory does not exist
+ *                 code:
+ *                   type: integer
+ *                   example: 404
  */
 router.patch('/:id',
     [
@@ -849,7 +1085,7 @@ router.patch('/:id',
             .optional().isString().withMessage("inv_url_image must be a string"),
         body("taxes")
             .optional()
-            .isArray({ min: 1 }).withMessage("taxes must be an array of numeric IDs")
+            .isArray().withMessage("taxes must be an array of numeric IDs")
             .custom((arr) => {
                 if (!Array.isArray(arr)) return true; // skip if not present
                 for (const id of arr) {
@@ -861,7 +1097,7 @@ router.patch('/:id',
             }),
         body("variants")
             .optional()
-            .isArray({ min: 1 }).withMessage("variants must be a non-empty array")
+            .isArray().withMessage("variants must be an array")
             .custom((arr) => {
                 if (!Array.isArray(arr)) return true; // skip if not present
                 for (const variant of arr) {

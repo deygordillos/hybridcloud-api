@@ -16,9 +16,29 @@ const router = Router();
  *     tags: [inventory-attributes]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *         description: Records per page
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: integer
+ *           enum: [0, 1]
+ *           example: 1
+ *         description: Filter by status (0=inactive, 1=active)
  *     responses:
  *       200:
- *         description: Attributes retrieved successfully
+ *         description: Attributes found
  *         content:
  *           application/json:
  *             schema:
@@ -27,12 +47,15 @@ const router = Router();
  *                 success:
  *                   type: boolean
  *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Attributes found
  *                 data:
  *                   type: array
  *                   items:
  *                     type: object
  *                     properties:
- *                       attr_id:
+ *                       inv_attr_id:
  *                         type: integer
  *                         example: 1
  *                       attr_name:
@@ -52,12 +75,37 @@ const router = Router();
  *                             inv_attrval_id:
  *                               type: integer
  *                               example: 1
- *                             inv_attrval_value:
+ *                             attr_value:
  *                               type: string
  *                               example: Red
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 50
+ *                     perPage:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *                     lastPage:
+ *                       type: integer
+ *                       example: 5
+ *       400:
+ *         description: Bad request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
  *                 message:
  *                   type: string
- *                   example: Attributes retrieved successfully
+ *                   example: Company ID is required
  *       401:
  *         description: Unauthorized
  *         content:
@@ -122,7 +170,7 @@ router.get('/',
  *                 example: ["Red", "Blue", "Green"]
  *     responses:
  *       201:
- *         description: Attribute created successfully
+ *         description: Attribute created
  *         content:
  *           application/json:
  *             schema:
@@ -131,10 +179,13 @@ router.get('/',
  *                 success:
  *                   type: boolean
  *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Attribute created
  *                 data:
  *                   type: object
  *                   properties:
- *                     attr_id:
+ *                     inv_attr_id:
  *                       type: integer
  *                       example: 1
  *                     attr_name:
@@ -154,12 +205,9 @@ router.get('/',
  *                           inv_attrval_id:
  *                             type: integer
  *                             example: 1
- *                           inv_attrval_value:
+ *                           attr_value:
  *                             type: string
  *                             example: Red
- *                 message:
- *                   type: string
- *                   example: Attribute created successfully
  *       400:
  *         description: Invalid input data
  *         content:
@@ -170,6 +218,9 @@ router.get('/',
  *                 success:
  *                   type: boolean
  *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: attr_name is required
  *                 errors:
  *                   type: array
  *                   items:
@@ -248,29 +299,92 @@ router.post('/',
  *                 type: string
  *                 maxLength: 50
  *                 description: Attribute name
+ *                 example: Color
  *               attr_description:
  *                 type: string
  *                 maxLength: 150
  *                 description: Attribute description
+ *                 example: Product color variations
  *               attr_status:
  *                 type: integer
  *                 enum: [0, 1]
  *                 description: Status (0=inactive, 1=active)
+ *                 example: 1
  *               attr_values:
  *                 type: array
  *                 minItems: 1
  *                 items:
  *                   type: string
- *                 description: Array of attribute values
+ *                 description: Array of attribute values to add
+ *                 example: ["Red", "Blue"]
  *     responses:
  *       200:
- *         description: Attribute updated successfully
+ *         description: Attribute updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Attribute updated
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_attr_id:
+ *                       type: integer
+ *                       example: 1
+ *                     attr_name:
+ *                       type: string
+ *                       example: Color
+ *                     attr_description:
+ *                       type: string
+ *                       example: Product color variations
+ *                     attr_status:
+ *                       type: integer
+ *                       example: 1
  *       400:
  *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Company ID is required
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       404:
  *         description: Attribute not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Attribute not found
  */
 router.put('/:id',
     [
@@ -325,29 +439,92 @@ router.put('/:id',
  *                 type: string
  *                 maxLength: 50
  *                 description: Attribute name
+ *                 example: Color
  *               attr_description:
  *                 type: string
  *                 maxLength: 150
  *                 description: Attribute description
+ *                 example: Product color variations
  *               attr_status:
  *                 type: integer
  *                 enum: [0, 1]
  *                 description: Status (0=inactive, 1=active)
+ *                 example: 1
  *               attr_values:
  *                 type: array
  *                 minItems: 1
  *                 items:
  *                   type: string
- *                 description: Array of attribute values
+ *                 description: Array of attribute values to add
+ *                 example: ["Red", "Blue"]
  *     responses:
  *       200:
- *         description: Attribute updated successfully
+ *         description: Attribute updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Attribute updated
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     inv_attr_id:
+ *                       type: integer
+ *                       example: 1
+ *                     attr_name:
+ *                       type: string
+ *                       example: Color
+ *                     attr_description:
+ *                       type: string
+ *                       example: Product color variations
+ *                     attr_status:
+ *                       type: integer
+ *                       example: 1
  *       400:
  *         description: Invalid input data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Company ID is required
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
  *       404:
  *         description: Attribute not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Attribute not found
  */
 router.patch('/:id',
     [

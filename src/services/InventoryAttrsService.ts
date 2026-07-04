@@ -10,12 +10,11 @@ export class InventoryAttrsService {
      */
     static async getAllByCompany(company_id: number, offset: number = 0, limit: number = 10, attr_status: number = 1) {
         const [data, total] = await InventoryAttrsRepository.findAndCount({
-            where: { company_id },
+            where: { company_id, attr_status },
             relations: ["attr_values"],
             skip: offset,
             take: limit,
             order: { inv_attr_id: "ASC" },
-            ...(attr_status ? { where: { attr_status } } : {})
         });
 
         return { data, total }
@@ -84,5 +83,12 @@ export class InventoryAttrsService {
      */
     static async findAttrValueById(inv_attrval_id: number) {
         return await InventoryAttrsValuesRepository.findOne({ where: { inv_attrval_id } });
+    }
+
+    /**
+     * Delete an attribute value by its ID
+     */
+    static async deleteAttrValue(inv_attrval_id: number) {
+        return await InventoryAttrsValuesRepository.delete({ inv_attrval_id });
     }
 }
