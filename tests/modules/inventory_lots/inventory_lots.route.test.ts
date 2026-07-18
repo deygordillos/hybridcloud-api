@@ -103,7 +103,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const res = await request(app)
         .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(validLotData);
 
       expect(res.statusCode).toBe(201);
@@ -120,7 +120,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const res = await request(app)
         .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(invalidData);
 
       expect(res.statusCode).toBe(400);
@@ -140,7 +140,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const res = await request(app)
         .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(invalidData);
 
       expect(res.statusCode).toBe(400);
@@ -160,7 +160,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const res = await request(app)
         .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(invalidData);
 
       expect(res.statusCode).toBe(400);
@@ -179,7 +179,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const res = await request(app)
         .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(invalidData);
 
       expect(res.statusCode).toBe(400);
@@ -199,7 +199,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const res = await request(app)
         .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(invalidData);
 
       expect(res.statusCode).toBe(400);
@@ -219,7 +219,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const res = await request(app)
         .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(invalidData);
 
       expect(res.statusCode).toBe(400);
@@ -239,7 +239,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const res = await request(app)
         .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(invalidData);
 
       expect(res.statusCode).toBe(400);
@@ -259,7 +259,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const res = await request(app)
         .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(invalidData);
 
       expect(res.statusCode).toBe(400);
@@ -279,7 +279,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const res = await request(app)
         .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(invalidData);
 
       expect(res.statusCode).toBe(400);
@@ -299,7 +299,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const res = await request(app)
         .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(invalidData);
 
       expect(res.statusCode).toBe(400);
@@ -316,7 +316,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
     it('should get lots by valid variant ID', async () => {
       const res = await request(app)
         .get(`/api/v1/inventory/lots/variant/${inventoryVariant.inv_var_id}`)
-        .set(authHeader(token));
+        .set(authHeader(token, company.company_id));
 
       expect(res.statusCode).toBe(200);
       expect(res.body.success).toBe(true);
@@ -326,7 +326,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
     it('should fail validation when variantId is not a number', async () => {
       const res = await request(app)
         .get('/api/v1/inventory/lots/variant/not-a-number')
-        .set(authHeader(token));
+        .set(authHeader(token, company.company_id));
 
       expect(res.statusCode).toBe(400);
       expect(res.body.message).toBe('error');
@@ -339,7 +339,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
     it('should fail validation when variantId is less than 1', async () => {
       const res = await request(app)
         .get('/api/v1/inventory/lots/variant/0')
-        .set(authHeader(token));
+        .set(authHeader(token, company.company_id));
 
       expect(res.statusCode).toBe(400);
       expect(res.body.message).toBe('error');
@@ -354,7 +354,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
     it('should search lots by valid lot number', async () => {
       const res = await request(app)
         .get('/api/v1/inventory/lots/search/LOT123')
-        .set(authHeader(token));
+        .set(authHeader(token, company.company_id));
 
       expect(res.statusCode).toBe(200);
       expect(res.body.success).toBe(true);
@@ -365,7 +365,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
       const longLotNumber = 'A'.repeat(101);
       const res = await request(app)
         .get(`/api/v1/inventory/lots/search/${longLotNumber}`)
-        .set(authHeader(token));
+        .set(authHeader(token, company.company_id));
 
       expect(res.statusCode).toBe(400);
       expect(res.body.message).toBe('error');
@@ -389,7 +389,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const createRes = await request(app)
         .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(lotData);
 
       createdLotId = createRes.body.data.inv_lot_id;
@@ -398,7 +398,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
     it('should get lot by valid ID', async () => {
       const res = await request(app)
         .get(`/api/v1/inventory/lots/${createdLotId}`)
-        .set(authHeader(token));
+        .set(authHeader(token, company.company_id));
 
       expect(res.statusCode).toBe(200);
       expect(res.body.success).toBe(true);
@@ -408,7 +408,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
     it('should fail validation when ID is not a number', async () => {
       const res = await request(app)
         .get('/api/v1/inventory/lots/not-a-number')
-        .set(authHeader(token));
+        .set(authHeader(token, company.company_id));
 
       expect(res.statusCode).toBe(400);
       expect(res.body.message).toBe('error');
@@ -421,7 +421,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
     it('should fail validation when ID is less than 1', async () => {
       const res = await request(app)
         .get('/api/v1/inventory/lots/0')
-        .set(authHeader(token));
+        .set(authHeader(token, company.company_id));
 
       expect(res.statusCode).toBe(400);
       expect(res.body.message).toBe('error');
@@ -445,7 +445,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const createRes = await request(app)
         .post('/api/v1/inventory/lots')
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(lotData);
 
       createdLotId = createRes.body.data.inv_lot_id;
@@ -459,7 +459,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const res = await request(app)
         .put(`/api/v1/inventory/lots/${createdLotId}`)
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(updateData);
 
       expect(res.statusCode).toBe(200);
@@ -475,7 +475,7 @@ describe('Inventory Lots Routes - Express Validator Tests', () => {
 
       const res = await request(app)
         .put(`/api/v1/inventory/lots/${createdLotId}`)
-        .set(authHeader(token))
+        .set(authHeader(token, company.company_id))
         .send(invalidData);
 
       expect(res.statusCode).toBe(400);

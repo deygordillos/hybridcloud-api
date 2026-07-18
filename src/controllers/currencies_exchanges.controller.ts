@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { CurrenciesExchangesService } from "../services/CurrenciesExchangesService";
+import { AuditService } from "../services/AuditService";
 import { successResponse, errorResponse } from "../helpers/responseHelper";
 import messages from "../config/messages";
 
@@ -90,6 +91,16 @@ export class CurrenciesExchangesController {
 
             const currency = await CurrenciesExchangesService.create(company_id, currencyData);
 
+            await AuditService.log({
+                company_id,
+                entity_type: 'currencies_exchanges',
+                entity_id: currency.currency_exc_id,
+                action_type: 'CREATE',
+                after: currency as any,
+                changed_by: req['user']?.user_id ?? null,
+                ip_address: req.ip
+            });
+
             return successResponse(res, messages.CurrenciesExchanges.currency_exchange_created, 201, currency);
         } catch (error) {
             if (error instanceof Error) {
@@ -118,7 +129,20 @@ export class CurrenciesExchangesController {
                 return errorResponse(res, messages.CurrenciesExchanges.currency_exchange_not_exists, 404);
             }
 
+            const before = { ...currency };
             const response = await CurrenciesExchangesService.update(currency_exc_id, req.body);
+
+            await AuditService.log({
+                company_id: req['company_id'],
+                entity_type: 'currencies_exchanges',
+                entity_id: currency_exc_id,
+                action_type: 'UPDATE',
+                before: before as any,
+                after: response as any,
+                changed_by: req['user']?.user_id ?? null,
+                ip_address: req.ip
+            });
+
             return successResponse(res, messages.CurrenciesExchanges.currency_exchange_updated, 200, response);
         } catch (error) {
             if (error instanceof Error) {

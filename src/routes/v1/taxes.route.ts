@@ -222,6 +222,15 @@ router.post('/',
                 }
                 return true;
             }),
+        body('currency_id')
+            .optional({ nullable: true }).isInt({ min: 1 }).withMessage("currency_id must be a positive integer"),
+        body('tax_type')
+            .custom((value, { req }) => {
+                if (Number(value) === TaxTypeEnum.FIXED && !req.body.currency_id) {
+                    throw new Error("currency_id is required when tax_type is 3 (fixed)");
+                }
+                return true;
+            }),
         validatorRequestMiddleware
     ],
     TaxesController.create);
@@ -293,6 +302,15 @@ router.put('/:id',
                 }
                 return true;
             }),
+        body('currency_id')
+            .optional({ nullable: true }).isInt({ min: 1 }).withMessage("currency_id must be a positive integer"),
+        body('tax_type')
+            .custom((value, { req }) => {
+                if (Number(value) === TaxTypeEnum.FIXED && !req.body.currency_id) {
+                    throw new Error("currency_id is required when tax_type is 3 (fixed)");
+                }
+                return true;
+            }),
         validatorRequestMiddleware
     ],
     TaxesController.update);
@@ -357,6 +375,15 @@ router.patch('/:id',
             .custom((value) => {
                 if (typeof value === 'string') {
                     throw new Error("tax_value must be a number, not a string");
+                }
+                return true;
+            }),
+        body('currency_id')
+            .optional({ nullable: true }).isInt({ min: 1 }).withMessage("currency_id must be a positive integer"),
+        body('tax_type').optional()
+            .custom((value, { req }) => {
+                if (Number(value) === TaxTypeEnum.FIXED && !req.body.currency_id) {
+                    throw new Error("currency_id is required when tax_type is 3 (fixed)");
                 }
                 return true;
             }),

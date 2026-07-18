@@ -50,7 +50,7 @@ describe('CurrenciesExchanges Routes', () => {
   it('POST /api/v1/currencies-exchanges - debe crear una relación de moneda tipo stable', async () => {
     const res = await request(app)
       .post('/api/v1/currencies-exchanges')
-      .set(authHeader(token))
+      .set(authHeader(token, company.company_id))
       .send({
         currency_id: currency2.currency_id,
         currency_exc_rate: 100.12345678,
@@ -71,7 +71,7 @@ describe('CurrenciesExchanges Routes', () => {
   it('GET /api/v1/currencies-exchanges - debe listar monedas de la empresa', async () => {
     const res = await request(app)
       .get('/api/v1/currencies-exchanges')
-      .set(authHeader(token));
+      .set(authHeader(token, company.company_id));
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(Array.isArray(res.body.data)).toBe(true);
@@ -80,7 +80,7 @@ describe('CurrenciesExchanges Routes', () => {
   it('GET /api/v1/currencies-exchanges/:id - debe obtener una relación por id', async () => {
     const res = await request(app)
       .get(`/api/v1/currencies-exchanges/${createdId}`)
-      .set(authHeader(token));
+      .set(authHeader(token, company.company_id));
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.data.currency_exc_id).toBe(createdId);
@@ -89,7 +89,7 @@ describe('CurrenciesExchanges Routes', () => {
   it('PUT /api/v1/currencies-exchanges/:id - debe actualizar una relación a tipo stable', async () => {
     const res = await request(app)
       .put(`/api/v1/currencies-exchanges/${createdId}`)
-      .set(authHeader(token))
+      .set(authHeader(token, company.company_id))
       .send({ currency_exc_rate: 200.12345678, exchange_method: 1, currency_exc_type: 2 });
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
@@ -104,7 +104,7 @@ describe('CurrenciesExchanges Routes', () => {
   it('GET /api/v1/currencies-exchanges/history - debe devolver el historial', async () => {
     const res = await request(app)
       .get('/api/v1/currencies-exchanges/history')
-      .set(authHeader(token));
+      .set(authHeader(token, company.company_id));
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(Array.isArray(res.body.data)).toBe(true);
@@ -113,7 +113,7 @@ describe('CurrenciesExchanges Routes', () => {
   it('POST /api/v1/currencies-exchanges - error de validación', async () => {
     const res = await request(app)
       .post('/api/v1/currencies-exchanges')
-      .set(authHeader(token))
+      .set(authHeader(token, company.company_id))
       .send({});
     expect(res.status).toBe(400);
     expect(res.body.success).toBe(false);
@@ -122,7 +122,7 @@ describe('CurrenciesExchanges Routes', () => {
   it('GET /api/v1/currencies-exchanges/:id - error id inválido', async () => {
     const res = await request(app)
       .get('/api/v1/currencies-exchanges/invalid')
-      .set(authHeader(token));
+      .set(authHeader(token, company.company_id));
     expect(res.status).toBe(400);
     expect(res.body.success).toBe(false);
   });
@@ -130,7 +130,7 @@ describe('CurrenciesExchanges Routes', () => {
   it('GET /api/v1/currencies-exchanges/:id - error no encontrado', async () => {
     const res = await request(app)
       .get('/api/v1/currencies-exchanges/999999')
-      .set(authHeader(token));
+      .set(authHeader(token, company.company_id));
     expect(res.status).toBe(404);
     expect(res.body.success).toBe(false);
   });

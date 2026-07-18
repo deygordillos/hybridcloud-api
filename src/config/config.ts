@@ -2,6 +2,7 @@ import 'dotenv/config';
 
 export default {
     isProduction: process.env.NODE_ENV === 'production',
+    isTest: process.env.NODE_ENV === 'test',
     PORT: parseInt(process.env.PORT || "3000"),
     LOGGER: process.env.LOGGER || 'dev',
 

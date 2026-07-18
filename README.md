@@ -4,13 +4,24 @@ This project is a RESTful API developed in TypeScript using Node.js, Express, an
 
 ## Main Features
 
-- **Inventory Management:** CRUD for products, families, warehouses, and stock control.
-- **Tax Management:** CRUD for taxes associated with products and companies.
-- **Multi-company:** Each resource is associated with a company.
-- **Authentication & Authorization:** Middleware for JWT authentication and company validation.
+- **Inventory Management:** CRUD for products, families, warehouses, variants, lots, movements and stock control.
+- **Tax Management:** CRUD for taxes associated with products and companies (exempt / percent / fixed-with-currency).
+- **Multi-currency:** 3-currency model (local / stable / reference) with per-company exchange rates and history (`/v1/currencies`, `/v1/currencies-exchanges`).
+- **Pricing:** Prices per variant and price type in 3 currencies with history (`/v1/inventory/prices`, `/v1/types-of-prices`).
+- **Customers:** CRUD for company customers (`/v1/customers`).
+- **Sales Orders:** Orders with items, multi-currency snapshot of prices/rates and a state machine (draft → confirmed → dispatched → invoiced / cancelled). Dispatching creates inventory movements and discounts stock (`/v1/orders`).
+- **Dashboard:** KPI aggregations per company: sales, orders by status, top products, low stock, exchange rate series, recent activity (`/v1/dashboard/*`).
+- **Audit Trail:** Generic audit log with field-level diff for taxes, customers, prices, exchange rates and orders (`/v1/audit-logs`, admin only) plus the legacy `users_audit` for users.
+- **Multi-company:** Each resource is scoped by `company_id` (header `x-company-id` + `users_companies`).
+- **Authentication & Authorization:** JWT with refresh tokens, admin middleware, per-company validation.
+- **Security:** helmet, global and auth-specific rate limiting.
 - **Validations:** Uses express-validator to ensure data integrity.
 - **ORM:** Integrated with TypeORM for entity and migration management.
 - **Modular Structure:** Clear separation of controllers, services, repositories, and routes.
+
+> **Deprecated:** the legacy `coins` module (`/v1/coins`, `rel_coins_companies*`) is superseded by `currencies` / `currencies-exchanges`. Do not build new features on it.
+
+Planning docs: [docs/PLAN_TRABAJO.md](docs/PLAN_TRABAJO.md) (implementation plan and status) · [docs/ROADMAP_IA.md](docs/ROADMAP_IA.md) (AI roadmap for SMEs).
 
 ## Folder Structure
 

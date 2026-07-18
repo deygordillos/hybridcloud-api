@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CustomersService } from "../services/CustomersService";
 import { CompanyService } from "../services/CompanyService";
+import { AuditService } from "../services/AuditService";
 import messages from "../config/messages";
 
 export class CustomersController {
@@ -53,6 +54,16 @@ export class CustomersController {
             const customerData = { ...req.body, company_id };
             const customer = await CustomersService.create(customerData);
 
+            await AuditService.log({
+                company_id,
+                entity_type: 'customers',
+                entity_id: customer.cust_id,
+                action_type: 'CREATE',
+                after: customer as any,
+                changed_by: req['user']?.user_id ?? null,
+                ip_address: req.ip
+            });
+
             // Responder con el nuevo cliente creado
             return res.status(201).json({
                 message: messages.Customers.customer_created,
@@ -78,10 +89,23 @@ export class CustomersController {
             const customer = await CustomersService.findCustomerById(customer_id);
             if (!customer) throw new Error(messages.Customers.customer_not_exists || "Ups! Customer not exists.");
 
+            const before = { ...customer };
             const response = await CustomersService.update(
                 customer,
                 req.body
             );
+
+            await AuditService.log({
+                company_id: req['company_id'],
+                entity_type: 'customers',
+                entity_id: customer.cust_id,
+                action_type: 'UPDATE',
+                before: before as any,
+                after: customer as any,
+                changed_by: req['user']?.user_id ?? null,
+                ip_address: req.ip
+            });
+
             res.json(response);
         } catch (error) {
             res.status(500).json({ error: error.message });
