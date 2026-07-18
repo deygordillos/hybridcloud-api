@@ -47,6 +47,44 @@ This is an enterprise-level administrative system API designed for multi-company
 - Movements: `src/entity/inventory_movements.entity.ts`
 - Lots: `src/entity/inventory_lots.entity.ts`
 
+**Customers:**
+- Controller: `src/controllers/customers.controller.ts`
+- Service: `src/services/CustomersService.ts`
+- Entity: `src/entity/customers.entity.ts`
+- Tests: `tests/modules/customers/`
+
+**Taxes:**
+- Entity: `src/entity/taxes.entity.ts` (tax_type: 1 exempt, 2 percent, 3 fixed + currency_id)
+- N:M with products via `src/entity/inventory_taxes.entity.ts`
+- Service rules: exempt forces tax_value=0; fixed requires currency_id
+- Tests: `tests/modules/taxes/`
+
+**Currencies / Exchange Rates:**
+- Catalog: `src/routes/v1/currencies.route.ts` (`GET /v1/currencies`)
+- Per-company rates + history: `src/services/CurrenciesExchangesService.ts` (types: 1 local, 2 stable, 3 ref; method: 1 DIVIDE, 2 MULTIPLY)
+- 3-currency model (local/stable/ref) used by prices and orders
+- DEPRECATED: legacy `coins` module (`/v1/coins`) — do not extend
+
+**Orders (Sales):**
+- Entities: `src/entity/orders.entity.ts`, `src/entity/order_items.entity.ts`
+- Service: `src/services/OrdersService.ts` — state machine (1 draft → 2 confirmed → 3 dispatched → 4 invoiced; 5 cancelled from draft/confirmed). Confirm re-snapshots exchange rates; dispatch creates inventory movements and discounts stock. Totals are persisted snapshots — NEVER recalculated after confirmation.
+- Routes: `src/routes/v1/orders.route.ts`; Tests: `tests/modules/orders/`
+
+**Audit (generic):**
+- Entity: `src/entity/audit_logs.entity.ts` (entity_type + entity_id + diff JSON)
+- Service: `src/services/AuditService.ts` (`log()` never throws; auto field-diff)
+- Query endpoint: `GET /v1/audit-logs` (admin only); instrumented in taxes, customers, currencies_exchanges, inventory_prices, orders controllers/services
+- Users keep their own `users_audit`
+
+**Dashboard:**
+- Service: `src/services/DashboardService.ts`; Routes: `src/routes/v1/dashboard.route.ts`
+- Endpoints: summary, sales, top-products, low-stock, exchange-rate, recent-activity
+- Tests: `tests/modules/dashboard/`
+
+**Rate limiting / security headers:**
+- `src/middlewares/rate-limit.middleware.ts` (global 300/15min; auth 10/15min; disabled when NODE_ENV=test)
+- helmet configured in `src/app.ts` (CSP off for Swagger UI)
+
 **Validation:**
 - express-validator for request validation
 - Middleware: `src/middlewares/validator_request.ts`

@@ -39,7 +39,7 @@ export class Taxes {
     @Column({ type: "tinyint", width: 1, default: 2, comment: "1 excent, 2 percent, 3 fixed" })
     tax_type: number;
 
-    @Column({ type: "float", precision: 5, scale: 2, default: 0.0, comment: "tax value" })
+    @Column({ type: "decimal", precision: 18, scale: 3, default: 0, comment: "tax value" })
     tax_value: number;
 
     @Column({ type: "int", unsigned: true, nullable: true, comment: "Currency tax id" })

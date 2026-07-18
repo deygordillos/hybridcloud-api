@@ -60,21 +60,22 @@ export class CustomersService {
             "cust_cellphone"
         >
     ) {
-        customer.cust_description = customerData.cust_description;
-        customer.cust_status = (customerData.cust_status === 0 || customerData.cust_status === 1) ? customerData.cust_status : 1;
-        customer.cust_exempt = (customerData.cust_exempt === 0 || customerData.cust_exempt === 1) ? customerData.cust_exempt : 1;
-        customer.cust_address = customerData.cust_address;
-        customer.cust_address_complement = customerData.cust_address_complement;
-        customer.cust_address_city = customerData.cust_address_city;
-        customer.cust_address_state = customerData.cust_address_state;
-        customer.cust_email = customerData.cust_email;
-        customer.cust_telephone1 = customerData.cust_telephone1;
-        customer.cust_telephone2 = customerData.cust_telephone2;
-        customer.cust_cellphone = customerData.cust_cellphone;
+        // Actualización parcial: los campos no enviados conservan su valor actual
+        customer.cust_description = customerData.cust_description ?? customer.cust_description;
+        customer.cust_status = (customerData.cust_status === 0 || customerData.cust_status === 1) ? customerData.cust_status : customer.cust_status;
+        customer.cust_exempt = (customerData.cust_exempt === 0 || customerData.cust_exempt === 1) ? customerData.cust_exempt : customer.cust_exempt;
+        customer.cust_address = customerData.cust_address !== undefined ? customerData.cust_address : customer.cust_address;
+        customer.cust_address_complement = customerData.cust_address_complement !== undefined ? customerData.cust_address_complement : customer.cust_address_complement;
+        customer.cust_address_city = customerData.cust_address_city !== undefined ? customerData.cust_address_city : customer.cust_address_city;
+        customer.cust_address_state = customerData.cust_address_state !== undefined ? customerData.cust_address_state : customer.cust_address_state;
+        customer.cust_email = customerData.cust_email !== undefined ? customerData.cust_email : customer.cust_email;
+        customer.cust_telephone1 = customerData.cust_telephone1 !== undefined ? customerData.cust_telephone1 : customer.cust_telephone1;
+        customer.cust_telephone2 = customerData.cust_telephone2 !== undefined ? customerData.cust_telephone2 : customer.cust_telephone2;
+        customer.cust_cellphone = customerData.cust_cellphone !== undefined ? customerData.cust_cellphone : customer.cust_cellphone;
         customer.updated_at = new Date();
 
         await CustomerRepository.save(customer);
-        return { message: messages.Customers.customer_updated };
+        return { message: messages.Customers.customer_updated, data: customer };
     }
 
 }

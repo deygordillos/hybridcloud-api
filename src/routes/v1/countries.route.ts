@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { body, param, query } from "express-validator";
 import { validatorRequestMiddleware } from '../../middlewares/validator_request';
 import { authMiddleware } from '../../middlewares/AuthMiddleware';
+import { adminMiddleware } from '../../middlewares/adminMiddleware';
 import { CountryController } from '../../controllers/country.controller';
 
 const router = Router();
@@ -551,6 +552,7 @@ router.get('/:id',
 router.post('/',
     [
         authMiddleware,
+        adminMiddleware,
         body('country_iso2')
             .notEmpty().withMessage('ISO2 code is required')
             .isLength({ min: 2, max: 2 }).withMessage('ISO2 code must be 2 characters'),
@@ -634,6 +636,7 @@ router.post('/',
 router.put('/:id',
     [
         authMiddleware,
+        adminMiddleware,
         param('id').isInt({ min: 1 }).withMessage('Country ID must be a positive integer'),
         body('country_name').optional().isString().withMessage('Country name must be a string'),
         body('country_status').optional().isInt().isIn([0, 1]).withMessage('Status must be 0 or 1'),

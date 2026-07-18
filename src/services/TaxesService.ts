@@ -41,8 +41,13 @@ export class TaxesService {
 
     /**
      * Create a tax
+     * Reglas: tax_type 1 (exento) fuerza tax_value = 0;
+     * tax_type 3 (fijo) requiere currency_id.
      */
-    static async create(tax: Pick<Taxes, "company_id" | "tax_code" | "tax_name" | "tax_description" | "tax_status" | "tax_type" | "tax_value">) {
+    static async create(tax: Pick<Taxes, "company_id" | "tax_code" | "tax_name" | "tax_description" | "tax_status" | "tax_type" | "tax_value" | "currency_id">) {
+        if (tax.tax_type === 1) tax.tax_value = 0;
+        if (tax.tax_type !== 3) tax.currency_id = null;
+
         const newTax = TaxesRepository.create(tax);
         await TaxesRepository.save(newTax);
         return newTax;
@@ -51,13 +56,18 @@ export class TaxesService {
     /**
      * Update a tax
      */
-    static async update(tax: Taxes, data: Pick<Taxes, "tax_name" | "tax_description" | "tax_status" | "tax_type" | "tax_value">) {
-        console.log({data});
+    static async update(tax: Taxes, data: Pick<Taxes, "tax_name" | "tax_description" | "tax_status" | "tax_type" | "tax_value" | "currency_id">) {
         tax.tax_name = data.tax_name ?? tax.tax_name;
         tax.tax_description = data.tax_description ?? tax.tax_description;
         tax.tax_status = (data.tax_status === 0 || data.tax_status === 1) ? data.tax_status : tax.tax_status;
-        tax.tax_type = (data.tax_type === 1 || data.tax_type === 2) ? data.tax_type : tax.tax_type;
+        tax.tax_type = (data.tax_type === 1 || data.tax_type === 2 || data.tax_type === 3) ? data.tax_type : tax.tax_type;
         tax.tax_value = typeof data.tax_value === "number" ? data.tax_value : tax.tax_value;
+        tax.currency_id = data.currency_id !== undefined ? data.currency_id : tax.currency_id;
+
+        // Reglas por tipo: exento fuerza valor 0, fijo requiere moneda
+        if (tax.tax_type === 1) tax.tax_value = 0;
+        if (tax.tax_type !== 3) tax.currency_id = null;
+
         tax.updated_at = new Date();
 
         await TaxesRepository.save(tax);

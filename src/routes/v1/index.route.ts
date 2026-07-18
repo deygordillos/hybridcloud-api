@@ -18,6 +18,10 @@ import inventoryLotsStoragesRoutes from './inventory_lots_storages.route'
 import inventoryMovementsRoutes from './inventory_movements.route'
 import typesOfPricesRoutes from './types_of_prices.route'
 import currenciesExchangesRoutes from './currencies_exchanges.route'
+import currenciesRoutes from './currencies.route'
+import auditLogsRoutes from './audit_logs.route'
+import ordersRoutes from './orders.route'
+import dashboardRoutes from './dashboard.route'
 import { swaggerSpec, swaggerUi } from '../../swagger-config'
 
 const router = Router();
@@ -40,6 +44,10 @@ router.use('/v1/inventory/lots-storages', inventoryLotsStoragesRoutes);
 router.use('/v1/inventory/movements', inventoryMovementsRoutes);
 router.use('/v1/types-of-prices', typesOfPricesRoutes);
 router.use('/v1/currencies-exchanges', currenciesExchangesRoutes);
+router.use('/v1/currencies', currenciesRoutes);
+router.use('/v1/audit-logs', auditLogsRoutes);
+router.use('/v1/orders', ordersRoutes);
+router.use('/v1/dashboard', dashboardRoutes);
 
 router.use('/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 router.use('/v1/docs.json', (req, res) => {

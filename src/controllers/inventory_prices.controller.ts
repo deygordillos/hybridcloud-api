@@ -4,6 +4,7 @@ import { InventoryPricesService } from "../services/InventoryPricesService";
 import { TypesOfPricesService } from "../services/TypesOfPricesService";
 import { InventoryVariantsService } from "../services/InventoryVariantsService";
 import { successResponse, errorResponse } from "../helpers/responseHelper";
+import { AuditService } from "../services/AuditService";
 
 export class InventoryPricesController {
     /**
@@ -130,7 +131,17 @@ export class InventoryPricesController {
 
             const price = await InventoryPricesService.create(data, user_id);
 
-            return successResponse(res, 
+            await AuditService.log({
+                company_id: req['company_id'],
+                entity_type: 'inventory_prices',
+                entity_id: price.inv_price_id,
+                action_type: 'CREATE',
+                after: price as any,
+                changed_by: user_id || null,
+                ip_address: req.ip
+            });
+
+            return successResponse(res,
                 messages.InventoryPrices?.price_created ?? "Inventory price created", 
                 201, 
                 price
@@ -175,7 +186,19 @@ export class InventoryPricesController {
                 }
             }
 
+            const before = { ...price };
             const response = await InventoryPricesService.update(price, req.body, user_id);
+
+            await AuditService.log({
+                company_id: req['company_id'],
+                entity_type: 'inventory_prices',
+                entity_id: inv_price_id,
+                action_type: 'UPDATE',
+                before: before as any,
+                after: response.data as any,
+                changed_by: user_id || null,
+                ip_address: req.ip
+            });
 
             return successResponse(res, response.message, 200, response.data);
         } catch (e) {
